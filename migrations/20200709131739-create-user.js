@@ -24,13 +24,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      scopes: {
-        references: {
-          model: 'Scopes',
-          key: 'id'
-        },
-        type: Sequelize.INTEGER
-      },
       shikimoriId: {
         type: Sequelize.STRING
       },

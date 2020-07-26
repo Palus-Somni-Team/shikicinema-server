@@ -1,10 +1,15 @@
-import {Column, HasMany, Model, Table} from 'sequelize-typescript';
+import {BelongsToMany, Column, Model, PrimaryKey, Table} from 'sequelize-typescript';
 import {Scope} from './Scope';
+import {UserScopes} from './UserScopes';
 
 @Table({
     updatedAt: false
 })
 export class User extends Model<User> {
+
+    @PrimaryKey
+    @Column
+    id!: number;
 
     @Column
     name!: string;
@@ -18,7 +23,7 @@ export class User extends Model<User> {
     @Column
     email!: string;
 
-    @HasMany(() => Scope)
+    @BelongsToMany(() => Scope, () => UserScopes, 'userId')
     scopes!: Scope[];
 
     @Column

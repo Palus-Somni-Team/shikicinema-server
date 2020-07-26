@@ -1,14 +1,17 @@
-import {Column, ForeignKey, Model, Table} from 'sequelize-typescript';
+import {BelongsToMany, Column, Model, Table} from 'sequelize-typescript';
+import {UserScopes} from "./UserScopes";
 import {User} from "./User";
 
 @Table({
+    createdAt: false,
     updatedAt: false
 })
 export class Scope extends Model<Scope> {
 
-    @ForeignKey(() => User)
-    userId!: number;
-
     @Column
     value!: string;
+
+    @BelongsToMany(() => User, () => UserScopes, 'scopeId')
+    scopes!: Scope[];
+
 }
