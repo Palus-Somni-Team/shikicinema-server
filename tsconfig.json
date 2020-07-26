@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "outDir": "./dist/",
+    "resolveJsonModule": true,
+    "target": "es5",
+    "sourceMap": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+
+    /* Advanced Options */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  }
+}

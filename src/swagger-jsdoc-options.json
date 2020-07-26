@@ -1,0 +1,230 @@
+{
+  "definition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Smarthard's site API Documentation",
+      "version": "v1",
+      "contact": {
+        "name": "Developer",
+        "email": "th3smartchan@gmail.com"
+      },
+      "license": {
+        "name": "BSD 2-Clause License"
+      }
+    },
+    "host": "smarthard.net",
+    "basePath": "/api",
+    "produces": [
+      "application/json"
+    ],
+    "schemes": [
+      "https"
+    ],
+    "components": {
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        },
+        "OAuth2": {
+          "type": "oauth2",
+          "flows": {
+            "authorizationCode": {
+              "authorizationUrl": "https://smarthard.net/oauth/authorize",
+              "tokenUrl": "https://smarthard.net/oauth/token",
+              "scopes": {
+                "admin": "Grants access to admin operations and extra info",
+                "database": "Grants access to entire database",
+                "database:articles": "Grants access to Articles scheme",
+                "database:shikivideos": "Grants access to Shikivideos scheme",
+                "database:shikivideos_create": "Grants write access to Shikivideos scheme",
+                "default": "Grants default access rights (login, logout, information about itself)",
+                "user": "Grants access to all user information",
+                "user:modify": "Grants access to user information modification"
+              }
+            }
+          }
+        }
+      },
+      "schemas": {
+        "UserCredentials": {
+          "type": "object",
+          "properties": {
+            "login": {
+              "type": "string",
+              "example": "User"
+            },
+            "password": {
+              "type": "string",
+              "example": "passw0rd"
+            }
+          }
+        },
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "login": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "scopes": {
+              "$ref": "#/components/schemas/OAuthScopes"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "UserWithoutPassword": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string",
+              "example": "username"
+            },
+            "login": {
+              "type": "string",
+              "example": "User"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "scopes": {
+              "$ref": "#/components/schemas/OAuthScopes"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "ShikivideosKinds": {
+          "type": "string",
+          "enum": ["озвучка", "оригинал", "субтитры"]
+        },
+        "ShikivideosLengthResponse": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "integer",
+              "example": 12
+            }
+          }
+        },
+        "Shikivideos": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 882657
+            },
+            "url": {
+              "type": "string",
+              "example": "http://video.sibnet.ru/shell.php?videoid=1503010"
+            },
+            "anime_id": {
+              "type": "integer",
+              "example": 6
+            },
+            "anime_english": {
+              "type": "string",
+              "example": "Trigun"
+            },
+            "anime_russian": {
+              "type": "string",
+              "example": "Триган"
+            },
+            "episode": {
+              "type": "integer",
+              "example": 7
+            },
+            "kind": {
+              "type": "string",
+              "example": "озвучка"
+            },
+            "language": {
+              "type": "string",
+              "example": "russian"
+            },
+            "quality": {
+              "type": "string",
+              "example": "TV"
+            },
+            "author": {
+              "type": "string",
+              "example": "2x2 (Мега-Аниме)"
+            },
+            "watches_count": {
+              "type": "integer"
+            },
+            "uploader": {
+              "type": "string",
+              "example": 278015
+            }
+          }
+        },
+        "StatusResponse": {
+          "type": "object",
+          "properties": {
+            "server": {
+              "type": "string",
+              "example": "online"
+            },
+            "api": {
+              "type": "string",
+              "example": "offline"
+            }
+          }
+        },
+        "StatusUptimeResponse": {
+          "type": "object",
+          "properties": {
+            "server": {
+              "type": "string",
+              "example": "1 month, 20 days"
+            },
+            "api": {
+              "type": "string",
+              "example": "2 days, 14 hours"
+            }
+          }
+        },
+        "OAuthScopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": ["admin", "user"]
+        },
+        "OAuthResponseType": {
+          "type": "string",
+          "enum": ["code"]
+        },
+        "OAuthGrantType": {
+          "type": "string",
+          "enum": ["authorization_code", "refresh_token", "client_credentials"]
+        }
+      }
+    }
+  },
+  "apis": [
+    "./routes/*.js"
+  ]
+}
