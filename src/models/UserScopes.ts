@@ -3,16 +3,16 @@ import {User} from './User';
 import {Scope} from './Scope';
 
 @Table({
-    createdAt: false,
-    updatedAt: false
+    tableName: 'user_scopes',
+    timestamps: false,
 })
 export class UserScopes extends Model<UserScopes> {
 
     @ForeignKey(() => User)
-    @Column
+    @Column({field: 'user_id'})
     userId!: number;
 
     @ForeignKey(() => Scope)
-    @Column
+    @Column({field: 'scope_id'})
     scopeId!: number
 }
