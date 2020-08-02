@@ -1,12 +1,17 @@
-import {BelongsToMany, Column, Model, PrimaryKey, Table} from 'sequelize-typescript';
+import {
+    BelongsToMany,
+    Column,
+    Model,
+    PrimaryKey,
+    Table,
+} from 'sequelize-typescript';
 import {Scope} from './Scope';
 import {UserScopes} from './UserScopes';
 
 @Table({
-    updatedAt: false
+    tableName: 'users',
 })
 export class User extends Model<User> {
-
     @PrimaryKey
     @Column
     id!: number;
@@ -23,11 +28,17 @@ export class User extends Model<User> {
     @Column
     email!: string;
 
-    @BelongsToMany(() => Scope, () => UserScopes, 'userId')
+    @BelongsToMany(() => Scope, () => UserScopes, 'user_id')
     scopes!: Scope[];
 
-    @Column
+    @Column({field: 'shikimori_id'})
     shikimoriId?: string;
+
+    @Column( {field: 'created_at'})
+    createdAt?: Date;
+
+    @Column( {field: 'updated_at'})
+    updatedAt?: Date;
 
     get isAdmin() {
         return this?.scopes?.some((s) => s.value === 'admin');

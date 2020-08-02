@@ -21,7 +21,7 @@ import {users} from './routes/users';
 const app = express();
 const {SESSION_SECRET, PRODUCTION} = require('./config/auth');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const sessionStorage = new SequelizeStore({ db: sequelize, tableName: 'Sessions' });
+const sessionStorage = new SequelizeStore({db: sequelize, tableName: 'sessions'});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
