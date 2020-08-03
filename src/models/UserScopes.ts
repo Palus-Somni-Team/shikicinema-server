@@ -7,7 +7,6 @@ import {Scope} from './Scope';
     timestamps: false,
 })
 export class UserScopes extends Model<UserScopes> {
-
     @ForeignKey(() => User)
     @Column({field: 'user_id'})
     userId!: number;
