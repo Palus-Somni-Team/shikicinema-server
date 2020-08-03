@@ -10,8 +10,10 @@ import http from 'http';
 import morgan from 'morgan';
 
 /* LOCAL IMPORTS */
+import SequelizeStoreConstructor from 'connect-session-sequelize';
 import {sequelize} from './sequelize';
 import {ServerError} from './types/ServerError';
+import SERVER_CONFIG from '../config/auth';
 import * as middleware from './auth/middleware';
 
 /* ROUTES */
@@ -19,17 +21,16 @@ import {users} from './routes/users';
 
 /* SERVER APP CONSTANTS */
 const app = express();
-const {SESSION_SECRET, PRODUCTION} = require('./config/auth');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const SequelizeStore: { new(options: any): any } = SequelizeStoreConstructor(session.Store);
 const sessionStorage = new SequelizeStore({db: sequelize, tableName: 'sessions'});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.set('trust proxy', true);
-app.use(morgan(PRODUCTION ? 'combined' : 'dev'));
+app.use(morgan(SERVER_CONFIG.isProduction ? 'combined' : 'dev'));
 app.use(session({
     name: 'user_sid',
-    secret: SESSION_SECRET,
+    secret: SERVER_CONFIG.sessionSecret,
     resave: false,
     saveUninitialized: false,
     proxy: true,
@@ -37,7 +38,7 @@ app.use(session({
         httpOnly: true,
         // secure: PRODUCTION, // removed because of nginx configuration
         sameSite: 'lax',
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // expires in 24h
+        expires: new Date(Date.now() + SERVER_CONFIG.cookieLife),
     },
     store: sessionStorage,
 }));
@@ -56,12 +57,12 @@ app.all('*', (req: Request, res: Response) => {
 app.use((err: ServerError, req: Request, res: Response, next: Function) => {
     res.status(err.status || 500).send({
         error: err.brief,
-        message: PRODUCTION ? err.message : err.toString(),
+        message: SERVER_CONFIG.isProduction ? err.message : err.toString(),
     });
 });
 
 /* SERVER STARTUP */
-(async () => {
+(async (): Promise<void> => {
     try {
         await sessionStorage.sync();
         await sequelize.authenticate();
