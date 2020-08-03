@@ -1,9 +1,9 @@
 import * as bcrypt from 'bcrypt';
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {ServerErrors} from '../types/ServerErrors';
 import {User} from '../models/User';
 
-export function destroyInvalidCookies(req: Request, res: Response, next: Function) {
+export function destroyInvalidCookies(req: Request, res: Response, next: NextFunction): void {
     if (req.session?.cookies && !req.session?.user) {
         res.clearCookie('user_sid');
     }
@@ -17,8 +17,8 @@ export function destroyInvalidCookies(req: Request, res: Response, next: Functio
  * @param {string[]} scopes Scopes that allowed for accessing this resources. NOTE that 'default' scope means any scope
  * @returns {Function} ExpressJS middleware function
  */
-export function allowFor(...scopes: string[]) {
-    return (req: Request, res: Response, next: Function) => {
+export function allowFor(...scopes: string[]): (req: Request, res: Response, next: NextFunction) => void {
+    return (req: Request, res: Response, next: NextFunction): void => {
         // request with session cookies
         if (req.session?.user) {
             return next();
@@ -30,7 +30,7 @@ export function allowFor(...scopes: string[]) {
     };
 }
 
-export async function validateUser(user: User, password: string) {
+export async function validateUser(user: User, password: string): Promise<boolean> {
     return await bcrypt.compare(password, user.password)
         .then((ok) => ok)
         .catch((err) => {
