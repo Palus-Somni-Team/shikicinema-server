@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import * as bcrypt from 'bcrypt';
 
 import * as middleware from '../auth/middleware';
@@ -9,9 +9,10 @@ export const users = Router();
 
 /**
  * @description user's E-mail validation. NOTE that only gmail users are allowed!
- * @param email user's email
+ * @param {string} email User's email
+ * @returns {boolean} Boolean if it's a correct email
  */
-function isEmail(email: string) {
+function isEmail(email: string): boolean {
     return /[^\s]+@(gmail.com)/i.test(email);
 }
 
@@ -66,7 +67,12 @@ users.post('/', async (req, res, next) => {
     }
 
     if (login.length > 16 || password.length > 32 || login === '' || password === '' || !isEmail(email)) {
-        return next(new ServerError('Invalid parameters', 400, 'login/password is too long or too short, or email is invalid'));
+        return next(
+            new ServerError(
+                'Invalid parameters',
+                400,
+                'login/password is too long or too short, or email is invalid',
+            ));
     }
 
     const existingLogin = await User.findOne({where: {login: login}});
@@ -79,7 +85,7 @@ users.post('/', async (req, res, next) => {
                 name: login,
                 password: bcrypt.hashSync(password, 10),
                 email: email,
-                scopes: ['user']
+                scopes: ['user'],
             })
             .then((user) => {
                 if (user) {
@@ -266,7 +272,7 @@ users.put('/:id', middleware.allowFor('user', 'admin'), async (req, res, next) =
 
     if (id && !isNaN(id)) {
         const requester = await User.findOne({where: {id: req.session?.user.id}})
-                                    .catch((err) => next(err));
+            .catch((err) => next(err));
 
         if (id == req.session?.user.id || (requester as User)?.isAdmin) {
             // if not admin
@@ -333,7 +339,7 @@ users.delete('/:id', middleware.allowFor('user', 'admin'), async (req, res, next
 
     if (id && !isNaN(id)) {
         const requester = await User.findOne({where: {id: req.session?.user?.id}})
-                                    .catch((err) => next(err));
+            .catch((err) => next(err));
 
         if (id == req.session?.user?.id || (requester as User)?.isAdmin) {
             User.destroy({where: {id: id}})
