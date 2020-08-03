@@ -29,8 +29,9 @@
         "new-cap": ["error", { "capIsNewExceptionPattern": "^@*" }],
         "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "next" }],
         "quotes": ["error", "single"],
-        "require-jsdoc": "warn",
-        "semi": ["error", "always"]
+        "require-jsdoc": "off",
+        "semi": ["error", "always"],
+        "valid-jsdoc": "off"
     },
     "overrides": [
         {
