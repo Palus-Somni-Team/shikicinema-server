@@ -6,6 +6,12 @@ module.exports = {
     module: {
         rules: [
             {
+                enforce: 'pre',
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+            },
+            {
                 test: /\.ts$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
@@ -21,5 +27,5 @@ module.exports = {
     },
     externals: [nodeExternals()],
     devtool: 'source-map',
-    target: 'node'
+    target: 'node',
 };
