@@ -40,7 +40,7 @@ export class User extends Model<User> {
     @Column( {field: 'updated_at'})
     updatedAt?: Date;
 
-    get isAdmin() {
-        return this?.scopes?.some((s) => s.value === 'admin');
+    get isAdmin(): boolean {
+        return this?.scopes?.some((s) => s.value === 'admin') || false;
     }
 }

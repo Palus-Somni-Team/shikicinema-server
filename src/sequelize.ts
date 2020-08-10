@@ -1,15 +1,13 @@
-import {Sequelize} from 'sequelize-typescript';
+import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
+import dotenv from 'dotenv';
 import {models} from './models';
+import configs, {DatabaseConfig, DatabaseConfigs} from '../config/database';
 
-const configs = require('../config/config.js')
+dotenv.config();
+
 const env = process.env.NODE_ENV || 'development';
-const config = (configs as any)[env];
+const config: DatabaseConfig = (configs as DatabaseConfigs)[env];
+const dbUri = config.url;
+const options: SequelizeOptions = {models};
 
-export const sequelize = new Sequelize({
-    dialect: config.dialect,
-    database: config.database,
-    host: config.host,
-    username: config.username,
-    password: config.password,
-    models
-});
+export const sequelize = new Sequelize(dbUri, options);

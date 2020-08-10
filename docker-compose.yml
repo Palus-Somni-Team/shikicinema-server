@@ -10,7 +10,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: shikicinema
+      POSTGRES_DB: shikicinema-dev
       POSTGRES_USER: postgres
 
   migrations:
@@ -25,7 +25,8 @@ services:
       - ".:/app"
     working_dir: "/app"
     environment:
-      NODE_ENV: "docker_dev"
+      NODE_ENV: "development"
+      DEV_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
     entrypoint: ["dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
                  "-wait", "tcp://shikicinema-db:5432",
                  "npm", "run", "migrate"]
