@@ -6,6 +6,7 @@
     "tsc": "npx tsc",
     "build": "webpack --mode development",
     "migrate": "npx sequelize db:migrate",
+    "test": "NODE_ENV=test mocha -r ts-node/register -R list 'test/**/*.ts'",
     "test-migrate": "npx sequelize db:migrate:undo:all && npx sequelize db:migrate && npx sequelize db:seed:all"
   },
   "dependencies": {
@@ -50,6 +51,7 @@
     "@types/express": "^4.17.6",
     "@types/express-session": "^1.17.0",
     "@types/helmet": "0.0.47",
+    "@types/mocha": "^8.0.1",
     "@types/morgan": "^1.9.0",
     "@types/node": "^14.0.1",
     "@types/swagger-jsdoc": "^3.0.2",
@@ -62,6 +64,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-jsdoc": "^30.1.0",
+    "mocha": "^8.1.1",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
     "tsconfig-paths": "^3.9.0",
