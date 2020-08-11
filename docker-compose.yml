@@ -26,8 +26,8 @@ services:
     working_dir: "/app"
     environment:
       NODE_ENV: "development"
-      DEV_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
+      SHIKICINEMA_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
+      SHIKICINEMA_CONFIG_DIR: "/app/config"
     entrypoint: ["dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
                  "-wait", "tcp://shikicinema-db:5432",
                  "npm", "run", "migrate"]
-

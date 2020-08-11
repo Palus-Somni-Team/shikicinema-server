@@ -1,7 +1,9 @@
 const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config()
 
 module.exports = {
-    'config': path.resolve('config', 'database.js'),
+    'config': path.resolve(`${process.env.SHIKICINEMA_CONFIG_DIR}`, 'database.json'),
     'models-path': path.resolve('./src/models'),
     'migrations-path': path.resolve('./migrations')
 };

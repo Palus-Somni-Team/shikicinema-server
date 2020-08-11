@@ -1,9 +1,7 @@
-// TODO: clean up
-
 /* EXTERNAL IMPORTS */
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express, {Request, Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import http from 'http';
@@ -13,11 +11,12 @@ import morgan from 'morgan';
 import SequelizeStoreConstructor from 'connect-session-sequelize';
 import {sequelize} from './sequelize';
 import {ServerError} from './types/ServerError';
-import SERVER_CONFIG from '../config/auth';
+import {sessionOptions} from './options/SessionOptions';
 import * as middleware from './auth/middleware';
 
 /* ROUTES */
 import {users} from './routes/users';
+import {isProduction} from './options/constants';
 
 /* SERVER APP CONSTANTS */
 const app = express();
@@ -27,21 +26,8 @@ const sessionStorage = new SequelizeStore({db: sequelize, tableName: 'sessions'}
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.set('trust proxy', true);
-app.use(morgan(SERVER_CONFIG.isProduction ? 'combined' : 'dev'));
-app.use(session({
-    name: 'user_sid',
-    secret: SERVER_CONFIG.sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    proxy: true,
-    cookie: {
-        httpOnly: true,
-        // secure: PRODUCTION, // removed because of nginx configuration
-        sameSite: 'lax',
-        expires: new Date(Date.now() + SERVER_CONFIG.cookieLife),
-    },
-    store: sessionStorage,
-}));
+app.use(morgan(isProduction ? 'combined' : 'dev'));
+app.use(session({...sessionOptions, store: sessionStorage}));
 app.use(cors());
 app.use(helmet({
     hsts: false, // disabled because of nginx configuration
@@ -54,10 +40,10 @@ app.all('*', (req: Request, res: Response) => {
     res.status(404).send({});
 });
 
-app.use((err: ServerError, req: Request, res: Response, next: Function) => {
+app.use((err: ServerError, req: Request, res: Response, next: NextFunction) => {
     res.status(err.status || 500).send({
         error: err.brief,
-        message: SERVER_CONFIG.isProduction ? err.message : err.toString(),
+        message: isProduction ? err.message : err.toString(),
     });
 });
 

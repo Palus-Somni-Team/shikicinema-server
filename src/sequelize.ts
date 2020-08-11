@@ -1,13 +1,11 @@
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 import dotenv from 'dotenv';
 import {models} from './models';
-import configs, {DatabaseConfig, DatabaseConfigs} from '../config/database';
+import {databaseOptions} from './options/DatabaseOptions';
 
 dotenv.config();
 
-const env = process.env.NODE_ENV || 'development';
-const config: DatabaseConfig = (configs as DatabaseConfigs)[env];
-const dbUri = config.url;
-const options: SequelizeOptions = {models};
+const dbUri = `${process.env.SHIKICINEMA_DB_URI}`;
+const options = {...databaseOptions, models: models} as SequelizeOptions;
 
 export const sequelize = new Sequelize(dbUri, options);
