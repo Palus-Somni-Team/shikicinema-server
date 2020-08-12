@@ -5,7 +5,7 @@ import {databaseOptions} from './options/DatabaseOptions';
 
 dotenv.config();
 
-const dbUri = `${process.env.SHIKICINEMA_DB_URI}`;
+const dbUri = `${process.env[databaseOptions.use_env_variable]}`;
 const options = {...databaseOptions, models: models} as SequelizeOptions;
 
 export const sequelize = new Sequelize(dbUri, options);

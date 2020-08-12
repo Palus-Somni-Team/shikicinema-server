@@ -6,7 +6,7 @@
     "tsc": "npx tsc",
     "build": "webpack --mode development",
     "migrate": "npx sequelize db:migrate",
-    "test": "NODE_ENV=test mocha -r ts-node/register -R list 'test/**/*.ts'",
+    "test": "NODE_ENV=test SHIKICINEMA_CONFIG_DIR=./config/testing/ mocha -r ts-node/register -R list 'test/**/*.ts'",
     "test-migrate": "npx sequelize db:migrate:undo:all && npx sequelize db:migrate && npx sequelize db:seed:all"
   },
   "dependencies": {
