@@ -6,8 +6,7 @@
     "module": "commonjs",
     "moduleResolution": "Node",
     "outDir": "./dist/",
-    "resolveJsonModule": true,
-    "target": "es6",
+    "target": "es2018",
     "sourceMap": true,
 
     /* Strict Type-Checking Options */

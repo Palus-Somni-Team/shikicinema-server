@@ -1,0 +1,12 @@
+{
+  "secret": "secret",
+  "name": "user_sid",
+  "resave": false,
+  "saveUninitialized": false,
+  "proxy": true,
+  "cookie": {
+    "maxAge": 86400000,
+    "httpOnly": true,
+    "sameSite": "lax"
+  }
+}
