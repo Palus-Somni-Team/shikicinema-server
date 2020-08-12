@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
-export const isProduction = process.env.NODE_ENV === 'production';
-
 const configDirEnv = `${process.env.SHIKICINEMA_CONFIG_DIR}`;
-export const configDirectory = !!configDirEnv ? './config' : configDirEnv;
+
+export const isProduction = process.env.NODE_ENV === 'production';
+export const configDirectory = !!configDirEnv ? configDirEnv : path.resolve('config/');
