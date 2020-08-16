@@ -45,6 +45,7 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/bluebird": "^3.5.32",
+    "@types/chai": "^4.2.12",
     "@types/connect-pg-simple": "^4.2.0",
     "@types/connect-session-sequelize": "git+https://github.com/calebsander/connect-session-sequelize-types.git",
     "@types/cors": "^2.8.6",
@@ -60,6 +61,8 @@
     "@types/webpack": "^4.41.20",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-loader": "^4.0.2",
