@@ -1,5 +1,20 @@
 version: '3.4'
 
+x-migrations-image: &migrations-image
+  image: shikicinema-migrate
+  privileged: true
+  build:
+    context: .
+    dockerfile: Dockerize.Dockerfile
+    args:
+      baseImage: "${NODE_DOCKER_IMAGE}"
+  volumes:
+    - ".:/app"
+  working_dir: "/app"
+  entrypoint: ["dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
+               "-wait", "tcp://shikicinema-db:5432",
+               "npm", "run", "migrate"]
+
 services:
 
   shikicinema-db:
@@ -13,21 +28,16 @@ services:
       POSTGRES_DB: shikicinema-dev
       POSTGRES_USER: postgres
 
-  migrations:
-    image: shikicinema-migrate
-    privileged: true
-    build:
-      context: .
-      dockerfile: Dockerize.Dockerfile
-      args:
-        baseImage: "${NODE_DOCKER_IMAGE}"
-    volumes:
-      - ".:/app"
-    working_dir: "/app"
+  dev-migrations:
+    <<: *migrations-image
     environment:
       NODE_ENV: "development"
       SHIKICINEMA_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
-      SHIKICINEMA_CONFIG_DIR: "/app/config"
-    entrypoint: ["dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
-                 "-wait", "tcp://shikicinema-db:5432",
-                 "npm", "run", "migrate"]
+      SHIKICINEMA_CONFIG_DIR: "/app/config/development"
+
+  test-migrations:
+    <<: *migrations-image
+    environment:
+      NODE_ENV: "test"
+      SHIKICINEMA_TEST_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
+      SHIKICINEMA_CONFIG_DIR: "/app/config/testing"
