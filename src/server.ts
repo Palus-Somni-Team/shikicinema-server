@@ -16,6 +16,7 @@ import * as middleware from './auth/middleware';
 
 /* ROUTES */
 import {users} from './routes/users';
+import {videos} from './routes/videos/router';
 import {isProduction} from './options/constants';
 
 /* SERVER APP CONSTANTS */
@@ -35,6 +36,7 @@ app.use(helmet({
 app.use(middleware.destroyInvalidCookies);
 
 app.use('/api/users/', users);
+app.use('/api/videos/', videos);
 
 app.all('*', (req: Request, res: Response) => {
     res.status(404).send({});

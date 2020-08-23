@@ -1,3 +1,4 @@
+import {VideoKind} from './VideoKind';
 /**
  * Represents information about anime episode.
  *
@@ -9,6 +10,6 @@
 export interface AnimeEpisodeInfo {
     animeId: number;
     episode: number;
-    availableDomains: string[];
-    availableKinds: string[];
+    availableDomains: Set<string>;
+    availableKinds: Set<VideoKind>;
 }

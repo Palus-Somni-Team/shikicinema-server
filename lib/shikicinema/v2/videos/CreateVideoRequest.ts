@@ -21,6 +21,5 @@ export interface CreateVideoRequest {
     kind: VideoKind;
     language: string;
     quality: VideoQuality;
-    studio: string;
-    releasedBy: string[];
+    author: string;
 }

@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction, RequestHandler} from 'express';
 import {validationResult} from 'express-validator';
-import {ValidationError} from './types/ValidationError';
+import {ValidationError} from '../../types/ValidationError';
 
 export abstract class Validator {
     public static handle(validator: Validator): RequestHandler {

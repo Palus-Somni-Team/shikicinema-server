@@ -2,22 +2,23 @@
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('user_scopes', {
-            user_id: {
-                references: {
-                    model: 'users',
-                    key: 'id',
+        return queryInterface.createTable('user_scopes',
+            {
+                user_id: {
+                    references: {
+                        model: 'users',
+                        key: 'id',
+                    },
+                    type: Sequelize.INTEGER,
                 },
-                type: Sequelize.INTEGER,
-            },
-            scope_id: {
-                references: {
-                    model: 'scopes',
-                    key: 'id',
+                scope_id: {
+                    references: {
+                        model: 'scopes',
+                        key: 'id',
+                    },
+                    type: Sequelize.INTEGER,
                 },
-                type: Sequelize.INTEGER,
-            },
-        });
+            });
     },
 
     down: (queryInterface, Sequelize) => {

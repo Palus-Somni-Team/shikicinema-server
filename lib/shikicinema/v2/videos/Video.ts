@@ -18,6 +18,11 @@ export interface Video {
     url: string;
 
     /**
+     * Domain part of url.
+     */
+    domain: string;
+
+    /**
      * Id of an anime from shikimori.one.
      *
      * @example One Piece has an anime id of 21.
@@ -46,15 +51,9 @@ export interface Video {
 
     /**
      * Studio that prepared a release. AniLibria, OnibakuGroup, etc.
+     * You also can add people responsible for the release. Like Eladiel, Oriko, Ghost etc.
      */
-    studio: string;
-
-    /**
-     * People responsible for the release. Eladiel, Oriko, Ghost etc.
-     *
-     * Note: These are not only dubbers.
-     */
-    releasedBy: string[];
+    author: string;
 
     /**
      * Number of people who marked the video as viewed.

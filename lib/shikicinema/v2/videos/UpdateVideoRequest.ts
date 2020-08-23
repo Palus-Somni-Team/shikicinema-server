@@ -26,8 +26,7 @@ export interface UpdateVideoRequest {
     kind?: VideoKind;
     language?: string;
     quality?: VideoQuality;
-    studio?: string;
-    releasedBy?: string[];
+    author?: string;
     watchesCount?: number;
     uploader?: number;
 }
