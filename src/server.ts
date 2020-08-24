@@ -19,7 +19,7 @@ import {users} from './routes/users';
 import {isProduction} from './options/constants';
 
 /* SERVER APP CONSTANTS */
-const app = express();
+export const app = express();
 const SequelizeStore: { new(options: any): any } = SequelizeStoreConstructor(session.Store);
 const sessionStorage = new SequelizeStore({db: sequelize, tableName: 'sessions'});
 
