@@ -6,7 +6,7 @@
     "tsc": "npx tsc",
     "build": "webpack --mode development",
     "migrate": "npx sequelize db:migrate",
-    "test": "NODE_ENV=test SHIKICINEMA_CONFIG_DIR=./config/testing/ mocha -r ts-node/register -R list 'test/**/*.ts'",
+    "test": "NODE_ENV=test SHIKICINEMA_CONFIG_DIR=./config/testing/ mocha --exit -r ts-node/register -R list 'test/**/*.ts'",
     "up-dev-db": "docker-compose up shikicinema-db dev-migrations",
     "up-test-db": "docker-compose up shikicinema-db test-migrations"
   },

@@ -26,7 +26,7 @@ const sessionStorage = new SequelizeStore({db: sequelize, tableName: 'sessions'}
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.set('trust proxy', true);
-app.use(morgan(isProduction ? 'combined' : 'dev'));
+app.use(morgan(isProduction ? 'combined' : 'dev', {skip: (req, res) => process.env.NODE_ENV === 'test'}));
 app.use(session({...sessionOptions, store: sessionStorage}));
 app.use(cors());
 app.use(helmet({
