@@ -6,6 +6,6 @@ import {databaseOptions} from './options/DatabaseOptions';
 dotenv.config();
 
 const dbUri = `${process.env[databaseOptions.use_env_variable]}`;
-const options = {...databaseOptions, models: models} as SequelizeOptions;
+const options = {...databaseOptions, models} as SequelizeOptions;
 
 export const sequelize = new Sequelize(dbUri, options);

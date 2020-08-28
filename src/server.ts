@@ -15,7 +15,7 @@ import {sessionOptions} from './options/SessionOptions';
 import * as middleware from './auth/middleware';
 
 /* ROUTES */
-import {users} from './routes/users';
+import {users} from './routes/users/router';
 import {isProduction} from './options/constants';
 
 /* SERVER APP CONSTANTS */

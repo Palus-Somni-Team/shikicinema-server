@@ -26,7 +26,7 @@ export class UserEntity extends Model<UserEntity> {
     @Column
     email!: string;
 
-    @Column(DataType.ARRAY(DataType.ENUM(...ALL_ROLES)))
+    @Column(DataType.ARRAY(DataType.STRING))
     roles!: Role[];
 
     @Column({field: 'shikimori_id'})
