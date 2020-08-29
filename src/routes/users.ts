@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 import * as middleware from '../auth/middleware';
 import {ServerError} from '../types/ServerError';
-import {User} from '../models/User';
+import {UserEntity} from '../models/UserEntity';
 
 export const users = Router();
 
@@ -75,17 +75,17 @@ users.post('/', async (req, res, next) => {
             ));
     }
 
-    const existingLogin = await User.findOne({where: {login: login}});
-    const existingEmail = await User.findOne({where: {email: email}});
+    const existingLogin = await UserEntity.findOne({where: {login: login}});
+    const existingEmail = await UserEntity.findOne({where: {email: email}});
 
     if (!existingLogin && !existingEmail) {
-        return User
+        return UserEntity
             .create({
                 login: login,
                 name: login,
                 password: bcrypt.hashSync(password, 10),
                 email: email,
-                scopes: ['user'],
+                roles: ['user'],
             })
             .then((user) => {
                 if (user) {
@@ -93,7 +93,7 @@ users.post('/', async (req, res, next) => {
                         login: user.login,
                         name: user.name,
                         email: user.email,
-                        scopes: user.scopes,
+                        roles: user.roles,
                     });
                 } else {
                     return next(new ServerError('Internal Error', 500, 'An error occurred during operation'));
@@ -157,12 +157,12 @@ users.get('/', async (req, res) => {
     let users;
 
     if (limit && offset) {
-        users = await User.findAll({
+        users = await UserEntity.findAll({
             limit, offset,
             attributes: ['id', 'name'],
         });
     } else {
-        users = await User.findAll({
+        users = await UserEntity.findAll({
             attributes: ['id', 'name'],
         });
     }
@@ -215,9 +215,8 @@ users.get('/:id', async (req, res) => {
     let user;
 
     if (id && !isNaN(id)) {
-        user = await User.findOne({
+        user = await UserEntity.findOne({
             where: {id: id},
-            attributes: ['id', 'name'],
         });
     } else {
         res.status(400).send({message: `wrong value for parameter id: ${id}`});
@@ -271,25 +270,25 @@ users.put('/:id', middleware.allowFor('user', 'admin'), async (req, res, next) =
     const id = Number.parseInt(`${req.params.id}`, 10) || null;
 
     if (id && !isNaN(id)) {
-        const requester = await User.findOne({where: {id: req.session?.user.id}})
+        const requester = await UserEntity.findOne({where: {id: req.session?.user.id}})
             .catch((err) => next(err));
 
-        if (id == req.session?.user.id || (requester as User)?.isAdmin) {
+        if (id == req.session?.user.id || (requester as UserEntity)?.isAdmin) {
             // if not admin
-            if (!(requester as User)?.isAdmin) {
+            if (!(requester as UserEntity)?.isAdmin) {
                 req.body.id = undefined; // do not change user id
                 req.body.scopes = undefined; // ...and scopes
             }
 
-            User.update(req.body, {where: {id: id}})
-                .then(() => User.findOne({where: {id: req.body.id || id}}))
+            UserEntity.update(req.body, {where: {id: id}})
+                .then(() => UserEntity.findOne({where: {id: req.body.id || id}}))
                 .then((user) => {
                     return res.status(200).send({
                         id: user?.id,
                         name: user?.name,
                         login: user?.login,
                         email: user?.email,
-                        scopes: user?.scopes,
+                        roles: user?.roles,
                     });
                 })
                 .catch((err) => next(err));
@@ -338,11 +337,11 @@ users.delete('/:id', middleware.allowFor('user', 'admin'), async (req, res, next
     const id = Number.parseInt(`${req.params.id}`, 10) || null;
 
     if (id && !isNaN(id)) {
-        const requester = await User.findOne({where: {id: req.session?.user?.id}})
+        const requester = await UserEntity.findOne({where: {id: req.session?.user?.id}})
             .catch((err) => next(err));
 
-        if (id == req.session?.user?.id || (requester as User)?.isAdmin) {
-            User.destroy({where: {id: id}})
+        if (id == req.session?.user?.id || (requester as UserEntity)?.isAdmin) {
+            UserEntity.destroy({where: {id: id}})
                 .then(() => res.status(200).send({}))
                 .catch((err) => next(err));
         } else {
@@ -379,7 +378,7 @@ users.delete('/:id', middleware.allowFor('user', 'admin'), async (req, res, next
  */
 
 users.post('/count', (req, res, next) => {
-    User.findAndCountAll()
+    UserEntity.findAndCountAll()
         .then((value) => res.status(200).send({count: value.count}))
         .catch((err) => next(err));
 });

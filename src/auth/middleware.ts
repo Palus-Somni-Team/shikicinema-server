@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import {NextFunction, Request, Response} from 'express';
 import {ServerErrors} from '../types/ServerErrors';
-import {User} from '../models/User';
+import {UserEntity} from '../models/UserEntity';
 
 export function destroyInvalidCookies(req: Request, res: Response, next: NextFunction): void {
     if (req.session?.cookies && !req.session?.user) {
@@ -30,7 +30,7 @@ export function allowFor(...scopes: string[]): (req: Request, res: Response, nex
     };
 }
 
-export async function validateUser(user: User, password: string): Promise<boolean> {
+export async function validateUser(user: UserEntity, password: string): Promise<boolean> {
     return await bcrypt.compare(password, user.password)
         .then((ok) => ok)
         .catch((err) => {
