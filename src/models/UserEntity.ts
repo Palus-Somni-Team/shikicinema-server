@@ -1,17 +1,12 @@
-import {
-    BelongsToMany,
-    Column,
-    Model,
-    PrimaryKey,
-    Table,
-} from 'sequelize-typescript';
-import {Scope} from './Scope';
-import {UserScopes} from './UserScopes';
+import {Column, DataType, Model, PrimaryKey, Table} from 'sequelize-typescript';
+
+export const ALL_ROLES = ['admin', 'banned', 'default', 'user'] as const;
+export type Role = typeof ALL_ROLES[number];
 
 @Table({
     tableName: 'users',
 })
-export class User extends Model<User> {
+export class UserEntity extends Model<UserEntity> {
     @PrimaryKey
     @Column
     id!: number;
@@ -28,8 +23,8 @@ export class User extends Model<User> {
     @Column
     email!: string;
 
-    @BelongsToMany(() => Scope, () => UserScopes, 'user_id')
-    scopes!: Scope[];
+    @Column(DataType.ARRAY(DataType.ENUM(...ALL_ROLES)))
+    roles!: Role[];
 
     @Column({field: 'shikimori_id'})
     shikimoriId?: string;
@@ -41,6 +36,6 @@ export class User extends Model<User> {
     updatedAt?: Date;
 
     get isAdmin(): boolean {
-        return this?.scopes?.some((s) => s.value === 'admin') || false;
+        return this?.roles?.some((role) => role === 'admin') || false;
     }
 }
