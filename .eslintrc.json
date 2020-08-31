@@ -33,7 +33,8 @@
         "quotes": ["error", "single"],
         "require-jsdoc": "off",
         "semi": ["error", "always"],
-        "valid-jsdoc": "off"
+        "valid-jsdoc": "off",
+        "jsdoc/check-tag-names": ["warn", { "definedTags": ["swagger"] }]
     },
     "overrides": [
         {
