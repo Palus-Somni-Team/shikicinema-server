@@ -1,4 +1,4 @@
-import {Column, DataType, Model, PrimaryKey, Table} from 'sequelize-typescript';
+import {AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Unique} from 'sequelize-typescript';
 
 export const ALL_ROLES = ['admin', 'banned', 'default', 'user'] as const;
 export type Role = typeof ALL_ROLES[number];
@@ -8,18 +8,21 @@ export type Role = typeof ALL_ROLES[number];
 })
 export class UserEntity extends Model<UserEntity> {
     @PrimaryKey
+    @AutoIncrement
     @Column
     id!: number;
 
     @Column
     name!: string;
 
+    @Unique
     @Column
     login!: string;
 
     @Column
     password!: string;
 
+    @Unique
     @Column
     email!: string;
 
