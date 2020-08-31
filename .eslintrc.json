@@ -23,7 +23,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": ["error", 4],
+        "indent": ["error", 4, {"SwitchCase": 1}],
         "linebreak-style": ["error", "unix"],
         "operator-linebreak": [2, "before", { "overrides": { "?": "before", ":": "before" } }],
         "max-len": ["error", 120],
