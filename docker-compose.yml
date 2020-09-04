@@ -11,9 +11,9 @@ x-migrations-image: &migrations-image
   volumes:
     - ".:/app"
   working_dir: "/app"
-  entrypoint: ["dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
-               "-wait", "tcp://shikicinema-db:5432",
-               "npm", "run", "migrate"]
+  entrypoint: [ "dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
+                "-wait", "tcp://shikicinema-db:5432",
+                "npm", "run", "migrate" ]
 
 services:
 
