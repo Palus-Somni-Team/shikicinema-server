@@ -7,13 +7,18 @@ x-migrations-image: &migrations-image
     context: .
     dockerfile: Dockerize.Dockerfile
     args:
-      baseImage: "${NODE_DOCKER_IMAGE}"
+      baseImage: "${LIQUIBASE_DOCKER_IMAGE}"
   volumes:
-    - ".:/app"
-  working_dir: "/app"
+    - "./migrations:/migrations"
   entrypoint: [ "dockerize", "-timeout", "20s", "-wait-retry-interval", "3s",
                 "-wait", "tcp://shikicinema-db:5432",
-                "npm", "run", "migrate" ]
+                "/entrypoint", "update" ]
+
+x-migrations-envs: &migrations-envs
+  LIQUIBASE_USERNAME: postgres
+  LIQUIBASE_PASSWORD: postgres
+  LIQUIBASE_CHANGELOG: /migrations/index.xml
+  LIQUIBASE_OPTS: --defaultSchemaName=public
 
 services:
 
@@ -31,13 +36,11 @@ services:
   dev-migrations:
     <<: *migrations-image
     environment:
-      NODE_ENV: "development"
-      SHIKICINEMA_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
-      SHIKICINEMA_CONFIG_DIR: "/app/config/development"
+      LIQUIBASE_URL: jdbc:postgresql://shikicinema-db/shikicinema-dev
+      <<: *migrations-envs
 
   test-migrations:
     <<: *migrations-image
     environment:
-      NODE_ENV: "test"
-      SHIKICINEMA_TEST_DB_URI: "postgresql://postgres:postgres@shikicinema-db:5432/shikicinema-dev"
-      SHIKICINEMA_CONFIG_DIR: "/app/config/testing"
+      LIQUIBASE_URL: jdbc:postgresql://shikicinema-db/shikicinema-test
+      <<: *migrations-envs
