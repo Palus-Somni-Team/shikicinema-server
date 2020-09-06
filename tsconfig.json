@@ -1,24 +1,15 @@
 {
-  "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
-    /* Basic Options */
-    "module": "commonjs",
-    "moduleResolution": "Node",
-    "outDir": "./dist/",
-    "target": "es2018",
-    "sourceMap": true,
-
-    /* Strict Type-Checking Options */
-    "strict": true,
-
-    /* Module Resolution Options */
-    "esModuleInterop": true,
-
-    /* Advanced Options */
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  }
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "incremental": true
+    }
 }
