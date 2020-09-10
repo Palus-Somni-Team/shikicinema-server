@@ -68,7 +68,11 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./",
+    "moduleNameMapper": {
+      "@shikicinema": ["<rootDir>/lib/shikicinema/index.ts"],
+      "@utils/(.*)": ["<rootDir>/src/utils/$1"]
+    },
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
