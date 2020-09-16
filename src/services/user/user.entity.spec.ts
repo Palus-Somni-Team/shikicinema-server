@@ -12,7 +12,7 @@ describe('UserEntity', () => {
     expect(entity.password).toBe(password);
     expect(entity.email).toBe(email);
     expect(entity.roles).toStrictEqual([Role.user]);
-    expect(entity.shikimoriId).toBe(null);
+    expect(entity.uploader).toBe(null);
   });
 
   it('should test password hash function', async () => {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2019-10-04-01-create-upload-tokens" author="Smarthard">
+
+        <createTable tableName="upload_tokens">
+
+            <column name="token" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="uploader_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="expired_at" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="revoked" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="upload_tokens"
+                                 baseColumnNames="uploader_id"
+                                 constraintName="fk_uploader_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 referencedTableName="uploaders"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,4 +1,4 @@
-import { GetByIdParamRequest } from '@shikicinema';
+import { GetByIdParamRequest, Role } from '@shikicinema';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -9,18 +9,22 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import { UserService } from '../services/user/user.service';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from '../services/user/dto';
+import { AllowRoles, RoleGuard } from '../guards/role.guard';
 import { AdminUserInfo } from './dto/AdminUserInfo.dto';
-import { plainToClass } from 'class-transformer';
 
 @Controller('admin/user')
+@AllowRoles(Role.admin)
 @UseInterceptors(ClassSerializerInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
+@UseGuards(RoleGuard)
 export class AdminUserController {
   constructor(private readonly userService: UserService) {}
 

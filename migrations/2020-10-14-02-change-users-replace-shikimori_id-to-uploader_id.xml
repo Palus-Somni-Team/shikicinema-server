@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2019-10-14-01-create-uploaders" author="Smarthard">
+
+        <dropColumn tableName="users">
+
+            <column name="shikimori_id"/>
+
+        </dropColumn>
+
+        <addColumn tableName="users">
+
+            <column name="uploader_id" type="int" defaultValue="NULL">
+                <constraints nullable="true"/>
+            </column>
+
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="uploader_id"
+                                 constraintName="fk_uploader_id"
+                                 onDelete="SET NULL"
+                                 onUpdate="CASCADE"
+                                 referencedTableName="uploaders"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

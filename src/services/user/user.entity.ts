@@ -1,6 +1,15 @@
 import { Role } from '@shikicinema';
 import * as bcrypt from 'bcrypt';
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity, JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UploaderEntity } from '../uploader/uploader.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -22,8 +31,9 @@ export class UserEntity {
   @Column('smallint', { array: true })
   roles!: Role[];
 
-  @Column({ name: 'shikimori_id', default: null })
-  shikimoriId: string | null;
+  @OneToOne(() => UploaderEntity, uploader => uploader)
+  @JoinColumn({ name: 'uploader_id' })
+  uploader: UploaderEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -41,7 +51,7 @@ export class UserEntity {
     password: string,
     email: string,
     roles: Role[] = [Role.user],
-    shikimoriId: string | null = null,
+    uploader: UploaderEntity = null,
     name: string = login,
     createdAt: Date = new Date(),
     updateAt: Date = new Date()
@@ -50,7 +60,7 @@ export class UserEntity {
     this.password = password;
     this.email = email;
     this.roles = roles;
-    this.shikimoriId = shikimoriId;
+    this.uploader = uploader;
     this.name = name;
     this.createdAt = createdAt;
     this.updatedAt = updateAt;
