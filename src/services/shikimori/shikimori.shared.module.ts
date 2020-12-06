@@ -1,15 +1,13 @@
 import { HttpModule, Module } from '@nestjs/common';
 import { ShikimoriClient } from './shikimori.client';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    // TODO: config service needed
-    HttpModule.register({
-      baseURL: 'https://shikimori.one',
-      headers: {
-        'User-Agent': 'Shikicinema Server Auth Service; https://github.com/Palus-Somni-Team/shikicinema-server',
-      },
-      timeout: 1000
+    HttpModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => configService.get('axios-shikimori'),
     }),
   ],
   providers: [ShikimoriClient],

@@ -1,4 +1,0 @@
-{
-  "env": "SHIKICINEMA_DB_URI",
-  "dialect": "postgres"
-}

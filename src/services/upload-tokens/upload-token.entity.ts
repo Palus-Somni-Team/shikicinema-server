@@ -10,7 +10,7 @@ export class UploadTokenEntity {
   @JoinColumn({ name: 'uploader_id' })
   uploader: UploaderEntity;
 
-  @Column('timestamptz', { name: 'expired_at' })
+  @Column({ name: 'expired_at' })
   expiredAt: Date;
 
   @Column('boolean', { name: 'revoked' })
