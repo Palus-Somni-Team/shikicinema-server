@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UploaderEntity } from '../uploader/uploader.entity';
+import { getIntArrayType } from '@utils/typeorm-helper';
 
 @Entity('users')
 export class UserEntity {
@@ -28,7 +29,7 @@ export class UserEntity {
   @Column()
   email: string;
 
-  @Column('smallint', { array: true })
+  @Column({ array: true, type: getIntArrayType() })
   roles!: Role[];
 
   @OneToOne(() => UploaderEntity, uploader => uploader)

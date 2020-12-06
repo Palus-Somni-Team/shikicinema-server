@@ -1,5 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import EntitiesConfig from './entities.config';
+import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
+import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
 
 const postgresConfig = {
     type:         process.env.SHIKICINEMA_DB_TYPE || 'postgres',
@@ -19,6 +21,7 @@ const inMemoryConfig = {
     entities: EntitiesConfig,
     logging: false,
     synchronize: true,
+    migrations: [ UserSeed21607357974819, SessionSeed1607704017485 ]
 };
 
 export default registerAs('database', () => process.env.NODE_ENV === 'testing' ? inMemoryConfig : postgresConfig);

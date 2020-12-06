@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "allowJs": true,
         "module": "commonjs",
         "declaration": true,
         "removeComments": true,
@@ -12,8 +13,9 @@
         "baseUrl": "./",
         "incremental": true,
         "paths": {
-            "@shikicinema": ["./lib/shikicinema"],
-            "@utils/*": ["./src/utils/*"]
+            "@shikicinema": [ "<rootDir>/../lib/shikicinema"],
+            "@utils/*": ["<rootDir>/../src/utils/*"],
+            "dist/*": ["<rootDir>/../dist/*"]
         }
     }
 }
