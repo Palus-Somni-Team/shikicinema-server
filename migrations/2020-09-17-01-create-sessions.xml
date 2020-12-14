@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2019-09-17-01-create-sessions" author="Smarthard">
+
+        <createTable tableName="sessions">
+
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="expired_at" type="bigint"/>
+
+            <column name="json" type="text"/>
+
+        </createTable>
+
+        <createIndex tableName="sessions" indexName="idx_expired_at">
+            <column descending="false" name="expired_at"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,18 +1,18 @@
+import { Role } from '@shikicinema';
+import { parseWhere } from '@utils/where-parser.utils';
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
 import { PgException, PgSharedService } from '../postgres/postgres.service';
-import { Role } from '@shikicinema';
-import { parseWhere } from '@utils/where-parser.utils';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly pgService: PgSharedService,
     @InjectRepository(UserEntity)
-    private readonly repository: Repository<UserEntity>
+    private readonly repository: Repository<UserEntity>,
   ) {}
 
   async findById(id: GetUserById): Promise<UserEntity> {
@@ -23,6 +23,10 @@ export class UserService {
     }
 
     return user;
+  }
+
+  findByLogin(login: string): Promise<UserEntity> {
+    return this.repository.findOne({ where: { login } });
   }
 
   findAll(query: GetUsers): Promise<UserEntity[]> {

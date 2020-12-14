@@ -39,6 +39,7 @@ export type GetVideosResponse = DataResponse<Video>;
 // Users
 //
 export {CreateUserRequest} from './v2/users/CreateUserRequest';
+export {RegisterUserRequest} from './v2/users/RegisterUserRequest';
 export {GetUsersRequest} from './v2/users/GetUsersRequest';
 export {PaginationRequest} from './v2/PaginationRequest';
 export {UpdateUserRequest} from './v2/users/UpdateUserRequest';
@@ -49,3 +50,5 @@ export {Role} from './v2/users/Role';
 // For Admin only
 //
 export {AdminUser} from './v2/users/AdminUser';
+
+export {IShikimoriUser, IShikimoriUserImage} from './v2/shikimori/User';
