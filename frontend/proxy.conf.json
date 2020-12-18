@@ -1,0 +1,12 @@
+{
+  "/api": {
+    "target": "https://dev.smarthard.net",
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/auth": {
+    "target": "https://dev.smarthard.net",
+    "changeOrigin": true,
+    "secure": false
+  }
+}

@@ -17,5 +17,8 @@
             "@utils/*": ["<rootDir>/../src/utils/*"],
             "dist/*": ["<rootDir>/../dist/*"]
         }
-    }
+    },
+    "exclude": [
+        "frontend"
+    ]
 }
