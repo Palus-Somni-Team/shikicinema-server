@@ -1,9 +1,9 @@
 import { Exclude, Expose } from 'class-transformer';
 import { TransformRoles } from '@utils/class-transform.utils';
-import { Role } from '@shikicinema';
+import { Role, OwnerUserInfo as IOwnerUserInfo } from '@shikicinema';
 
 @Exclude()
-export class OwnerUserInfo {
+export class OwnerUserInfo implements IOwnerUserInfo {
   @Expose()
   id: number;
 

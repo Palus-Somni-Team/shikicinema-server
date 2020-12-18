@@ -50,5 +50,6 @@ export {Role} from './v2/users/Role';
 // For Admin only
 //
 export {AdminUser} from './v2/users/AdminUser';
+export {OwnerUserInfo} from './v2/users/OwnerUserInfo'
 
 export {IShikimoriUser, IShikimoriUserImage} from './v2/shikimori/User';
