@@ -1,0 +1,17 @@
+ion-app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: var(--app-min-monitor-width)) {
+  form {
+    width: 25%;
+  }
+}
+
+form div {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row-reverse;
+}

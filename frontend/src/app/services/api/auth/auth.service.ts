@@ -1,35 +1,52 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { OwnerUserInfo, Role, RegisterUserRequest } from '@shikicinema';
-import { Observable, ReplaySubject } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { RegisterUserRequest, Role } from '@shikicinema';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { User } from '../../../types/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private _userSubject = new ReplaySubject<User>(1);
+
+  private _mapToUser = map((resBody: any) => new User(
+    resBody.id,
+    resBody.login,
+    resBody.email,
+    resBody.name,
+    resBody.roles,
+    resBody.shikimoriId,
+    resBody.createdAt,
+    resBody.updatedAt
+  ));
+
   constructor(
     private http: HttpClient
   ) {
     this.me()
-      .subscribe((user) => this._userSubject.next(user));
+      .pipe(
+        catchError(() => of(null as User))
+      )
+      .subscribe(
+        (user) => this._userSubject.next(user)
+      );
   }
 
-  private _userSubject = new ReplaySubject<OwnerUserInfo>(1);
-
-  public get user$(): Observable<OwnerUserInfo> {
+  public get user$(): Observable<User> {
     return this._userSubject.asObservable();
   }
 
   public hasRole(role: Role, roles: Role[]): boolean {
-    const stringRole = Role[role];
-    return roles?.some((r: any) => r == stringRole);
+    return roles?.some((r) => r === role);
   }
 
-  public login(login: string, password: string): Observable<OwnerUserInfo> {
-    return this.http.post<OwnerUserInfo>('/auth/login', { login, password })
+  public login(login: string, password: string): Observable<User> {
+    return this.http.post<any>('/auth/login', { login, password })
       .pipe(
+        this._mapToUser,
         tap((user) => this._userSubject.next(user))
       );
   }
@@ -41,14 +58,16 @@ export class AuthService {
       );
   }
 
-  public me(): Observable<OwnerUserInfo> {
-    return this.http.get<OwnerUserInfo>('/auth/me');
+  public me(): Observable<User> {
+    return this.http.get<any>('/auth/me')
+      .pipe(this._mapToUser);
   }
 
-  public register(login: string, password: string, email: string): Observable<OwnerUserInfo> {
+  public register(login: string, password: string, email: string): Observable<User> {
     const body: RegisterUserRequest = { login, password, email };
-    return this.http.post<OwnerUserInfo>('/auth/register', body)
+    return this.http.post<any>('/auth/register', body)
       .pipe(
+        this._mapToUser,
         switchMap(() => this.login(login, password))
       );
   }

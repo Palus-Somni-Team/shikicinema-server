@@ -1,0 +1,62 @@
+<ion-content>
+  <ion-split-pane contentId="main-content">
+
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-header>
+          <h1>Shikicinema</h1>
+        </ion-header>
+        <ion-list id="inbox-list">
+
+          <ion-menu-toggle *ngFor="let p of dashboardPages; index as i; first as isFirst; last as isLast"
+                           auto-hide="false">
+            <!-- Profile link -->
+            <ion-item *ngIf="isFirst"
+                      (click)="selectedIndex = 0"
+                      [class.selected]="selectedIndex == 0"
+                      routerLink="/admin/profile"
+                      routerDirection="root"
+                      lines="none"
+                      detail="false">
+              <ng-container *ngIf="(user$ | async) as user">
+                <ion-icon slot="start"
+                          ios="person-outline"
+                          md="person-sharp"></ion-icon>
+                <ion-label>{{ user?.name }}</ion-label>
+              </ng-container>
+            </ion-item>
+
+            <!-- Other links from dashboard -->
+            <ion-item (click)="selectedIndex = (+i + 1)"
+                      [routerLink]="[p.url]"
+                      [class.selected]="selectedIndex == (+i + 1)"
+                      routerDirection="root"
+                      lines="none"
+                      detail="false">
+              <ion-icon slot="start"
+                        [ios]="p.icon + '-outline'"
+                        [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+        </ion-list>
+
+      </ion-content>
+
+      <div id="logout-button">
+          <ion-button (click)="onLogout()"
+                      color="dark">
+            Logout
+            <ion-icon slot="end"
+                      icon="log-out-outline"></ion-icon>
+          </ion-button>
+      </div>
+    </ion-menu>
+
+    <div class="sub-router">
+      <ion-router-outlet></ion-router-outlet>
+    </div>
+
+  </ion-split-pane>
+</ion-content>
