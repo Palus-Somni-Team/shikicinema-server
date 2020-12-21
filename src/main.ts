@@ -11,6 +11,7 @@ import { SessionEntity } from './services/session/session.entity';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const serverPort = configService.get('server-port');
   const sessionsConfig = configService.get('express-session');
   const sessionStorage = new TypeormStore({ cleanupLimit: 2 });
   const sessionStore = sessionStorage.connect(getRepository(SessionEntity));
@@ -19,7 +20,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  await app.listen(3000);
+  await app.listen(serverPort);
 }
 
 bootstrap();
