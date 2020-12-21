@@ -15,8 +15,8 @@ x-migrations-image: &migrations-image
                 "/entrypoint", "update" ]
 
 x-migrations-envs: &migrations-envs
-  LIQUIBASE_USERNAME: postgres
-  LIQUIBASE_PASSWORD: postgres
+  LIQUIBASE_USERNAME: "${SHIKICINEMA_DB_USER}"
+  LIQUIBASE_PASSWORD: "${SHIKICINEMA_DB_PASS}"
   LIQUIBASE_CHANGELOG: /migrations/index.xml
   LIQUIBASE_OPTS: --defaultSchemaName=public
 
@@ -27,20 +27,14 @@ services:
     privileged: true
     restart: always
     ports:
-      - 5432:5432
+      - "${SHIKICINEMA_DB_PORT}:5432"
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: shikicinema-dev
-      POSTGRES_USER: postgres
+      POSTGRES_DB: "${SHIKICINEMA_DB_NAME}"
+      POSTGRES_USER: "${SHIKICINEMA_DB_USER}"
+      POSTGRES_PASSWORD: "${SHIKICINEMA_DB_PASS}"
 
   dev-migrations:
     <<: *migrations-image
     environment:
-      LIQUIBASE_URL: jdbc:postgresql://shikicinema-db/shikicinema-dev
-      <<: *migrations-envs
-
-  test-migrations:
-    <<: *migrations-image
-    environment:
-      LIQUIBASE_URL: jdbc:postgresql://shikicinema-db/shikicinema-test
+      LIQUIBASE_URL: "jdbc:postgresql://shikicinema-db/${SHIKICINEMA_DB_NAME}"
       <<: *migrations-envs
