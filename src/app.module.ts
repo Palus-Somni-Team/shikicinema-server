@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import DatabaseConfig from './config/database.config';
 import AxiosShikimoriConfig from './config/axios-shikimori.config';
 import ExpressSessionConfig from './config/express-session.config';
+import ServerPortConfig from './config/server-port.config';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import ExpressSessionConfig from './config/express-session.config';
       load: [
         AxiosShikimoriConfig,
         DatabaseConfig,
-        ExpressSessionConfig
+        ExpressSessionConfig,
+        ServerPortConfig,
       ]
     }),
     TypeOrmModule.forRootAsync({
