@@ -36,6 +36,7 @@
     "connect-typeorm": "^1.1.4",
     "express-session": "^1.17.1",
     "liquibase": "^1.0.1",
+    "nest-router": "^1.0.9",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",

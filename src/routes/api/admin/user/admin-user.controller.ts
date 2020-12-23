@@ -15,12 +15,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { UserService } from '../services/user/user.service';
-import { CreateUser, GetUserById, GetUsers, UpdateUser } from '../services/user/dto';
-import { AllowRoles, RoleGuard } from '../guards/role.guard';
+import { UserService } from '../../../../services/user/user.service';
+import { CreateUser, GetUserById, GetUsers, UpdateUser } from '../../../../services/user/dto';
+import { AllowRoles, RoleGuard } from '../../../../guards/role.guard';
 import { AdminUserInfo } from './dto/AdminUserInfo.dto';
 
-@Controller('admin/user')
+@Controller('/')
 @AllowRoles(Role.admin)
 @UseInterceptors(ClassSerializerInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
