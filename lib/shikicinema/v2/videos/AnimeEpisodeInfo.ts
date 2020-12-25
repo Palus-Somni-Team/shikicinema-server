@@ -1,4 +1,5 @@
-import { VideoKind } from './VideoKind';
+import { VideoKindEnum } from '@lib-shikicinema';
+
 /**
  * Represents information about anime episode.
  *
@@ -11,5 +12,5 @@ export interface AnimeEpisodeInfo {
     animeId: number;
     episode: number;
     availableDomains: Set<string>;
-    availableKinds: Set<VideoKind>;
+    availableKinds: Set<VideoKindEnum>;
 }

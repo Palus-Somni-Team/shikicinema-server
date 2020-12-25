@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2021-01-16-01-create-videos" author="BasicEC">
+
+        <createTable tableName="videos">
+
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="anime_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="episode" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="url" type="varchar(2048)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="kind" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="language" type="varchar(2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="quality" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="author" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="watches_count" type="integer" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamptz" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamptz" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="uploader_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addUniqueConstraint columnNames="url"
+                             schemaName="public"
+                             tableName="videos"/>
+
+        <addForeignKeyConstraint baseTableName="videos"
+                                 baseColumnNames="uploader_id"
+                                 constraintName="fk_uploader_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 referencedTableName="uploaders"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>
