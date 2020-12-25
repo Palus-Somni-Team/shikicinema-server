@@ -11,5 +11,6 @@
     <include file="2020-10-14-01-create-uploaders.xml" relativeToChangelogFile="true"/>
     <include file="2020-10-14-02-replace-shikimori-id-with-uploader-id-in-users.xml" relativeToChangelogFile="true"/>
     <include file="2020-10-15-01-create-upload-tokens.xml" relativeToChangelogFile="true"/>
+    <include file="2021-01-16-01-create-videos.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -6,6 +6,6 @@
  */
 export interface GetEpisodesRequest {
     animeId: number;
-    offset?: number;
+    cursor?: number;
     limit?: number;
 }
