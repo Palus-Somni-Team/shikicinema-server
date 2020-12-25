@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { UserInfo } from './dto/UserInfo.dto';
-import { UserService } from '../services/user/user.service';
-import { GetUserById, GetUsers } from '../services/user/dto';
+import { UserService } from '../../../services/user/user.service';
+import { GetUserById, GetUsers } from '../../../services/user/dto';
 
-@Controller('user')
+@Controller('/')
 @UseInterceptors(ClassSerializerInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class UserController {

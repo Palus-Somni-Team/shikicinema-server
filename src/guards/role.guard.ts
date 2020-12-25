@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core';
 import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
 import { Role } from '@shikicinema';
-import { IRequest } from '../auth/dto/IRequest';
+import { IRequest } from '../routes/auth/dto/IRequest';
 import { UserService } from '../services/user/user.service';
 
 /**
