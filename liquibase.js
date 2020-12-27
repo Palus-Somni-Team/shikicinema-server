@@ -6,13 +6,17 @@ dotenv.config();
 
 (async () => {
   try {
-    const args = process.argv.slice(2);
-    const database = args[0] || 'shikicinema-dev';
+    const host = process.env.SHIKICINEMA_DB_HOST || 'localhost';
+    const port = process.env.SHIKICINEMA_DB_PORT || 5432;
+    const database = process.env.SHIKICINEMA_DB_NAME || 'shikicinema-dev';
+    const username = process.env.SHIKICINEMA_DB_USER || 'postgres';
+    const password = process.env.SHIKICINEMA_DB_PASS || 'postgres';
+
     await liquibase({
+      username,
+      password,
       changeLogFile: path.resolve('migrations', 'index.xml'),
-      username: 'postgres',
-      password: 'postgres',
-      url: `jdbc:postgresql://127.0.0.1:5432/${database}`,
+      url: `jdbc:postgresql://${host}:${port}/${database}`,
       classpath: path.resolve('node_modules', 'liquibase', 'lib', 'Drivers', 'postgresql-42.2.8.jar'),
     }).run('update');
     console.log('Migration was successful');
