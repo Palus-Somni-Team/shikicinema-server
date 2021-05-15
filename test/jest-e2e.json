@@ -12,6 +12,9 @@
         "@app-utils/(.*)": [
             "<rootDir>/src/utils/$1"
         ],
+        "@app-entities": [
+            "<rootDir>/src/entities/index.ts"
+        ],
         "dist/(.*)": [
             "<rootDir>/dist/$1"
         ]

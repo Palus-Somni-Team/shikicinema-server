@@ -23,7 +23,7 @@ const routes: Routes = [
                 module: UserModule,
             },
             {
-                path: '/video',
+                path: '/videos',
                 module: VideoModule,
             },
             {
@@ -35,7 +35,7 @@ const routes: Routes = [
                         module: AdminUserModule,
                     },
                     {
-                        path: '/video',
+                        path: '/videos',
                         module: AdminVideoModule,
                     },
                 ],

@@ -1,13 +1,14 @@
 import * as passport from 'passport';
 import * as request from 'supertest';
 import * as session from 'express-session';
-import { AppModule } from '../src/app.module';
 import { ConfigService } from '@nestjs/config';
 import { INestApplication } from '@nestjs/common';
-import { SessionEntity, UserEntity } from '@app-entities';
+import { SessionEntity, UserEntity, VideoEntity } from '@app-entities';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
 import { getConnection, getRepository } from 'typeorm';
+
+import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
@@ -15,13 +16,11 @@ describe('AppController (e2e)', () => {
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
-        })
-            .compile();
+        }).compile();
 
 
         app = moduleFixture.createNestApplication();
-        await getConnection()
-            .runMigrations({ transaction: 'all' });
+        await getConnection().runMigrations({ transaction: 'all' });
         const configService = app.get(ConfigService);
         const sessionsConfig = configService.get('express-session');
         const sessionStorage = new TypeormStore({ cleanupLimit: 2 });
@@ -72,10 +71,7 @@ describe('AppController (e2e)', () => {
 
                 return request(app.getHttpServer())
                     .post('/auth/login')
-                    .send({
-                        login: user1.login,
-                        password: '12345678',
-                    })
+                    .send({ login: user1.login, password: '12345678' })
                     .expect(200)
                     .expect('Set-Cookie', /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/)
                     .expect({
@@ -98,25 +94,21 @@ describe('AppController (e2e)', () => {
                     .findOne({ where: { login: 'user1' } });
                 const loginRes = await request(app.getHttpServer())
                     .post('/auth/login')
-                    .send({
-                        login: user1.login,
-                        password: '12345678',
-                    });
+                    .send({ login: user1.login, password: '12345678' });
                 const meRes = await request(app.getHttpServer())
                     .get('/auth/me')
                     .set('Cookie', loginRes.get('Set-Cookie'))
                     .send();
 
-                expect(meRes.body)
-                    .toStrictEqual({
-                        id: user1.id,
-                        login: user1.login,
-                        name: user1.name,
-                        email: user1.email,
-                        roles: ['user'],
-                        createdAt: user1.createdAt.toISOString(),
-                        updatedAt: user1.updatedAt.toISOString(),
-                    });
+                expect(meRes.body).toStrictEqual({
+                    id: user1.id,
+                    login: user1.login,
+                    name: user1.name,
+                    email: user1.email,
+                    roles: ['user'],
+                    createdAt: user1.createdAt.toISOString(),
+                    updatedAt: user1.updatedAt.toISOString(),
+                });
             },
         );
 
@@ -128,10 +120,7 @@ describe('AppController (e2e)', () => {
                     .findOne({ where: { login: 'user1' } });
                 const loginRes = await request(app.getHttpServer())
                     .post('/auth/login')
-                    .send({
-                        login: user1.login,
-                        password: '12345678',
-                    });
+                    .send({ login: user1.login, password: '12345678' });
 
                 return request(app.getHttpServer())
                     .post('/auth/logout')
@@ -144,29 +133,18 @@ describe('AppController (e2e)', () => {
         it(
             'should return newly registered user POST /auth/register',
             async () => {
-                const {
-                    login,
-                    password,
-                    email,
-                } = {
+                const { login, password, email } = {
                     login: 'new_user',
                     password: '12345678',
                     email: 'new_user@email.com',
                 };
                 const loginRes = await request(app.getHttpServer())
                     .post('/auth/register')
-                    .send({
-                        login,
-                        password,
-                        email,
-                    });
+                    .send({ login, password, email });
 
                 return request(app.getHttpServer())
                     .post('/auth/login')
-                    .send({
-                        login,
-                        password,
-                    })
+                    .send({ login, password })
                     .expect(200)
                     .expect('Set-Cookie', /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/)
                     .expect(loginRes.body);
@@ -175,43 +153,112 @@ describe('AppController (e2e)', () => {
     });
 
     describe('/ADMIN', () => {
-        it(
-            'should not allow to access admin route without proper rights GET /api/admin/user',
-            async () => {
-                const loginRes = await request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({
-                        login: 'user1',
-                        password: '12345678',
-                    });
+        describe('/USER', () => {
+            it(
+                'should not allow to access admin route without proper rights GET /api/admin/user',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'user1', password: '12345678' });
 
-                return request(app.getHttpServer())
-                    .get('/api/admin/user')
-                    .set('Cookie', loginRes.get('Set-Cookie'))
-                    .expect(403)
-                    .expect({
-                        statusCode: 403,
-                        message: 'Forbidden resource',
-                        error: 'Forbidden',
-                    });
-            },
-        );
+                    return request(app.getHttpServer())
+                        .get('/api/admin/user')
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .expect(403)
+                        .expect({
+                            statusCode: 403,
+                            message: 'Forbidden resource',
+                            error: 'Forbidden',
+                        });
+                },
+            );
 
-        it(
-            'should allow to access admin route for admin GET /api/admin/user',
-            async () => {
-                const loginRes = await request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({
-                        login: 'admin',
-                        password: '12345678',
-                    });
+            it(
+                'should allow to access admin route for admin GET /api/admin/user',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'admin', password: '12345678' });
 
-                return request(app.getHttpServer())
-                    .get('/api/admin/user')
-                    .set('Cookie', loginRes.get('Set-Cookie'))
-                    .expect(200);
-            },
-        );
+                    return request(app.getHttpServer())
+                        .get('/api/admin/user')
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .expect(200);
+                },
+            );
+        });
+
+        describe('/VIDEOS', () => {
+            it(
+                'should delete video DELETE /api/admin/videos/:videoId',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'admin', password: '12345678' });
+                    const video = await getConnection()
+                        .getRepository(VideoEntity)
+                        .findOne({ animeId: 21, episode: 113 });
+
+                    return request(app.getHttpServer())
+                        .delete(`/api/admin/videos/${video.id}`)
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .expect(200);
+                },
+            );
+        });
+    });
+
+    describe('/API', () => {
+        describe('/VIDEOS', () => {
+            it(
+                'should return video in correct format GET /api/videos',
+                async () => {
+                    const animeId = 1;
+                    const episode = 1;
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos?animeId=${animeId}&episode=${episode}`)
+                        .expect(200)
+                        .expect((res) => {
+                            for (const video of res.body) {
+                                expect(video).toEqual(expect.objectContaining({
+                                    animeId, episode,
+                                    id: expect.any(Number),
+                                    author: expect.any(String),
+                                    url: expect.any(String),
+                                    kind: expect.any(String),
+                                    language: expect.any(String),
+                                    watchesCount: expect.any(Number),
+                                    createdAt: expect.any(String),
+                                    updatedAt: expect.any(String),
+                                    uploader: expect.objectContaining({
+                                        id: expect.any(Number),
+                                        banned: expect.any(Boolean),
+                                        shikimoriId: expect.any(String),
+                                    }),
+                                }));
+                            }
+                        });
+                },
+            );
+
+            it(
+                'should return all videos by animeId GET /api/videos',
+                async () => {
+                    const animeId = 1;
+                    const videos = await getConnection()
+                        .getRepository(VideoEntity)
+                        .find({
+                            where: { animeId },
+                            relations: ['uploader'],
+                        });
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos?animeId=${animeId}`)
+                        .expect(200)
+                        .expect((res) => res.body.length === videos.length);
+                },
+            );
+        });
     });
 });
