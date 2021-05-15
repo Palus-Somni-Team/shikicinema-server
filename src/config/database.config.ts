@@ -1,7 +1,10 @@
-import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
-import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
 import { entities } from '@app-entities';
 import { registerAs } from '@nestjs/config';
+
+import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
+import { UploaderSeed1621024303293 } from '../../seeds/1621024303293-uploader-seed';
+import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
+import { VideoSeed1621024590642 } from '../../seeds/1621024590642-video-seed';
 
 export default registerAs('database', () => {
     const postgresConfig = {
@@ -22,7 +25,12 @@ export default registerAs('database', () => {
         entities,
         logging: false,
         synchronize: true,
-        migrations: [UserSeed21607357974819, SessionSeed1607704017485],
+        migrations: [
+            UserSeed21607357974819,
+            SessionSeed1607704017485,
+            UploaderSeed1621024303293,
+            VideoSeed1621024590642,
+        ],
     };
 
     return process.env.NODE_ENV === 'testing' ? inMemoryConfig : postgresConfig;
