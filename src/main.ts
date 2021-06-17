@@ -6,7 +6,7 @@ import * as passport from 'passport';
 import { getRepository } from 'typeorm';
 
 import { AppModule } from './app.module';
-import { SessionEntity } from './services/session/session.entity';
+import { SessionEntity } from '@app-entities';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

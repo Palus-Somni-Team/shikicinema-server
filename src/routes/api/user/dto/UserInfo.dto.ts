@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { User } from '@shikicinema';
+import { User } from '@lib-shikicinema';
 
 @Exclude()
 export class UserInfo implements User {

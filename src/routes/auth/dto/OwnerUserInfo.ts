@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
-import { TransformRoles } from '@utils/class-transform.utils';
-import { Role } from '@shikicinema';
+import { TransformRoles } from '@app-utils/class-transform.utils';
+import { Role } from '@lib-shikicinema';
 
 @Exclude()
 export class OwnerUserInfo {

@@ -1,4 +1,4 @@
-import { TransformNullableString } from '@utils/class-transform.utils';
+import { TransformNullableString } from '@app-utils/class-transform.utils';
 import { plainToClass } from 'class-transformer';
 
 class TestTransformNullableString {

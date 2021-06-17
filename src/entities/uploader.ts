@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { UploadTokenEntity } from '../upload-tokens/upload-token.entity';
+import { UserEntity } from './user';
+import { UploadTokenEntity } from './upload-token';
 
 @Entity('uploaders')
 export class UploaderEntity {

@@ -1,9 +1,9 @@
-import { Role } from '@shikicinema';
-import { parseWhere } from '@utils/where-parser.utils';
+import { Role } from '@lib-shikicinema';
+import { parseWhere } from '@app-utils/where-parser.utils';
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '@app-entities';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
 import { PgException, PgSharedService } from '../postgres/postgres.service';
 

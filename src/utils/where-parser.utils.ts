@@ -1,4 +1,4 @@
-import { PaginationRequest } from '@shikicinema';
+import { PaginationRequest } from '@lib-shikicinema';
 
 export type ParsedQuery = {
   where: any;

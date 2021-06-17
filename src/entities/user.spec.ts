@@ -1,6 +1,6 @@
-import { Role } from '@shikicinema';
+import { Role } from '@lib-shikicinema';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from './user.entity';
+import { UserEntity } from './user';
 
 describe('UserEntity', () => {
   it('should test entity constructor', () => {

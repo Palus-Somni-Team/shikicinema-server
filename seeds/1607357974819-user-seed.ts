@@ -1,6 +1,6 @@
-import { Role } from '@shikicinema';
+import { Role } from '@lib-shikicinema';
 import { getRepository, MigrationInterface, QueryRunner } from 'typeorm';
-import { UserEntity } from '../src/services/user/user.entity';
+import { UserEntity } from '@app-entities';
 
 export const seeds = [
   new UserEntity('admin', '12345678', 'admin@email.com', [Role.admin, Role.user]),

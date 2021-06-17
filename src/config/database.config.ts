@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import EntitiesConfig from './entities.config';
+import { entities } from '@app-entities';
 import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
 import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
 
@@ -13,13 +13,13 @@ export default registerAs('database', () => {
         password:     process.env.SHIKICINEMA_DB_PASS || 'postgres',
         logging:      process.env.SHIKICINEMA_DB_LOG || false,
         synchronize:  process.env.SHIKICINEMA_DB_SYNC || false,
-        entities:     EntitiesConfig,
+        entities
     };
 
     const inMemoryConfig = {
         type: 'sqlite',
         database: ':memory:',
-        entities: EntitiesConfig,
+        entities,
         logging: false,
         synchronize: true,
         migrations: [ UserSeed21607357974819, SessionSeed1607704017485 ]

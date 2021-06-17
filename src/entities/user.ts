@@ -1,4 +1,4 @@
-import { Role } from '@shikicinema';
+import { Role } from '@lib-shikicinema';
 import * as bcrypt from 'bcrypt';
 import {
   BeforeInsert,
@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UploaderEntity } from '../uploader/uploader.entity';
-import { getIntArrayType } from '@utils/typeorm-helper';
+import { UploaderEntity } from './uploader';
+import { getIntArrayType } from '@app-utils/typeorm-helper';
 
 @Entity('users')
 export class UserEntity {
