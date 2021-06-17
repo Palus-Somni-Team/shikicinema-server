@@ -2,8 +2,8 @@ import { BadRequestException, ConflictException, Injectable, InternalServerError
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { UploaderEntity } from '@app-entities';
-import { PgException, PgSharedService } from '../postgres/postgres.service';
 import { UserService } from '../user/user.service';
+import { isPgException, PgException } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class UploaderService {
@@ -11,7 +11,6 @@ export class UploaderService {
     @InjectRepository(UploaderEntity)
     private readonly repository: Repository<UploaderEntity>,
     private readonly userService: UserService,
-    private readonly pgService: PgSharedService,
   ) {}
 
   async newShikimoriUploader(shikimoriId: string, userId: number = null): Promise<UploaderEntity> {
@@ -27,7 +26,7 @@ export class UploaderService {
 
       return uploader;
     } catch (e) {
-      if (this.pgService.isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
+      if (isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
         throw new ConflictException();
       } else {
         throw new InternalServerErrorException();

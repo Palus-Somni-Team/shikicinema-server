@@ -3,16 +3,13 @@ import { ConflictException, ForbiddenException, Injectable, InternalServerErrorE
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UploaderEntity, UploadTokenEntity } from '@app-entities';
-import { PgException, PgSharedService } from '../postgres/postgres.service';
-import { UploaderService } from '../uploader/uploader.service';
+import { isPgException, PgException } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class UploadTokensService {
   constructor(
     @InjectRepository(UploadTokenEntity)
     private readonly repository: Repository<UploadTokenEntity>,
-    private readonly uploaderService: UploaderService,
-    private readonly pgService: PgSharedService,
   ) {}
 
   getByToken(token: string): Promise<UploadTokenEntity> {
@@ -30,7 +27,7 @@ export class UploadTokensService {
     try {
       return await this.repository.save(new UploadTokenEntity(await uuid4(), uploader));
     } catch (e) {
-      if (this.pgService.isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
+      if (isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
         throw new ConflictException();
       } else {
         throw new InternalServerErrorException();

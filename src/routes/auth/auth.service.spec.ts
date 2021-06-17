@@ -13,7 +13,6 @@ import { SessionService } from '../../services/session/session.service';
 import { ShikimoriClient } from '../../services/shikimori/shikimori.client';
 import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
 import { ShikimoriUser } from '../../services/shikimori/dto/ShikimoriUser.dto';
-import { PgSharedService } from '../../services/postgres/postgres.service';
 import { UploaderService } from '../../services/uploader/uploader.service';
 import { AuthService } from './auth.service';
 import { IRequest } from './dto/IRequest';
@@ -94,7 +93,6 @@ describe('AuthService', () => {
             getUserInfoByToken: jest.fn(),
           },
         },
-        PgSharedService,
       ],
     }).compile();
 

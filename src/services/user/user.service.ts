@@ -5,12 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '@app-entities';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
-import { PgException, PgSharedService } from '../postgres/postgres.service';
+import { isPgException, PgException } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly pgService: PgSharedService,
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,
   ) {}
@@ -51,7 +50,7 @@ export class UserService {
       // Do not remove await for proper exception handling
       return await this.repository.save(entity);
     } catch (e) {
-      if (this.pgService.isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
+      if (isPgException(e, PgException.UNIQUE_CONSTRAINS_ERROR)) {
         throw new ConflictException();
       } else {
         throw new InternalServerErrorException();

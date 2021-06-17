@@ -6,7 +6,6 @@ import { plainToClass } from 'class-transformer';
 import { UserService } from './user.service';
 import { UserEntity } from '@app-entities';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
-import { PgSharedService } from '../postgres/postgres.service';
 
 describe('UserService', () => {
   const id = 123;
@@ -32,7 +31,6 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
-        PgSharedService,
         {
           provide: getRepositoryToken(UserEntity),
           useValue: {
