@@ -1,7 +1,7 @@
-import { CreateUserRequest, Role } from '@shikicinema';
+import { CreateUserRequest, Role } from '@lib-shikicinema';
 import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
-import { TransformRoles } from '@utils/class-transform.utils';
+import { TransformRoles } from '@app-utils/class-transform.utils';
 
 @Exclude()
 export class CreateUser implements CreateUserRequest {

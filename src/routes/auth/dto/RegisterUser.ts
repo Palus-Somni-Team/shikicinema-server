@@ -1,4 +1,4 @@
-import { RegisterUserRequest } from '@shikicinema';
+import { RegisterUserRequest } from '@lib-shikicinema';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsString, Length } from 'class-validator';
 

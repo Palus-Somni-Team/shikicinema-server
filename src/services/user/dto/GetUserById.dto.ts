@@ -1,4 +1,4 @@
-import { GetByIdParamRequest } from '@shikicinema';
+import { GetByIdParamRequest } from '@lib-shikicinema';
 import { IsInt, Min } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 

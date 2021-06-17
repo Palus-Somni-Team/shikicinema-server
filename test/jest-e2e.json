@@ -6,10 +6,10 @@
     ],
     "rootDir": "..",
     "moduleNameMapper": {
-        "@shikicinema": [
+        "@lib-shikicinema": [
             "<rootDir>/lib/shikicinema/index.ts"
         ],
-        "@utils/(.*)": [
+        "@app-utils/(.*)": [
             "<rootDir>/src/utils/$1"
         ],
         "dist/(.*)": [

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UploaderService } from './uploader.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UploaderEntity } from './uploader.entity';
+import { UploaderEntity } from '@app-entities';
 import { PgSharedService } from '../postgres/postgres.service';
 import { UserSharedModule } from '../user/user.shared.module';
 

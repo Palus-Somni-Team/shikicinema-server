@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { UserService } from './user.service';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '@app-entities';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
 import { PgSharedService } from '../postgres/postgres.service';
 

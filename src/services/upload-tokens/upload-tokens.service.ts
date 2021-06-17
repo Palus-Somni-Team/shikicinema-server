@@ -2,8 +2,7 @@ import { v4 as uuid4 } from 'uuid';
 import { ConflictException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UploadTokenEntity } from './upload-token.entity';
-import { UploaderEntity } from '../uploader/uploader.entity';
+import { UploaderEntity, UploadTokenEntity } from '@app-entities';
 import { PgException, PgSharedService } from '../postgres/postgres.service';
 import { UploaderService } from '../uploader/uploader.service';
 

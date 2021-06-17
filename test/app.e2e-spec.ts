@@ -3,10 +3,9 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection, getRepository } from 'typeorm';
 import { AppModule } from '../src/app.module';
-import { UserEntity } from '../src/services/user/user.entity';
+import { SessionEntity, UserEntity } from '@app-entities';
 import { ConfigService } from '@nestjs/config';
 import { TypeormStore } from 'connect-typeorm';
-import { SessionEntity } from '../src/services/session/session.entity';
 import * as session from 'express-session';
 import * as passport from 'passport';
 

@@ -1,4 +1,4 @@
-import { IShikimoriUser, IShikimoriUserImage } from '@shikicinema';
+import { IShikimoriUser, IShikimoriUserImage } from '@lib-shikicinema';
 
 export class ShikimoriUser implements IShikimoriUser {
   public id: string;

@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
-import { UploaderEntity } from './uploader.entity';
+import { UploaderEntity } from '@app-entities';
 import { PgException, PgSharedService } from '../postgres/postgres.service';
 import { UserService } from '../user/user.service';
 

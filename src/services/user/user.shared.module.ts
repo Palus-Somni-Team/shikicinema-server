@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '@app-entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PgSharedService } from '../postgres/postgres.service';
 

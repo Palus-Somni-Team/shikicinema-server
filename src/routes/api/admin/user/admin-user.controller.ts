@@ -1,4 +1,4 @@
-import { GetByIdParamRequest, Role } from '@shikicinema';
+import { GetByIdParamRequest, Role } from '@lib-shikicinema';
 import {
   Body,
   ClassSerializerInterceptor,

@@ -1,5 +1,5 @@
-import { Role, UpdateUserRequest } from '@shikicinema';
-import { TransformNullableString, TransformRoles } from '@utils/class-transform.utils';
+import { Role, UpdateUserRequest } from '@lib-shikicinema';
+import { TransformNullableString, TransformRoles } from '@app-utils/class-transform.utils';
 import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateUser implements UpdateUserRequest {
