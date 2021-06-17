@@ -7,12 +7,12 @@ import { UploaderSharedModule } from '../uploader/uploader.shared.module';
 import { UserSharedModule } from '../user/user.shared.module';
 
 @Module({
-  imports: [
-    UserSharedModule,
-    UploaderSharedModule,
-    TypeOrmModule.forFeature([UploadTokenEntity, UploaderEntity])
-  ],
-  providers: [UploaderService, UploadTokensService],
-  exports: [UploadTokensService],
+    imports: [
+        UserSharedModule,
+        UploaderSharedModule,
+        TypeOrmModule.forFeature([UploadTokenEntity, UploaderEntity]),
+    ],
+    providers: [UploaderService, UploadTokensService],
+    exports: [UploadTokensService],
 })
 export class UploadTokensSharedModule {}

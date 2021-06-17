@@ -18,6 +18,7 @@ export interface IShikimoriUser {
   name: string;
   sex: 'male' | 'female' | null;
   website: string;
-  birth_on: string; // YYYY-MM-DD
+  // YYYY-MM-DD
+  birth_on: string;
   locale: string;
 }

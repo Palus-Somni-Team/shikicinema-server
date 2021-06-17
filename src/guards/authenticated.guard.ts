@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthenticatedGuard extends AuthGuard('session') {
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
+    canActivate(
+        context: ExecutionContext
+    ): boolean | Promise<boolean> | Observable<boolean> {
+        const request = context.switchToHttp().getRequest();
 
-    return request.isAuthenticated();
-  }
+        return request.isAuthenticated();
+    }
 }

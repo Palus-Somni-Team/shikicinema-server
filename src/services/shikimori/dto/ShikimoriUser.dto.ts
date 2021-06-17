@@ -16,28 +16,28 @@ export class ShikimoriUser implements IShikimoriUser {
   last_online_at: string;
 
   constructor(
-    id: string,
-    avatar: string,
-    nickname: string,
-    image: IShikimoriUserImage = null,
-    name = '',
-    locale = 'ru',
-    sex: 'male' | 'female' | null = null,
-    url: string = null,
-    website: string = null,
-    last_online_at: string = null,
-    birth_on: string = null,
+      id: string,
+      avatar: string,
+      nickname: string,
+      image: IShikimoriUserImage = null,
+      name = '',
+      locale = 'ru',
+      sex: 'male' | 'female' | null = null,
+      url: string = null,
+      website: string = null,
+      last_online_at: string = null,
+      birth_on: string = null,
   ) {
-    this.id = id;
-    this.avatar = avatar;
-    this.birthday = birth_on === null ? null : new Date(birth_on);
-    this.image = image;
-    this.name = name;
-    this.nickname = nickname;
-    this.lastOnline = last_online_at === null ? null : new Date(last_online_at);
-    this.locale = locale;
-    this.sex = sex;
-    this.url = url;
-    this.website = website;
+      this.id = id;
+      this.avatar = avatar;
+      this.birthday = birth_on === null ? null : new Date(birth_on);
+      this.image = image;
+      this.name = name;
+      this.nickname = nickname;
+      this.lastOnline = last_online_at === null ? null : new Date(last_online_at);
+      this.locale = locale;
+      this.sex = sex;
+      this.url = url;
+      this.website = website;
   }
 }

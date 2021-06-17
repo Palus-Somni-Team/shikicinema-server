@@ -1,6 +1,6 @@
 import './Video';
-import {VideoKind} from './VideoKind';
-import {VideoQuality} from './VideoQuality';
+import { VideoKind } from './VideoKind';
+import { VideoQuality } from './VideoQuality';
 
 /**
  * Interface for the classes representing video creation request.

@@ -1,4 +1,4 @@
-import {Role} from './Role';
+import { Role } from './Role';
 
 /**
  * Interface for the classes representing user update request. ONLY FOR ADMINS!

@@ -5,18 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class SessionService {
-  constructor(
+    constructor(
     @InjectRepository(SessionEntity)
     private readonly repository: Repository<SessionEntity>
-  ) {}
+    ) {}
 
-  findById(sid: string) {
-    return this.repository.findOne(sid);
-  }
+    findById(sid: string) {
+        return this.repository.findOne(sid);
+    }
 
-  async revokeById(sid: string) {
-    const session = await this.findById(sid);
-    session.expiredAt = Date.now();
-    return this.repository.save(session);
-  }
+    async revokeById(sid: string) {
+        const session = await this.findById(sid);
+        session.expiredAt = Date.now();
+        return this.repository.save(session);
+    }
 }

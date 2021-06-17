@@ -1,13 +1,13 @@
 import { Role } from '@lib-shikicinema';
 import * as bcrypt from 'bcrypt';
 import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity, JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+    BeforeInsert,
+    Column,
+    CreateDateColumn,
+    Entity, JoinColumn,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { UploaderEntity } from './uploader';
 import { getIntArrayType } from '@app-utils/typeorm-helper';
@@ -32,7 +32,7 @@ export class UserEntity {
   @Column({ array: true, type: getIntArrayType() })
   roles!: Role[];
 
-  @OneToOne(() => UploaderEntity, uploader => uploader)
+  @OneToOne(() => UploaderEntity, (uploader) => uploader)
   @JoinColumn({ name: 'uploader_id' })
   uploader: UploaderEntity;
 
@@ -44,26 +44,26 @@ export class UserEntity {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+      this.password = await bcrypt.hash(this.password, 10);
   }
 
   constructor(
-    login: string,
-    password: string,
-    email: string,
-    roles: Role[] = [Role.user],
-    uploader: UploaderEntity = null,
-    name: string = login,
-    createdAt: Date = new Date(),
-    updateAt: Date = new Date()
+      login: string,
+      password: string,
+      email: string,
+      roles: Role[] = [Role.user],
+      uploader: UploaderEntity = null,
+      name: string = login,
+      createdAt: Date = new Date(),
+      updateAt: Date = new Date()
   ) {
-    this.login = login;
-    this.password = password;
-    this.email = email;
-    this.roles = roles;
-    this.uploader = uploader;
-    this.name = name;
-    this.createdAt = createdAt;
-    this.updatedAt = updateAt;
+      this.login = login;
+      this.password = password;
+      this.email = email;
+      this.roles = roles;
+      this.uploader = uploader;
+      this.name = name;
+      this.createdAt = createdAt;
+      this.updatedAt = updateAt;
   }
 }

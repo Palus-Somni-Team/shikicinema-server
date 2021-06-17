@@ -14,12 +14,12 @@ export class SessionEntity implements ISession {
   json: string;
 
   constructor(
-    id: string,
-    expiredAt: number,
-    json: string,
+      id: string,
+      expiredAt: number,
+      json: string,
   ) {
-    this.id = id;
-    this.expiredAt = expiredAt;
-    this.json = json;
+      this.id = id;
+      this.expiredAt = expiredAt;
+      this.json = json;
   }
 }

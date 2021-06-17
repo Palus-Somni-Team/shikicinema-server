@@ -10,25 +10,25 @@ export class UploaderEntity {
   @Column()
   banned: boolean
 
-  @OneToOne(() => UserEntity, user => user.id)
+  @OneToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @OneToMany(() => UploadTokenEntity, uploadToken => uploadToken.uploader)
+  @OneToMany(() => UploadTokenEntity, (uploadToken) => uploadToken.uploader)
   uploadTokens: UploadTokenEntity[];
 
   @Column({ name: 'shikimori_id' })
   shikimoriId: string;
 
   constructor(
-    shikimoriId: string,
-    user: UserEntity,
-    uploadTokens: UploadTokenEntity[],
-    banned = false,
+      shikimoriId: string,
+      user: UserEntity,
+      uploadTokens: UploadTokenEntity[],
+      banned = false,
   ) {
-    this.shikimoriId = shikimoriId;
-    this.user = user;
-    this.uploadTokens = uploadTokens;
-    this.banned = banned;
+      this.shikimoriId = shikimoriId;
+      this.user = user;
+      this.uploadTokens = uploadTokens;
+      this.banned = banned;
   }
 }

@@ -6,7 +6,7 @@ export class UploadTokenEntity {
   @PrimaryColumn('uuid', { name: 'token' })
   token: string;
 
-  @ManyToOne(() => UploaderEntity, uploader => uploader.uploadTokens, { cascade: true })
+  @ManyToOne(() => UploaderEntity, (uploader) => uploader.uploadTokens, { cascade: true })
   @JoinColumn({ name: 'uploader_id' })
   uploader: UploaderEntity;
 
@@ -17,18 +17,19 @@ export class UploadTokenEntity {
   revoked: boolean;
 
   get isExpired(): boolean {
-    return this.expiredAt < new Date();
+      return this.expiredAt < new Date();
   }
 
   constructor(
-    token: string,
-    uploader: UploaderEntity,
-    expiredAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // TODO: add configs
-    revoked = false,
+      token: string,
+      uploader: UploaderEntity,
+      // TODO: add configs
+      expiredAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      revoked = false,
   ) {
-    this.token = token;
-    this.uploader = uploader;
-    this.expiredAt = expiredAt;
-    this.revoked = revoked;
+      this.token = token;
+      this.uploader = uploader;
+      this.expiredAt = expiredAt;
+      this.revoked = revoked;
   }
 }

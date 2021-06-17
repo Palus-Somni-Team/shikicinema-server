@@ -14,25 +14,25 @@ import { UploadTokenStrategy } from './upload-token.strategy';
 import { UploaderSharedModule } from '../../services/uploader/uploader.shared.module';
 
 @Module({
-  imports: [
-    UserSharedModule,
-    UploadTokensSharedModule,
-    UploaderSharedModule,
-    SessionSharedModule,
-    ShikimoriSharedModule,
-    PassportModule.register({
-      defaultStrategy: 'local',
-      session: true,
-    }),
-  ],
-  providers: [
-    AuthService,
-    SessionSerializer,
-    LocalStrategy,
-    LocalGuard,
-    UploadTokenGuard,
-    UploadTokenStrategy,
-  ],
-  controllers: [AuthController],
+    imports: [
+        UserSharedModule,
+        UploadTokensSharedModule,
+        UploaderSharedModule,
+        SessionSharedModule,
+        ShikimoriSharedModule,
+        PassportModule.register({
+            defaultStrategy: 'local',
+            session: true,
+        }),
+    ],
+    providers: [
+        AuthService,
+        SessionSerializer,
+        LocalStrategy,
+        LocalGuard,
+        UploadTokenGuard,
+        UploadTokenStrategy,
+    ],
+    controllers: [AuthController],
 })
 export class AuthModule {}

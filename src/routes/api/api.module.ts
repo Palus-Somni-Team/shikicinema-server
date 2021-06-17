@@ -3,6 +3,6 @@ import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [AdminModule, UserModule]
+    imports: [AdminModule, UserModule],
 })
 export class ApiModule {}

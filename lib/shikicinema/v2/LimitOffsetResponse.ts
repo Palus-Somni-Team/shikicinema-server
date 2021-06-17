@@ -1,4 +1,4 @@
-import {DataResponse} from './DataResponse';
+import { DataResponse } from './DataResponse';
 
 /**
  * Represents response for the request with limit and offset props.

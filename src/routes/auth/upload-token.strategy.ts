@@ -6,29 +6,29 @@ import { UploadTokenEntity } from '@app-entities';
 
 @Injectable()
 export class UploadTokenStrategy extends PassportStrategy(BearerStrategy) {
-  constructor(
+    constructor(
     private readonly uploadTokensService: UploadTokensService
-  ) {
-    super();
-  }
-
-  async validate(bearer: string): Promise<number> {
-    let token: UploadTokenEntity;
-
-    try {
-      token = await this.uploadTokensService.getByToken(bearer);
-    } catch (e) {
-      throw new UnauthorizedException('Token is expired or invalid');
+    ) {
+        super();
     }
 
-    if (!token || token.isExpired || token.revoked) {
-      throw new UnauthorizedException('Token is expired or invalid');
-    }
+    async validate(bearer: string): Promise<number> {
+        let token: UploadTokenEntity;
 
-    if (token.uploader.banned) {
-      throw new ForbiddenException('You have been banned');
-    }
+        try {
+            token = await this.uploadTokensService.getByToken(bearer);
+        } catch (e) {
+            throw new UnauthorizedException('Token is expired or invalid');
+        }
 
-    return token.uploader.id;
-  }
+        if (!token || token.isExpired || token.revoked) {
+            throw new UnauthorizedException('Token is expired or invalid');
+        }
+
+        if (token.uploader.banned) {
+            throw new ForbiddenException('You have been banned');
+        }
+
+        return token.uploader.id;
+    }
 }

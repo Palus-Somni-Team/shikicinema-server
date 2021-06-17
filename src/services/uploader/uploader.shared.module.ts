@@ -5,11 +5,11 @@ import { UploaderEntity } from '@app-entities';
 import { UserSharedModule } from '../user/user.shared.module';
 
 @Module({
-  imports: [
-    UserSharedModule,
-    TypeOrmModule.forFeature([UploaderEntity])
-  ],
-  providers: [UploaderService],
-  exports: [UploaderService],
+    imports: [
+        UserSharedModule,
+        TypeOrmModule.forFeature([UploaderEntity]),
+    ],
+    providers: [UploaderService],
+    exports: [UploaderService],
 })
 export class UploaderSharedModule {}

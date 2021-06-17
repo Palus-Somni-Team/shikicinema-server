@@ -1,5 +1,5 @@
-import {VideoKind} from './VideoKind';
-import {VideoQuality} from './VideoQuality';
+import { VideoKind } from './VideoKind';
+import { VideoQuality } from './VideoQuality';
 
 /**
  * Represents video.

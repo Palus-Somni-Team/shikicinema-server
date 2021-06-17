@@ -9,43 +9,46 @@ import { UserService } from '../services/user/user.service';
  * NOTE that handlers roles are preferred than controller if both set.
  *
  * @param {Array<Role>} roles - list of allowed roles
+ * @return {any}
  */
 export function AllowRoles(...roles: Role[]) {
-  return SetMetadata('roles', roles);
+    return SetMetadata('roles', roles);
 }
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-  constructor(
+    constructor(
     private reflector: Reflector,
     private userService: UserService
-  ) {}
+    ) {}
 
-  private matchRoles(allowed: Role[], roles: Role[]): boolean {
-    return allowed.some((role) => roles.some((r) => r == role));
-  }
-
-  private getAllowedRoles(context: ExecutionContext): Role[] {
-    const rolesOnHandlerLevel = this.reflector.get<Role[]>('roles', context.getHandler());
-    const rolesOnClassLevel = this.reflector.get<Role[]>('roles', context.getClass());
-
-    return rolesOnHandlerLevel || rolesOnClassLevel;
-  }
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const allowedRoles = this.getAllowedRoles(context);
-
-    if (!allowedRoles || allowedRoles.length === 0) {
-      return true;
+    private matchRoles(allowed: Role[], roles: Role[]): boolean {
+        // todo replace == with ===
+        // eslint-disable-next-line eqeqeq
+        return allowed.some((role) => roles.some((r) => r == role));
     }
 
-    try {
-      const request = context.switchToHttp().getRequest() as IRequest;
-      const user = await this.userService.findById({ id: request.user });
+    private getAllowedRoles(context: ExecutionContext): Role[] {
+        const rolesOnHandlerLevel = this.reflector.get<Role[]>('roles', context.getHandler());
+        const rolesOnClassLevel = this.reflector.get<Role[]>('roles', context.getClass());
 
-      return this.matchRoles(allowedRoles, user.roles);
-    } catch (e) {
-      return false;
+        return rolesOnHandlerLevel || rolesOnClassLevel;
     }
-  }
+
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const allowedRoles = this.getAllowedRoles(context);
+
+        if (!allowedRoles || allowedRoles.length === 0) {
+            return true;
+        }
+
+        try {
+            const request = context.switchToHttp().getRequest() as IRequest;
+            const user = await this.userService.findById({ id: request.user });
+
+            return this.matchRoles(allowedRoles, user.roles);
+        } catch (e) {
+            return false;
+        }
+    }
 }
