@@ -3,13 +3,13 @@ import { IShikimoriUser } from '@lib-shikicinema';
 import { ShikimoriUser } from './dto/ShikimoriUser.dto';
 
 export interface IShikimoriClient {
-  getUserInfoByToken(token: string): Promise<ShikimoriUser>;
+    getUserInfoByToken(token: string): Promise<ShikimoriUser>;
 }
 
 @Injectable()
 export class ShikimoriClient implements IShikimoriClient {
     constructor(
-    private readonly http: HttpService,
+        private readonly http: HttpService,
     ) {}
 
     public getUserInfoByToken(token: string): Promise<ShikimoriUser> {

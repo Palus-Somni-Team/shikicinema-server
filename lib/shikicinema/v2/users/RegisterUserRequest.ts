@@ -7,7 +7,7 @@
  * @property {string} password  - password which will be hashed and stored.
  */
 export interface RegisterUserRequest {
-  login: string;
-  email: string;
-  password: string;
+    login: string;
+    email: string;
+    password: string;
 }

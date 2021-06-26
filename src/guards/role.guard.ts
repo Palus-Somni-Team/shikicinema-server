@@ -18,8 +18,8 @@ export function AllowRoles(...roles: Role[]) {
 @Injectable()
 export class RoleGuard implements CanActivate {
     constructor(
-    private reflector: Reflector,
-    private userService: UserService
+        private reflector: Reflector,
+        private userService: UserService
     ) {}
 
     private matchRoles(allowed: Role[], roles: Role[]): boolean {

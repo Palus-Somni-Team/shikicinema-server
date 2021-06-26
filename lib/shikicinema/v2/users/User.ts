@@ -7,8 +7,8 @@
  * @property {string} [shikimoriId=null]  - user' id from Shikimori.
  */
 export interface User {
-  id: number;
-  login: string;
-  name: string;
-  shikimoriId: string | null;
+    id: number;
+    login: string;
+    name: string;
+    shikimoriId: string | null;
 }

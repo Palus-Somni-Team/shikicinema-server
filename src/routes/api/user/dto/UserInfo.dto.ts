@@ -3,15 +3,15 @@ import { User } from '@lib-shikicinema';
 
 @Exclude()
 export class UserInfo implements User {
-  @Expose()
-  id: number;
+    @Expose()
+    id: number;
 
-  @Expose()
-  login: string;
+    @Expose()
+    login: string;
 
-  @Expose()
-  name: string;
+    @Expose()
+    name: string;
 
-  @Expose()
-  shikimoriId: string | null;
+    @Expose()
+    shikimoriId: string | null;
 }

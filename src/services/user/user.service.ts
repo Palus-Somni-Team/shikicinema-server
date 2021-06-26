@@ -10,8 +10,8 @@ import { isPgException, PgException } from '@app-utils/postgres.utils';
 @Injectable()
 export class UserService {
     constructor(
-    @InjectRepository(UserEntity)
-    private readonly repository: Repository<UserEntity>,
+        @InjectRepository(UserEntity)
+        private readonly repository: Repository<UserEntity>,
     ) {}
 
     async findById(id: GetUserById): Promise<UserEntity> {

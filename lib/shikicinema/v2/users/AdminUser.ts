@@ -14,12 +14,12 @@ import { Role } from './Role';
  * @property {Date} updatedAt             - user' last change date.
  */
 export interface AdminUser {
-  id: number;
-  login: string;
-  name: string;
-  email: string;
-  roles: Role[];
-  shikimoriId: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+    id: number;
+    login: string;
+    name: string;
+    email: string;
+    roles: Role[];
+    shikimoriId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
 }

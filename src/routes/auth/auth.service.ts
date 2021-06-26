@@ -15,11 +15,11 @@ import { Role } from '@lib-shikicinema';
 @Injectable()
 export class AuthService {
     constructor(
-    private readonly userService: UserService,
-    private readonly sessionService: SessionService,
-    private readonly shikimoriService: ShikimoriClient,
-    private readonly uploaderService: UploaderService,
-    private readonly uploadTokensService: UploadTokensService,
+        private readonly userService: UserService,
+        private readonly sessionService: SessionService,
+        private readonly shikimoriService: ShikimoriClient,
+        private readonly uploaderService: UploaderService,
+        private readonly uploadTokensService: UploadTokensService,
     ) {}
 
     async getUserWithCredentials(login: string, password: string): Promise<UserEntity> {

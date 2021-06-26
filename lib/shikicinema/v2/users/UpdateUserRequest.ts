@@ -10,8 +10,8 @@ import { Role } from './Role';
  * @property {Array<Role>} [roles]  - see {@link User.roles}.
  */
 export interface UpdateUserRequest {
-  name?: string;
-  email?: string;
-  shikimoriId?: string | null;
-  roles?: Role[];
+    name?: string;
+    email?: string;
+    shikimoriId?: string | null;
+    roles?: Role[];
 }

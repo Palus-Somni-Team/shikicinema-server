@@ -1,9 +1,9 @@
 import { PaginationRequest } from '@lib-shikicinema';
 
 export type ParsedQuery = {
-  where: any;
-  limit?: number;
-  offset?: number;
+    where: any;
+    limit?: number;
+    offset?: number;
 };
 
 export function parseWhere(obj: any): ParsedQuery {

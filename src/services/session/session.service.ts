@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class SessionService {
     constructor(
-    @InjectRepository(SessionEntity)
-    private readonly repository: Repository<SessionEntity>
+        @InjectRepository(SessionEntity)
+        private readonly repository: Repository<SessionEntity>
     ) {}
 
     findById(sid: string) {

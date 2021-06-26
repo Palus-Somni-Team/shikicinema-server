@@ -2,12 +2,12 @@ import { TransformNullableString } from '@app-utils/class-transform.utils';
 import { plainToClass } from 'class-transformer';
 
 class TestTransformNullableString {
-  @TransformNullableString()
-  test: string | null;
+    @TransformNullableString()
+    test: string | null;
 
-  constructor(test: string = undefined) {
-      this.test = test;
-  }
+    constructor(test: string = undefined) {
+        this.test = test;
+    }
 }
 
 describe('Utils class-transform', () => {

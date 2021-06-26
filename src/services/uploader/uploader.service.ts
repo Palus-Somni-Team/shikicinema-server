@@ -8,9 +8,9 @@ import { isPgException, PgException } from '@app-utils/postgres.utils';
 @Injectable()
 export class UploaderService {
     constructor(
-    @InjectRepository(UploaderEntity)
-    private readonly repository: Repository<UploaderEntity>,
-    private readonly userService: UserService,
+        @InjectRepository(UploaderEntity)
+        private readonly repository: Repository<UploaderEntity>,
+        private readonly userService: UserService,
     ) {}
 
     async newShikimoriUploader(shikimoriId: string, userId: number = null): Promise<UploaderEntity> {

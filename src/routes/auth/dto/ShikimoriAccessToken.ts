@@ -3,8 +3,8 @@ import { IsString, MinLength } from 'class-validator';
 
 @Exclude()
 export class ShikimoriAccessToken {
-  @Expose()
-  @IsString()
-  @MinLength(10)
-  token: string;
+    @Expose()
+    @IsString()
+    @MinLength(10)
+    token: string;
 }

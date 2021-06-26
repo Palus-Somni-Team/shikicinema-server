@@ -38,6 +38,7 @@ module.exports = {
         'max-len': ['error', {
             code: 120,
             tabWidth: 4,
+            ignoreUrls: true,
         }],
         'no-inline-comments': 'error',
         'no-whitespace-before-property': 'error',
@@ -52,7 +53,9 @@ module.exports = {
         'no-duplicate-imports': 'error',
         'no-useless-computed-key': 'error',
         'no-useless-rename': 'error',
-        'indent': ['error', 4],
+        // see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md
+        'indent': 'off',
+        '@typescript-eslint/indent': ['error'],
         'new-cap': 'off',
         'require-jsdoc': 'off',
     },

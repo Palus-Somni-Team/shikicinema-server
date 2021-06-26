@@ -1,5 +1,5 @@
 export enum PgException {
-  UNIQUE_CONSTRAINS_ERROR = 23505
+    UNIQUE_CONSTRAINS_ERROR = 23505
 }
 
 export function isInPgExceptionCodes(code: string) {

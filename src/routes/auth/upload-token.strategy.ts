@@ -7,7 +7,7 @@ import { UploadTokenEntity } from '@app-entities';
 @Injectable()
 export class UploadTokenStrategy extends PassportStrategy(BearerStrategy) {
     constructor(
-    private readonly uploadTokensService: UploadTokensService
+        private readonly uploadTokensService: UploadTokensService
     ) {
         super();
     }

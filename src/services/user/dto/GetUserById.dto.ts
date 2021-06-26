@@ -4,9 +4,9 @@ import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
 export class GetUserById implements GetByIdParamRequest {
-  @Expose()
-  @IsInt()
-  @Min(0)
-  @Type(() => Number)
-  id: number;
+    @Expose()
+    @IsInt()
+    @Min(0)
+    @Type(() => Number)
+    id: number;
 }

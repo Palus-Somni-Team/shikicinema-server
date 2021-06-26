@@ -8,8 +8,8 @@ import { isPgException, PgException } from '@app-utils/postgres.utils';
 @Injectable()
 export class UploadTokensService {
     constructor(
-    @InjectRepository(UploadTokenEntity)
-    private readonly repository: Repository<UploadTokenEntity>,
+        @InjectRepository(UploadTokenEntity)
+        private readonly repository: Repository<UploadTokenEntity>,
     ) {}
 
     getByToken(token: string): Promise<UploadTokenEntity> {

@@ -4,28 +4,28 @@ import { Role } from '@lib-shikicinema';
 
 @Exclude()
 export class OwnerUserInfo {
-  @Expose()
-  id: number;
+    @Expose()
+    id: number;
 
-  @Expose()
-  login: string;
+    @Expose()
+    login: string;
 
-  @Expose()
-  name: string;
+    @Expose()
+    name: string;
 
-  @Expose()
-  email: string;
+    @Expose()
+    email: string;
 
-  @Expose()
-  @TransformRoles()
-  roles: Role[];
+    @Expose()
+    @TransformRoles()
+    roles: Role[];
 
-  @Expose()
-  shikimoriId: string | null;
+    @Expose()
+    shikimoriId: string | null;
 
-  @Expose()
-  createdAt: Date;
+    @Expose()
+    createdAt: Date;
 
-  @Expose()
-  updatedAt: Date;
+    @Expose()
+    updatedAt: Date;
 }
