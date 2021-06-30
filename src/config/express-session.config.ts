@@ -7,10 +7,10 @@ export default registerAs('express-session', () => ({
     rolling: true,
     saveUninitialized: false,
     cookie: {
-      // secure: true,
-      httpOnly: true,
-      sameSite: 'lax',
-      maxAge: process.env.SESSION_MAX_AGE || 24 * 60 * 60 * 1000,
+        // secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: process.env.SESSION_MAX_AGE || 24 * 60 * 60 * 1000,
     },
-  }),
+}),
 );

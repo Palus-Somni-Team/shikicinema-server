@@ -15,11 +15,11 @@ import { Role } from './Role';
  * @property {number} offset              - offset from the beginning.
  */
 export interface GetUsersRequest extends PaginationRequest {
-  id?: number;
-  login?: string;
-  name?: string;
-  email?: string;
-  shikimoriId?: string | null;
-  roles?: Role[];
-  createdAt?: Date;
+    id?: number;
+    login?: string;
+    name?: string;
+    email?: string;
+    shikimoriId?: string | null;
+    roles?: Role[];
+    createdAt?: Date;
 }

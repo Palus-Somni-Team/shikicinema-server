@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SessionService } from './session.service';
 import { SessionEntity } from '@app-entities';
+import { SessionService } from './session.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  providers: [SessionService],
-  imports: [TypeOrmModule.forFeature([SessionEntity])],
-  exports: [SessionService],
+    providers: [SessionService],
+    imports: [TypeOrmModule.forFeature([SessionEntity])],
+    exports: [SessionService],
 })
 export class SessionSharedModule {}

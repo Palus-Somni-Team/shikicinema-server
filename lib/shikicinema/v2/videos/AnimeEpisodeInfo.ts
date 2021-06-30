@@ -1,4 +1,4 @@
-import {VideoKind} from './VideoKind';
+import { VideoKind } from './VideoKind';
 /**
  * Represents information about anime episode.
  *

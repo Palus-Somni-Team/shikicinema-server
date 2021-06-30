@@ -1,8 +1,5 @@
-import './Video';
-import './VideoKind';
-import './VideoQuality';
-import {VideoKind} from './VideoKind';
-import {VideoQuality} from './VideoQuality';
+import { VideoKind } from './VideoKind';
+import { VideoQuality } from './VideoQuality';
 
 /**
  * Interface for the classes representing the video update request.

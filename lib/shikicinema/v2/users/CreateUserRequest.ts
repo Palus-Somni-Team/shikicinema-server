@@ -1,4 +1,4 @@
-import {Role} from './Role';
+import { Role } from './Role';
 
 /**
  * Interface for the classes representing user create request. ONLY FOR ADMINS!
@@ -10,8 +10,8 @@ import {Role} from './Role';
  * @property {string} [roles]   - see {@link AdminUser.roles}.
  */
 export interface CreateUserRequest {
-  login: string;
-  email: string;
-  password: string;
-  roles?: Role[];
+    login: string;
+    email: string;
+    password: string;
+    roles?: Role[];
 }

@@ -1,47 +1,46 @@
 import { isInPgExceptionCodes, isPgException } from '@app-utils/postgres.utils';
 
 describe('Postgres utils', () => {
+    describe('isInPgExceptionCodes', () => {
+        const codes = ['23505'];
 
-  describe('isInPgExceptionCodes', () => {
-    const codes = ['23505'];
+        for (const code of codes) {
+            it('should return true for known error codes', () => {
+                expect(isInPgExceptionCodes(code))
+                    .toBeTruthy();
+            });
+        }
+    });
 
-    for (const code of codes) {
-      it('should return true for known error codes', () => {
-        expect(isInPgExceptionCodes(code))
-          .toBeTruthy();
-      });
-    }
-  });
+    describe('isPgException', () => {
+        const knownErrorCodes = [
+            { code: '23505' },
+            { code: 23505 },
+        ];
+        const unknownErrorCodes = [
+            { code: '' },
+            { code: undefined },
+            { code: null },
+            { code: 'abcd' },
+            // 3735928495
+            { code: '0xDEADBEAF' },
+            {},
+            null,
+            undefined,
+        ];
 
-  describe('isPgException', () => {
-    const knownErrorCodes = [
-      { code: '23505' },
-      { code: 23505 },
-    ];
-    const unknownErrorCodes = [
-      { code: '' },
-      { code: undefined },
-      { code: null },
-      { code: 'abcd' },
-      // 3735928495
-      { code: '0xDEADBEAF' },
-      {},
-      null,
-      undefined,
-    ];
+        for (const error of knownErrorCodes) {
+            it('should return true for known errors without specified code', () => {
+                expect(isPgException(error))
+                    .toBeTruthy();
+            });
+        }
 
-    for (const error of knownErrorCodes) {
-      it('should return true for known errors without specified code', () => {
-        expect(isPgException(error))
-          .toBeTruthy();
-      });
-    }
-
-    for (const error of unknownErrorCodes) {
-      it('should return false for unknown errors', () => {
-        expect(isPgException(error))
-          .toBeFalsy();
-      });
-    }
-  });
+        for (const error of unknownErrorCodes) {
+            it('should return false for unknown errors', () => {
+                expect(isPgException(error))
+                    .toBeFalsy();
+            });
+        }
+    });
 });
