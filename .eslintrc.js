@@ -5,7 +5,10 @@ module.exports = {
         sourceType: 'module',
         createDefaultProgram: true,
     },
-    'plugins': ['@typescript-eslint/eslint-plugin'],
+    'plugins': [
+        '@typescript-eslint/eslint-plugin',
+        'sort-imports-es6-autofix',
+    ],
     'extends': [
         'google',
         'plugin:@typescript-eslint/eslint-recommended',
@@ -58,6 +61,10 @@ module.exports = {
         '@typescript-eslint/indent': ['error'],
         'new-cap': 'off',
         'require-jsdoc': 'off',
+        // see https://github.com/marudor/eslint-plugin-sort-imports-es6-autofix/blob/master/README.md
+        'sort-imports-es6-autofix/sort-imports-es6': ['error', {
+            'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
+        }],
     },
     'ignorePatterns': ['node_modules', 'dist'],
 };

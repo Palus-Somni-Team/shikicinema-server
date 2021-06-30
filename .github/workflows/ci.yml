@@ -19,7 +19,7 @@ jobs:
       - run: npm ci
 
       - name: Check code style
-        run: $(npm bin)/eslint "./**/*.[tj]s"
+        run: npm run lint
 
       - name: Run tests
         run: npm run test

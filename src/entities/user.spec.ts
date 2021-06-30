@@ -1,5 +1,5 @@
-import { Role } from '@lib-shikicinema';
 import * as bcrypt from 'bcrypt';
+import { Role } from '@lib-shikicinema';
 import { UserEntity } from './user';
 
 describe('UserEntity', () => {

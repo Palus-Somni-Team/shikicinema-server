@@ -1,6 +1,6 @@
+import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Role, UpdateUserRequest } from '@lib-shikicinema';
 import { TransformNullableString, TransformRoles } from '@app-utils/class-transform.utils';
-import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateUser implements UpdateUserRequest {
     @IsOptional()

@@ -1,17 +1,17 @@
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { LocalGuard } from '../../guards/local.guard';
+import { LocalStrategy } from './local.strategy';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { UserSharedModule } from '../../services/user/user.shared.module';
-import { LocalStrategy } from './local.strategy';
-import { SessionSharedModule } from '../../services/session/session.shared.module';
-import { LocalGuard } from '../../guards/local.guard';
 import { SessionSerializer } from './session.serializer';
-import { UploadTokensSharedModule } from '../../services/upload-tokens/upload-tokens.shared.module';
+import { SessionSharedModule } from '../../services/session/session.shared.module';
 import { ShikimoriSharedModule } from '../../services/shikimori/shikimori.shared.module';
 import { UploadTokenGuard } from '../../guards/upload-token.guard';
 import { UploadTokenStrategy } from './upload-token.strategy';
+import { UploadTokensSharedModule } from '../../services/upload-tokens/upload-tokens.shared.module';
 import { UploaderSharedModule } from '../../services/uploader/uploader.shared.module';
+import { UserSharedModule } from '../../services/user/user.shared.module';
 
 @Module({
     imports: [

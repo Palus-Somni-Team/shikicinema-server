@@ -1,13 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { getConnection, getRepository } from 'typeorm';
-import { AppModule } from '../src/app.module';
-import { SessionEntity, UserEntity } from '@app-entities';
-import { ConfigService } from '@nestjs/config';
-import { TypeormStore } from 'connect-typeorm';
-import * as session from 'express-session';
 import * as passport from 'passport';
+import * as request from 'supertest';
+import * as session from 'express-session';
+import { AppModule } from '../src/app.module';
+import { ConfigService } from '@nestjs/config';
+import { INestApplication } from '@nestjs/common';
+import { SessionEntity, UserEntity } from '@app-entities';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TypeormStore } from 'connect-typeorm';
+import { getConnection, getRepository } from 'typeorm';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;

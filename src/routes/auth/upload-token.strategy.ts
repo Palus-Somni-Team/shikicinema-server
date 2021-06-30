@@ -1,8 +1,8 @@
-import { PassportStrategy } from '@nestjs/passport';
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
 import { UploadTokenEntity } from '@app-entities';
+import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
 
 @Injectable()
 export class UploadTokenStrategy extends PassportStrategy(BearerStrategy) {

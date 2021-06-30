@@ -1,3 +1,5 @@
+import { AuthService } from './auth.service';
+import { AuthenticatedGuard } from '../../guards/authenticated.guard';
 import {
     Body,
     Controller,
@@ -10,16 +12,14 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { AuthenticatedGuard } from '../../guards/authenticated.guard';
-import { LocalGuard } from '../../guards/local.guard';
-import { AuthService } from './auth.service';
 import { IRequest } from './dto/IRequest';
-import { plainToClass } from 'class-transformer';
+import { LocalGuard } from '../../guards/local.guard';
 import { OwnerUserInfo } from './dto/OwnerUserInfo';
 import { RegisterUser } from './dto/RegisterUser';
-import { UploadTokenInfo } from './dto/UploadTokenInfo.dto';
 import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
+import { UploadTokenInfo } from './dto/UploadTokenInfo.dto';
 import { UploaderInfo } from './dto/UploaderInfo.dto';
+import { plainToClass } from 'class-transformer';
 
 @Controller('/')
 @UsePipes(new ValidationPipe({ transform: true }))

@@ -1,9 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getConnection, Repository } from 'typeorm';
+import { PgException, isPgException } from '@app-utils/postgres.utils';
+import { Repository, getConnection } from 'typeorm';
 import { UploaderEntity } from '@app-entities';
 import { UserService } from '../user/user.service';
-import { isPgException, PgException } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class UploaderService {

@@ -1,7 +1,7 @@
-import { registerAs } from '@nestjs/config';
-import { entities } from '@app-entities';
-import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
 import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
+import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
+import { entities } from '@app-entities';
+import { registerAs } from '@nestjs/config';
 
 export default registerAs('database', () => {
     const postgresConfig = {

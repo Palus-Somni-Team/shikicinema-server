@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
-import { TypeormStore } from 'connect-typeorm';
-import * as session from 'express-session';
 import * as passport from 'passport';
+import * as session from 'express-session';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { TypeormStore } from 'connect-typeorm';
 import { getRepository } from 'typeorm';
 
 import { AppModule } from './app.module';

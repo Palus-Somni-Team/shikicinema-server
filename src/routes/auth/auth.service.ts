@@ -1,16 +1,16 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UserService } from '../../services/user/user.service';
-import { UploaderEntity, UploadTokenEntity, UserEntity } from '@app-entities';
-import { SessionService } from '../../services/session/session.service';
-import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
-import { ShikimoriClient } from '../../services/shikimori/shikimori.client';
-import { ShikimoriUser } from '../../services/shikimori/dto/ShikimoriUser.dto';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { IRequest } from './dto/IRequest';
 import { RegisterUser } from './dto/RegisterUser';
-import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
-import { UploaderService } from '../../services/uploader/uploader.service';
 import { Role } from '@lib-shikicinema';
+import { SessionService } from '../../services/session/session.service';
+import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
+import { ShikimoriClient } from '../../services/shikimori/shikimori.client';
+import { ShikimoriUser } from '../../services/shikimori/dto/ShikimoriUser.dto';
+import { UploadTokenEntity, UploaderEntity, UserEntity } from '@app-entities';
+import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
+import { UploaderService } from '../../services/uploader/uploader.service';
+import { UserService } from '../../services/user/user.service';
 
 @Injectable()
 export class AuthService {

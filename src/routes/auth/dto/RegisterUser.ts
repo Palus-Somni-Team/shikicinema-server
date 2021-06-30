@@ -1,6 +1,6 @@
-import { RegisterUserRequest } from '@lib-shikicinema';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsString, Length } from 'class-validator';
+import { RegisterUserRequest } from '@lib-shikicinema';
 
 @Exclude()
 export class RegisterUser implements RegisterUserRequest {

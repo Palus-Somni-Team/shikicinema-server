@@ -1,4 +1,5 @@
-import { GetByIdParamRequest, Role } from '@lib-shikicinema';
+import { AdminUserInfo } from './dto/AdminUserInfo.dto';
+import { AllowRoles, RoleGuard } from '../../../../guards/role.guard';
 import {
     Body,
     ClassSerializerInterceptor,
@@ -14,11 +15,10 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import { UserService } from '../../../../services/user/user.service';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from '../../../../services/user/dto';
-import { AllowRoles, RoleGuard } from '../../../../guards/role.guard';
-import { AdminUserInfo } from './dto/AdminUserInfo.dto';
+import { GetByIdParamRequest, Role } from '@lib-shikicinema';
+import { UserService } from '../../../../services/user/user.service';
+import { plainToClass } from 'class-transformer';
 
 @Controller('/')
 @AllowRoles(Role.admin)

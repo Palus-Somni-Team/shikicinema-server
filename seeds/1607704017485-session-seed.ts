@@ -1,4 +1,4 @@
-import { getRepository, MigrationInterface } from 'typeorm';
+import { MigrationInterface, getRepository } from 'typeorm';
 import { SessionEntity } from '@app-entities';
 
 const expireDateMsTomorrow = Date.now() + 24 * 60 * 60 * 1000;

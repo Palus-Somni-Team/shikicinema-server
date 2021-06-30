@@ -1,5 +1,5 @@
+import { MigrationInterface, getRepository } from 'typeorm';
 import { Role } from '@lib-shikicinema';
-import { getRepository, MigrationInterface } from 'typeorm';
 import { UserEntity } from '@app-entities';
 
 export const seeds = [

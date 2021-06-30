@@ -1,6 +1,6 @@
+import { Role } from '@lib-shikicinema';
 import { Transform } from 'class-transformer';
 import { TransformOptions } from 'class-transformer/metadata/ExposeExcludeOptions';
-import { Role } from '@lib-shikicinema';
 
 export function TransformNullableString(options?: TransformOptions) {
     return Transform((value) => {

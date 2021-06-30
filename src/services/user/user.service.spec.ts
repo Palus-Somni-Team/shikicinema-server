@@ -1,11 +1,11 @@
 import { ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
-import { plainToClass } from 'class-transformer';
-import { UserService } from './user.service';
-import { UserEntity } from '@app-entities';
 import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
+import { DeleteResult, Repository } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UserEntity } from '@app-entities';
+import { UserService } from './user.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 
 describe('UserService', () => {
     const id = 123;

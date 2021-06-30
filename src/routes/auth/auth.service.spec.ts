@@ -1,3 +1,5 @@
+import * as bcrypt from 'bcrypt';
+import { AuthService } from './auth.service';
 import {
     BadRequestException,
     ConflictException,
@@ -5,19 +7,17 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import * as bcrypt from 'bcrypt';
-import { UserService } from '../../services/user/user.service';
-import { SessionEntity, UploaderEntity, UploadTokenEntity, UserEntity } from '@app-entities';
-import { SessionService } from '../../services/session/session.service';
-import { ShikimoriClient } from '../../services/shikimori/shikimori.client';
-import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
-import { ShikimoriUser } from '../../services/shikimori/dto/ShikimoriUser.dto';
-import { UploaderService } from '../../services/uploader/uploader.service';
-import { AuthService } from './auth.service';
 import { IRequest } from './dto/IRequest';
-import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
 import { RegisterUser } from './dto/RegisterUser';
+import { SessionEntity, UploadTokenEntity, UploaderEntity, UserEntity } from '@app-entities';
+import { SessionService } from '../../services/session/session.service';
+import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
+import { ShikimoriClient } from '../../services/shikimori/shikimori.client';
+import { ShikimoriUser } from '../../services/shikimori/dto/ShikimoriUser.dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UploadTokensService } from '../../services/upload-tokens/upload-tokens.service';
+import { UploaderService } from '../../services/uploader/uploader.service';
+import { UserService } from '../../services/user/user.service';
 
 describe('AuthService', () => {
     const fakeUserPassword = 'fakeUserPass';

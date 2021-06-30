@@ -1,6 +1,6 @@
 import { CreateUserRequest, Role } from '@lib-shikicinema';
-import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
+import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { TransformRoles } from '@app-utils/class-transform.utils';
 
 @Exclude()
