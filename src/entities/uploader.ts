@@ -1,6 +1,16 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UploadTokenEntity } from './upload-token';
-import { UserEntity } from './user';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import {
+    UploadTokenEntity,
+    UserEntity,
+    VideoEntity,
+} from '@app-entities';
 
 @Entity('uploaders')
 export class UploaderEntity {
@@ -16,6 +26,9 @@ export class UploaderEntity {
 
     @OneToMany(() => UploadTokenEntity, (uploadToken) => uploadToken.uploader)
     uploadTokens: UploadTokenEntity[];
+
+    @OneToMany(() => VideoEntity, (video) => video.uploader)
+    videos: VideoEntity[];
 
     @Column({ name: 'shikimori_id' })
     shikimoriId: string;
