@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="2019-09-17-01-create-sessions" author="Smarthard">
+    <changeSet id="2020-09-17-01-create-sessions" author="Smarthard">
 
         <createTable tableName="sessions">
 

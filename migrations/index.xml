@@ -9,7 +9,7 @@
     <include file="2020-09-06-01-create-users.xml" relativeToChangelogFile="true"/>
     <include file="2020-09-17-01-create-sessions.xml" relativeToChangelogFile="true"/>
     <include file="2020-10-14-01-create-uploaders.xml" relativeToChangelogFile="true"/>
-    <include file="2020-10-14-02-change-users-replace-shikimori_id-to-uploader_id.xml" relativeToChangelogFile="true"/>
+    <include file="2020-10-14-02-replace-shikimori-id-with-uploader-id-in-users.xml" relativeToChangelogFile="true"/>
     <include file="2020-10-15-01-create-upload-tokens.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
