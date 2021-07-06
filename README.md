@@ -2,8 +2,9 @@
 
 ## Requirements
 
-*   PostgreSQL 10+
-*   NodeJS ^12.10.0
+*   PostgreSQL >=11.7
+*   NodeJS >=16.4.1
+*   npm >=7.18.1
 
 ## Build & Deployment
 
