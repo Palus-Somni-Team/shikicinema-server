@@ -5,6 +5,11 @@
   "author": "",
   "private": true,
   "license": "BSD-2-Clause",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=16",
+    "npm": ">=7"
+  },
   "scripts": {
     "up-dev-db": "docker-compose up shikicinema-db dev-migrations",
     "migrate": "node liquibase.js",
