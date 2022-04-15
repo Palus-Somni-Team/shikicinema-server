@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 
-import { BaseController } from '../../base.controller';
+import { BaseController } from '@app-routes/base.controller';
 import { CreateVideoRequest, GetVideosRequest } from './dto';
-import { IRequest } from '../../auth/dto/IRequest';
-import { UploadTokenGuard } from '../../../guards/upload-token.guard';
-import { VideoService } from '../../../services/video/video.service';
+import { IRequest } from '@app-routes/auth/dto/IRequest';
+import { UploadTokenGuard } from '@app/guards/upload-token.guard';
+import { VideoService } from '@app-services/video/video.service';
 
 @Controller()
 export class VideoController extends BaseController {
@@ -15,6 +15,11 @@ export class VideoController extends BaseController {
     @Get()
     async find(@Query() request: GetVideosRequest) {
         return this.videoService.find(request.animeId, request.episode);
+    }
+
+    @Get(':animeId/info')
+    async getInfo(@Param() params: { animeId: number}) {
+        return this.videoService.getInfo(params.animeId);
     }
 
     @Post()

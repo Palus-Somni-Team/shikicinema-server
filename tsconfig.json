@@ -16,6 +16,9 @@
             "@lib-shikicinema": [ "<rootDir>/../lib/shikicinema"],
             "@app-utils/*": ["<rootDir>/../src/utils/*"],
             "@app-entities": ["<rootDir>/../src/entities"],
+            "@app-routes/*": ["<rootDir>/../src/routes/*"],
+            "@app-services/*": ["<rootDir>/../src/services/*"],
+            "@app/*": ["<rootDir>/../src/*"],
             "dist/*": ["<rootDir>/../dist/*"]
         }
     }

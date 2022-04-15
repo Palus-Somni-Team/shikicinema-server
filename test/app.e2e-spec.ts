@@ -6,9 +6,10 @@ import { INestApplication } from '@nestjs/common';
 import { SessionEntity, UserEntity, VideoEntity } from '@app-entities';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
+import { VideoKindEnum } from '@lib-shikicinema';
 import { getConnection, getRepository } from 'typeorm';
 
-import { AppModule } from '../src/app.module';
+import { AppModule } from '@app/app.module';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
@@ -257,6 +258,33 @@ describe('AppController (e2e)', () => {
                         .get(`/api/videos?animeId=${animeId}`)
                         .expect(200)
                         .expect((res) => res.body.length === videos.length);
+                },
+            );
+
+            it(
+                'should return correct info by animeId GET /api/videos/:animeId/info',
+                async () => {
+                    const animeId = 1;
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos/${animeId}/info`)
+                        .expect(200)
+                        .expect({
+                            1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
+                            2: { kinds: [VideoKindEnum.DUBBING], domains: ['admin2.up'] },
+                            3: { kinds: [VideoKindEnum.DUBBING], domains: ['admin3.up'] },
+                        });
+                },
+            );
+
+            it(
+                'should return 404 Not Found if cannot found anime with this id GET /api/videos/:animeId/info',
+                async () => {
+                    const animeId = 404;
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos/${animeId}/info`)
+                        .expect(404);
                 },
             );
         });

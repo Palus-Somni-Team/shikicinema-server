@@ -17,6 +17,15 @@
         ],
         "dist/(.*)": [
             "<rootDir>/dist/$1"
+        ],
+        "@app-routes/(.*)": [
+            "<rootDir>/src/routes/$1"
+        ],
+        "@app-services/(.*)": [
+            "<rootDir>/src/services/$1"
+        ],
+        "@app/(.*)": [
+            "<rootDir>/src/$1"
         ]
     },
     "testEnvironment": "node",

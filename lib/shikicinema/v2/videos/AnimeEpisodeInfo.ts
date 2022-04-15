@@ -9,8 +9,8 @@ import { VideoKindEnum } from '@lib-shikicinema';
  * @property {string[]} availableKinds available kinds of videos.
  */
 export interface AnimeEpisodeInfo {
-    animeId: number;
-    episode: number;
-    availableDomains: Set<string>;
-    availableKinds: Set<VideoKindEnum>;
+    [episode: number]: {
+        domains: Array<string>;
+        kinds: Array<VideoKindEnum>;
+    }
 }
