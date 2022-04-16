@@ -21,11 +21,11 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"**/*.{ts,js}\"",
     "lint:fix": "eslint \"**/*.{ts,js}\" --fix",
-    "test": "cross-env NODE_ENV=testing jest",
-    "test:watch": "cross-env NODE_ENV=testing jest --watch",
-    "test:cov": "cross-env NODE_ENV=testing jest --coverage",
+    "test": "cross-env NODE_ENV=testing jest --config ./test/jest-common-config.ts",
+    "test:watch": "cross-env NODE_ENV=testing jest --watch --config ./test/jest-common-config.ts",
+    "test:cov": "cross-env NODE_ENV=testing jest --coverage --config ./test/jest-common-config.ts",
     "test:debug": "cross-env NODE_ENV=testing node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=testing jest --config ./test/jest-e2e.json",
+    "test:e2e": "cross-env NODE_ENV=testing jest --config ./test/jest-e2e-config.ts",
     "seed:generate": "typeorm migration:create -d seeds -n "
   },
   "dependencies": {

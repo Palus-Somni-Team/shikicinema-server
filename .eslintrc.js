@@ -66,5 +66,5 @@ module.exports = {
             'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
         }],
     },
-    'ignorePatterns': ['node_modules', 'dist'],
+    'ignorePatterns': ['node_modules', 'dist', 'test/*-config.ts'],
 };
