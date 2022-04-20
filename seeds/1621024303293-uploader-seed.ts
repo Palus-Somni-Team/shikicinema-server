@@ -9,9 +9,9 @@ const seeds = [
 export class UploaderSeed1621024303293 implements MigrationInterface {
     public async up(): Promise<void> {
         const userRepo = await getRepository(UserEntity);
-        const admin = await userRepo.findOne({ login: 'admin' });
-        const user1 = await userRepo.findOne({ login: 'user1' });
-        const banned = await userRepo.findOne({ login: 'banned' });
+        const admin = await userRepo.findOneBy({ login: 'admin' });
+        const user1 = await userRepo.findOneBy({ login: 'user1' });
+        const banned = await userRepo.findOneBy({ login: 'banned' });
 
         seeds.push(
             new UploaderEntity('13371337', admin, []),

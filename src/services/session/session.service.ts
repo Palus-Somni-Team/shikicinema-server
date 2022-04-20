@@ -10,8 +10,8 @@ export class SessionService {
         private readonly repository: Repository<SessionEntity>
     ) {}
 
-    findById(sid: string) {
-        return this.repository.findOne(sid);
+    findById(id: string) {
+        return this.repository.findOneBy({ id });
     }
 
     async revokeById(sid: string) {

@@ -371,7 +371,7 @@ describe('AppController (e2e)', () => {
                         .send({ login: 'admin', password: '12345678' });
                     const video = await getConnection()
                         .getRepository(VideoEntity)
-                        .findOne({ animeId: 21, episode: 113 });
+                        .findOneBy({ animeId: 21, episode: 113 });
 
                     return request(app.getHttpServer())
                         .delete(`/api/admin/videos/${video.id}`)

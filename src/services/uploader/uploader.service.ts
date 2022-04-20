@@ -34,11 +34,11 @@ export class UploaderService {
     }
 
     getByUploaderId(uploaderId: number): Promise<UploaderEntity> {
-        return this.repository.findOne(uploaderId);
+        return this.repository.findOneBy({ id: uploaderId });
     }
 
     getByUserId(userId: number): Promise<UploaderEntity> {
-        return this.repository.findOne({ where: { userId } });
+        return this.repository.findOneBy({ user: { id: userId } });
     }
 
     getByShikimoriId(shikimoriId: string): Promise<UploaderEntity> {

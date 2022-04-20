@@ -41,6 +41,6 @@ export class UploadTokensService {
     }
 
     async revokeAllFromUploader(uploader: UploaderEntity): Promise<void> {
-        await this.repository.delete({ uploader });
+        await this.repository.delete({ uploader: { id: uploader.id } });
     }
 }

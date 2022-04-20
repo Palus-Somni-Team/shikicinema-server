@@ -1,5 +1,5 @@
-import { AuthService } from './auth.service';
-import { AuthenticatedGuard } from '../../guards/authenticated.guard';
+import { AuthService } from '@app-routes/auth/auth.service';
+import { AuthenticatedGuard } from '@app/guards/authenticated.guard';
 import {
     Body,
     Controller,
@@ -13,7 +13,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { IRequest } from './dto/IRequest';
-import { LocalGuard } from '../../guards/local.guard';
+import { LocalGuard } from '@app/guards/local.guard';
 import { OwnerUserInfo } from './dto/OwnerUserInfo';
 import { RegisterUser } from './dto/RegisterUser';
 import { ShikimoriAccessToken } from './dto/ShikimoriAccessToken';
