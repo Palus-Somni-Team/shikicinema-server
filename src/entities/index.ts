@@ -1,15 +1,8 @@
-import { SessionEntity } from './session';
-import { UploadTokenEntity } from './upload-token';
-import { UploaderEntity } from './uploader';
-import { UserEntity } from './user';
-import { VideoEntity } from './video';
-
-export { SessionEntity } from './session';
-export { UploadTokenEntity } from './upload-token';
-export { UploaderEntity } from './uploader';
-export { UserEntity } from './user';
-export { VideoEntity } from './video';
-
+import { SessionEntity } from '@app-entities/session';
+import { UploadTokenEntity } from '@app-entities/upload-token';
+import { UploaderEntity } from '@app-entities/uploader';
+import { UserEntity } from '@app-entities/user';
+import { VideoEntity } from '@app-entities/video';
 
 export const entities = [
     UserEntity,
@@ -18,3 +11,9 @@ export const entities = [
     SessionEntity,
     VideoEntity,
 ];
+
+export { SessionEntity } from '@app-entities/session';
+export { UploadTokenEntity } from '@app-entities/upload-token';
+export { UploaderEntity } from '@app-entities/uploader';
+export { UserEntity } from '@app-entities/user';
+export { VideoEntity } from '@app-entities/video';

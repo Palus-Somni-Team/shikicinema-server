@@ -77,6 +77,25 @@ module.exports = {
         'sort-imports-es6-autofix/sort-imports-es6': ['error', {
             'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
         }],
+        'no-restricted-imports': [
+            'warn',
+            {
+                'patterns': [
+                    {
+                        'group': ['.*'],
+                        'message': 'Use @app/ or @app-{path}/ instead. Don\'t use relative path imports!',
+                    },
+                ],
+            },
+        ],
     },
+    'overrides': [
+        {
+            'files': ['lib/**'],
+            'rules': {
+                'no-restricted-imports': 'off',
+            },
+        },
+    ],
     'ignorePatterns': ['node_modules', 'dist', 'test/*-config.ts'],
 };

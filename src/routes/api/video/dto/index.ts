@@ -1,6 +1,6 @@
-export { CreateVideoRequest } from './CreateVideoRequest.dto';
-export { GetEpisodesRequest } from './GetEpisodesRequest.dto';
-export { GetVideosRequest } from './GetVideosRequest.dto';
-export { VideoResponse } from './VideoResponse.dto';
-export { GetVideosResponse } from './GetVideosResponse.dto';
-export { GetEpisodesResponse } from './GetEpisodesResponse.dto';
+export { CreateVideoRequest } from '@app-routes/api/video/dto/CreateVideoRequest.dto';
+export { GetEpisodesRequest } from '@app-routes/api/video/dto/GetEpisodesRequest.dto';
+export { GetVideosRequest } from '@app-routes/api/video/dto/GetVideosRequest.dto';
+export { VideoResponse } from '@app-routes/api/video/dto/VideoResponse.dto';
+export { GetVideosResponse } from '@app-routes/api/video/dto/GetVideosResponse.dto';
+export { GetEpisodesResponse } from '@app-routes/api/video/dto/GetEpisodesResponse.dto';

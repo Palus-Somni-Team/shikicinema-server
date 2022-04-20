@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { VideoController } from './video.controller';
-import { VideoSharedModule } from '../../../services/video/video.shared.module';
+import { VideoController } from '@app-routes/api/video/video.controller';
+import { VideoSharedModule } from '@app-services/video/video.shared.module';
 
 @Module({
     imports: [VideoSharedModule],

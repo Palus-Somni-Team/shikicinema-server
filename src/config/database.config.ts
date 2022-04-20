@@ -1,11 +1,11 @@
 import { entities } from '@app-entities';
 import { registerAs } from '@nestjs/config';
 
-import { SessionSeed1607704017485 } from '../../seeds/1607704017485-session-seed';
-import { UploadTokenSeed1650995411336 } from '../../seeds/1650995411336-upload-token-seed';
-import { UploaderSeed1621024303293 } from '../../seeds/1621024303293-uploader-seed';
-import { UserSeed21607357974819 } from '../../seeds/1607357974819-user-seed';
-import { VideoSeed1621024590642 } from '../../seeds/1621024590642-video-seed';
+import { SessionSeed1607704017485 } from '@app-seeds/1607704017485-session-seed';
+import { UploadTokenSeed1650995411336 } from '@app-seeds/1650995411336-upload-token-seed';
+import { UploaderSeed1621024303293 } from '@app-seeds/1621024303293-uploader-seed';
+import { UserSeed21607357974819 } from '@app-seeds/1607357974819-user-seed';
+import { VideoSeed1621024590642 } from '@app-seeds/1621024590642-video-seed';
 
 export default registerAs('database', () => {
     const postgresConfig = {

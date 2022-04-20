@@ -4,12 +4,16 @@ import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { INestApplication } from '@nestjs/common';
-import { SessionEntity, UserEntity, VideoEntity } from '@app-entities';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
 import { getConnection, getRepository } from 'typeorm';
 
 import { AppModule } from '@app/app.module';
+import {
+    SessionEntity,
+    UserEntity,
+    VideoEntity,
+} from '@app-entities';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 
 describe('AppController (e2e)', () => {
@@ -246,7 +250,10 @@ describe('AppController (e2e)', () => {
                             .send({ login: 'admin', password: '12345678' });
                         const video = await getConnection()
                             .getRepository(VideoEntity)
-                            .findOne({ animeId, episode }, { relations: ['uploader'] });
+                            .findOne({
+                                where: { animeId, episode },
+                                relations: ['uploader'],
+                            });
 
                         return request(app.getHttpServer())
                             .patch(`/api/admin/videos/${video.id}`)
@@ -268,7 +275,10 @@ describe('AppController (e2e)', () => {
                             .send({ login: 'admin', password: '12345678' });
                         const video = await getConnection()
                             .getRepository(VideoEntity)
-                            .findOne({ animeId, episode }, { relations: ['uploader'] });
+                            .findOne({
+                                where: { animeId, episode },
+                                relations: ['uploader'],
+                            });
 
                         return request(app.getHttpServer())
                             .patch(`/api/admin/videos/${video.id}`)
@@ -336,7 +346,10 @@ describe('AppController (e2e)', () => {
                         .send({ login: 'admin', password: '12345678' });
                     const video = await getConnection()
                         .getRepository(VideoEntity)
-                        .findOne({ animeId: 21, episode: 113 }, { relations: ['uploader'] });
+                        .findOne({
+                            where: { animeId: 21, episode: 113 },
+                            relations: ['uploader'],
+                        });
 
                     return request(app.getHttpServer())
                         .get(`/api/admin/videos/${video.id}`)
@@ -483,7 +496,7 @@ describe('AppController (e2e)', () => {
                         .expect(async () => {
                             const video = await getConnection()
                                 .getRepository(VideoEntity)
-                                .findOne({ animeId, episode });
+                                .findOneBy({ animeId, episode });
                             const foundVideoAsReqBody: CreateVideoRequest = {
                                 animeId: video.animeId,
                                 episode: video.episode,

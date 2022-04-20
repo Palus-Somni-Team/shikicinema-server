@@ -9,7 +9,8 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '@lib-shikicinema';
-import { UploaderEntity } from './uploader';
+
+import { UploaderEntity } from '@app-entities';
 import { getIntArrayType } from '@app-utils/typeorm-helper';
 
 @Entity('users')

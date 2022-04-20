@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { AdminModule } from './admin/admin.module';
-import { UserModule } from './user/user.module';
-import { VideoModule } from './video/video.module';
+import { AdminModule } from '@app-routes/api/admin/admin.module';
+import { UserModule } from '@app-routes/api/user/user.module';
+import { VideoModule } from '@app-routes/api/video/video.module';
 
 @Module({
     imports: [AdminModule, UserModule, VideoModule],

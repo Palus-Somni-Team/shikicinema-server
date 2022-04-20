@@ -8,9 +8,9 @@ export class UploadTokenSeed1650995411336 implements MigrationInterface {
         const uploaderRepo = await getRepository(UploaderEntity);
         const uploadTokenRepo = await getRepository(UploadTokenEntity);
 
-        const admin = await uploaderRepo.findOne({ shikimoriId: '13371337' });
-        const user1 = await uploaderRepo.findOne({ shikimoriId: '88005553535' });
-        const banned = await uploaderRepo.findOne({ shikimoriId: '99999999' });
+        const admin = await uploaderRepo.findOneBy({ shikimoriId: '13371337' });
+        const user1 = await uploaderRepo.findOneBy({ shikimoriId: '88005553535' });
+        const banned = await uploaderRepo.findOneBy({ shikimoriId: '99999999' });
 
         seeds.push(
             new UploadTokenEntity('admin-test-upload-token', admin, new Date('3000-01-01')),

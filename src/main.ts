@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { TypeormStore } from 'connect-typeorm';
 import { getRepository } from 'typeorm';
 
-import { AppModule } from './app.module';
+import { AppModule } from '@app/app.module';
 import { SessionEntity } from '@app-entities';
 
 async function bootstrap() {

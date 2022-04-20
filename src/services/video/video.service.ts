@@ -21,8 +21,8 @@ export class VideoService {
             const uploaderRepo = await entityManager.getRepository(UploaderEntity);
             const videoRepo = await entityManager.getRepository(VideoEntity);
 
-            const uploaderEntity = await uploaderRepo.findOne(uploaderId);
-            let videoEntity = await videoRepo.findOne({ where: { url: video.url } });
+            const uploaderEntity = await uploaderRepo.findOneBy({ id: uploaderId });
+            let videoEntity = await videoRepo.findOneBy({ url: video.url });
 
             if (videoEntity) {
                 throw new AlreadyExistsException();

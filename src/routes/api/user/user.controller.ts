@@ -8,10 +8,11 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import { GetUserById, GetUsers } from '../../../services/user/dto';
-import { UserInfo } from './dto/UserInfo.dto';
-import { UserService } from '../../../services/user/user.service';
 import { plainToClass } from 'class-transformer';
+
+import { GetUserById, GetUsers } from '@app-services/user/dto';
+import { UserInfo } from '@app-routes/api/user/dto/UserInfo.dto';
+import { UserService } from '@app-services/user/user.service';
 
 @Controller('/')
 @UseInterceptors(ClassSerializerInterceptor)

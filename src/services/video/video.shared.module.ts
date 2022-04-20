@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { VideoEntity } from '@app-entities';
 
-import { UploaderSharedModule } from '../uploader/uploader.shared.module';
-import { VideoService } from './video.service';
+import { UploaderSharedModule } from '@app-services/uploader/uploader.shared.module';
+import { VideoEntity } from '@app-entities';
+import { VideoService } from '@app-services/video/video.service';
 
 @Module({
     imports: [
