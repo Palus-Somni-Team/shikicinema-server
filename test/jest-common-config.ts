@@ -1,4 +1,5 @@
 import { pathsToModuleNameMapper } from 'ts-jest/utils';
+import { InitialOptionsTsJest } from 'ts-jest/dist/types';
 
 const defaultJestConfig = require('./jest-default-config.json');
 const { compilerOptions } = require('../tsconfig.json');
@@ -13,6 +14,7 @@ for (const [alias, paths] of Object.entries<string[]>(compilerOptions.paths)) {
 
 export default {
     ...defaultJestConfig,
-    testRegex: 'spec.ts$',
+    testRegex: 'spec.ts$', // run all tests
+    coveragePathIgnorePatterns: [ '/node_modules/', '/seeds/', 'dto\.ts$' ], // ignore test migrations and DTOs
     moduleNameMapper: pathsToModuleNameMapper(pathMappings),
-};
+} as InitialOptionsTsJest;
