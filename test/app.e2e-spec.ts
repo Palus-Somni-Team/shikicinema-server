@@ -6,10 +6,11 @@ import { INestApplication } from '@nestjs/common';
 import { SessionEntity, UserEntity, VideoEntity } from '@app-entities';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
-import { VideoKindEnum } from '@lib-shikicinema';
+import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { getConnection, getRepository } from 'typeorm';
 
 import { AppModule } from '@app/app.module';
+import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
@@ -190,6 +191,114 @@ describe('AppController (e2e)', () => {
         });
 
         describe('/VIDEOS', () => {
+            const animeId = 21;
+            const episode = 113;
+            const positivePatchReqBodies: UpdateVideoRequest[] = [
+                { animeId, episode, author: 'jfhbdfgjbfdgdfgkjdf' },
+                { animeId, episode, author: null },
+                { animeId, episode, url: 'https://kekeke.lel' },
+                { animeId, episode, url: 'http://lelelele.kek' },
+                { animeId, episode, kind: VideoKindEnum.DUBBING },
+                { animeId, episode, kind: VideoKindEnum.SUBTITLES },
+                { animeId, episode, kind: VideoKindEnum.ORIGINAL },
+                { animeId, episode, language: 'en' },
+                { animeId, episode, language: null },
+                { animeId, episode, language: 'ru' },
+                { animeId, episode, quality: VideoQualityEnum.BD },
+                { animeId, episode, quality: VideoQualityEnum.TV },
+                { animeId, episode, quality: VideoQualityEnum.DVD },
+                { animeId, episode, quality: VideoQualityEnum.WEB },
+                { animeId, episode, quality: VideoQualityEnum.UNKNOWN },
+                { animeId, episode, watchesCount: 0 },
+                { animeId, episode, watchesCount: 0xDEADBEEF },
+            ];
+            const negativePatchReqBodies: Partial<UpdateVideoRequest>[] = [
+                {},
+                { animeId },
+                { episode },
+                { animeId, episode: null },
+                { animeId: null, episode: null },
+                { animeId: -1, episode: -4 },
+                { animeId: 3, episode: -1 },
+                { animeId: -3, episode: 2 },
+                { animeId: 3, episode: NaN },
+                { animeId: NaN, episode: 5 },
+                { animeId: NaN, episode: NaN },
+                { animeId: 3, episode: Infinity },
+                { animeId: Infinity, episode: 5 },
+                { animeId: Infinity, episode: Infinity },
+                { animeId, episode, watchesCount: null },
+                { animeId, episode, watchesCount: -5 },
+                { animeId, episode, watchesCount: NaN },
+                { animeId, episode, watchesCount: Infinity },
+                { animeId, episode, url: null },
+                { animeId, episode, kind: null },
+            ];
+
+            for (const [index, patchReqBody] of negativePatchReqBodies.entries()) {
+                const patchReqAsText = JSON.stringify(patchReqBody);
+
+                it(
+                    `should return 400 Bad Request #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
+                    async () => {
+                        const loginRes = await request(app.getHttpServer())
+                            .post('/auth/login')
+                            .send({ login: 'admin', password: '12345678' });
+                        const video = await getConnection()
+                            .getRepository(VideoEntity)
+                            .findOne({ animeId, episode }, { relations: ['uploader'] });
+
+                        return request(app.getHttpServer())
+                            .patch(`/api/admin/videos/${video.id}`)
+                            .set('Cookie', loginRes.get('Set-Cookie'))
+                            .send(patchReqBody)
+                            .expect(400);
+                    },
+                );
+            }
+
+            for (const [index, patchReqBody] of positivePatchReqBodies.entries()) {
+                const patchReqAsText = JSON.stringify(patchReqBody);
+
+                it(
+                    `should return 200 OK & update video #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
+                    async () => {
+                        const loginRes = await request(app.getHttpServer())
+                            .post('/auth/login')
+                            .send({ login: 'admin', password: '12345678' });
+                        const video = await getConnection()
+                            .getRepository(VideoEntity)
+                            .findOne({ animeId, episode }, { relations: ['uploader'] });
+
+                        return request(app.getHttpServer())
+                            .patch(`/api/admin/videos/${video.id}`)
+                            .set('Cookie', loginRes.get('Set-Cookie'))
+                            .send(patchReqBody)
+                            .expect(200)
+                            .expect((res) => {
+                                expect(res.body).toEqual(expect.objectContaining({
+                                    id: video.id,
+                                    animeId: patchReqBody.animeId ?? video.animeId,
+                                    author: patchReqBody.author ?? video.author,
+                                    episode: patchReqBody.episode ?? video.episode,
+                                    kind: patchReqBody.kind ?? video.kind,
+                                    language: patchReqBody.language ?? video.language,
+                                    quality: patchReqBody.quality ?? video.quality,
+                                    uploader: {
+                                        shikimoriId: video.uploader.shikimoriId,
+                                        banned: video.uploader.banned,
+                                        id: video.uploader.id,
+                                    },
+                                    url: patchReqBody.url ?? video.url,
+                                    watchesCount: patchReqBody.watchesCount ?? video.watchesCount,
+                                    createdAt: expect.any(String),
+                                    updatedAt: expect.any(String),
+                                }));
+                            });
+                    },
+                );
+            }
+
             it(
                 'should delete video DELETE /api/admin/videos/:videoId',
                 async () => {

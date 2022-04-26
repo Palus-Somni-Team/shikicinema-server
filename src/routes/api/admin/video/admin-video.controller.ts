@@ -1,5 +1,6 @@
-import { Body, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { Role } from '@lib-shikicinema';
+import { Body, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { GetByIdParamRequest, Role } from '@lib-shikicinema';
+import { plainToClass } from 'class-transformer';
 
 import { AllowRoles, RoleGuard } from '@app/guards/role.guard';
 import { UpdateVideoRequest } from './dto';
@@ -11,19 +12,24 @@ import { VideoResponse } from '@app-routes/api/video/dto';
 @AllowRoles(Role.admin)
 export class AdminVideoController extends VideoController {
     @Get(':id')
-    async getById(@Param() videoId: number): Promise<VideoResponse> {
-        const video = await this.videoService.findById(videoId);
-        return new VideoResponse(video);
+    async getById(@Param() params: GetByIdParamRequest): Promise<VideoResponse> {
+        const video = await this.videoService.findById(params.id);
+
+        return plainToClass(VideoResponse, video);
     }
 
-    @Put(':id')
-    async update(@Param() videoId: number, @Body() request: UpdateVideoRequest): Promise<VideoResponse> {
-        const video = await this.videoService.update(videoId, request);
-        return new VideoResponse(video);
+    @Patch(':id')
+    async update(
+        @Param() params: GetByIdParamRequest,
+            @Body() request: UpdateVideoRequest,
+    ): Promise<VideoResponse> {
+        const video = await this.videoService.update(params.id, request);
+
+        return plainToClass(VideoResponse, video);
     }
 
     @Delete(':id')
-    async remove(@Param() videoId: number): Promise<void> {
-        await this.videoService.delete(videoId);
+    async remove(@Param() params: GetByIdParamRequest): Promise<void> {
+        await this.videoService.delete(params.id);
     }
 }

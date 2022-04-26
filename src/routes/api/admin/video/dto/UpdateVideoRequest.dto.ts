@@ -1,46 +1,52 @@
 import { Expose } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsNonNullableOptional } from '@app-utils/class-validate.utils';
 import { UpdateVideoRequest as Request, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
 export class UpdateVideoRequest implements Request {
     @Expose()
-    @IsOptional()
+    @IsNonNullableOptional()
     @IsString()
     @Length(5, 256)
     url?: string;
 
     @Expose()
-    @IsOptional()
     @IsInt()
+    @Min(0)
+    @IsNumber({ allowNaN: false, allowInfinity: false })
     animeId: number;
 
     @Expose()
-    @IsOptional()
     @IsInt()
     @Min(1)
+    @IsNumber({ allowNaN: false, allowInfinity: false })
     episode: number;
 
     @Expose()
+    @IsNonNullableOptional()
+    @IsEnum(VideoKindEnum)
     kind?: VideoKindEnum;
 
     @Expose()
     @IsOptional()
     @IsString()
-    @Length(3, 16)
+    @Length(2, 16)
     language?: string;
 
     @Expose()
+    @IsNonNullableOptional()
+    @IsEnum(VideoQualityEnum)
     quality?: VideoQualityEnum;
 
     @Expose()
     @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    author?: string;
+    author?: string | null;
 
     @Expose()
-    @IsOptional()
+    @IsNonNullableOptional()
     @IsInt()
     @Min(0)
+    @IsNumber({ allowNaN: false, allowInfinity: false })
     watchesCount?: number;
 }

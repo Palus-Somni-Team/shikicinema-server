@@ -20,6 +20,6 @@ export interface UpdateVideoRequest {
     kind?: VideoKindEnum;
     language?: string;
     quality?: VideoQualityEnum;
-    author?: string;
+    author?: string | null;
     watchesCount?: number;
 }

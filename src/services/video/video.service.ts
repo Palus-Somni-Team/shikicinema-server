@@ -43,7 +43,6 @@ export class VideoService {
         return entity;
     }
 
-    @Transaction()
     async update(id: number, video: UpdateVideoRequest): Promise<VideoEntity> {
         let entity = await this.repository.findOne({
             where: { id },
@@ -71,9 +70,9 @@ export class VideoService {
         await this.repository.delete({ id });
     }
 
-    async findById(videoId: number): Promise<VideoEntity> {
+    async findById(id: number): Promise<VideoEntity> {
         const video = await this.repository.findOne({
-            where: { id: videoId },
+            where: { id },
             relations: ['uploader'],
         });
 

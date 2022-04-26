@@ -5,16 +5,16 @@ import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
  */
 export interface Video {
     /**
+     * Resource ID
+     */
+    id: number;
+
+    /**
      * Url that provides the video and can be used in an iframe component.
      *
      * @example https://video.sibnet.ru/shell.php?videoid=3388202&share=1.
      */
     url: string;
-
-    /**
-     * Domain part of url.
-     */
-    domain: string;
 
     /**
      * Id of an anime from shikimori.one.
