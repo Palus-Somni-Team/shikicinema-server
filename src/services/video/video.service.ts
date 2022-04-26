@@ -1,69 +1,71 @@
 import { CreateVideoRequest, VideoKindEnum } from '@lib-shikicinema';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository, Transaction } from 'typeorm';
+import { Repository, getManager } from 'typeorm';
 
 import { AlreadyExistsException } from '@app-utils/exceptions/already-exists.exception';
 import { AnimeEpisodeInfo } from '@app-routes/api/video/dto/AnimeEpisodeInfo.dto';
 import { RawAnimeEpisodeInfoInterface } from '@app-routes/api/video/types/raw-anime-episode-info.interface';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
-import { UploaderService } from '@app-services/uploader/uploader.service';
-import { VideoEntity } from '@app-entities';
+import { UploaderEntity, VideoEntity } from '@app-entities';
 
 @Injectable()
 export class VideoService {
     constructor(
         @InjectRepository(VideoEntity)
         private readonly repository: Repository<VideoEntity>,
-        private readonly uploaderService: UploaderService,
     ) {}
 
-    @Transaction()
     async create(uploaderId: number, video: CreateVideoRequest): Promise<VideoEntity> {
-        const uploader = await this.uploaderService.getByUploaderId(uploaderId);
-        let entity = await this.repository.findOne({ where: { url: video.url } });
+        return getManager().transaction(async (entityManager) => {
+            const uploaderRepo = await entityManager.getRepository(UploaderEntity);
+            const videoRepo = await entityManager.getRepository(VideoEntity);
 
-        if (entity) {
-            throw new AlreadyExistsException();
-        } else {
-            entity = new VideoEntity(
-                video.animeId,
-                video.episode,
-                video.url,
-                video.kind,
-                video.language,
-                video.quality,
-                video.author,
-                uploader,
-            );
+            const uploaderEntity = await uploaderRepo.findOne(uploaderId);
+            let videoEntity = await videoRepo.findOne({ where: { url: video.url } });
 
-            entity = await this.repository.save(entity);
-        }
+            if (videoEntity) {
+                throw new AlreadyExistsException();
+            } else {
+                videoEntity = new VideoEntity(
+                    video.animeId,
+                    video.episode,
+                    video.url,
+                    video.kind,
+                    video.language,
+                    video.quality,
+                    video.author,
+                    uploaderEntity,
+                );
 
-        return entity;
+                return videoRepo.save(videoEntity);
+            }
+        });
     }
 
     async update(id: number, video: UpdateVideoRequest): Promise<VideoEntity> {
-        let entity = await this.repository.findOne({
-            where: { id },
-            relations: ['uploader'],
+        return getManager().transaction(async (entityManager) => {
+            const videoRepo = await entityManager.getRepository(VideoEntity);
+
+            const entity = await videoRepo.findOne({
+                where: { id },
+                relations: ['uploader'],
+            });
+
+            if (!entity) {
+                throw new NotFoundException();
+            }
+
+            entity.episode = video?.episode ?? entity.episode;
+            entity.url = video.url ?? entity.url;
+            entity.kind = video.kind ?? entity.kind;
+            entity.language = video.language ?? entity.language;
+            entity.quality = video.quality ?? entity.quality;
+            entity.author = video.author ?? entity.author;
+            entity.watchesCount = video.watchesCount ?? entity.watchesCount;
+
+            return videoRepo.save(entity);
         });
-
-        if (!entity) {
-            throw new NotFoundException();
-        }
-
-        entity.episode = video?.episode ?? entity.episode;
-        entity.url = video.url ?? entity.url;
-        entity.kind = video.kind ?? entity.kind;
-        entity.language = video.language ?? entity.language;
-        entity.quality = video.quality ?? entity.quality;
-        entity.author = video.author ?? entity.author;
-        entity.watchesCount = video.watchesCount ?? entity.watchesCount;
-
-        entity = await this.repository.save(entity);
-
-        return entity;
     }
 
     async delete(id: number): Promise<void> {

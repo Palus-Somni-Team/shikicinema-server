@@ -2,11 +2,11 @@ import * as passport from 'passport';
 import * as request from 'supertest';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
+import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { INestApplication } from '@nestjs/common';
 import { SessionEntity, UserEntity, VideoEntity } from '@app-entities';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
-import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { getConnection, getRepository } from 'typeorm';
 
 import { AppModule } from '@app/app.module';
@@ -300,6 +300,70 @@ describe('AppController (e2e)', () => {
             }
 
             it(
+                'should return 404 Not Found PATCH /api/admin/videos/:videoId',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'admin', password: '12345678' });
+
+                    return request(app.getHttpServer())
+                        .patch(`/api/admin/videos/${0xDEAD_BEEF}`)
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .send(positivePatchReqBodies[0])
+                        .expect(404);
+                },
+            );
+
+            it(
+                'should return 404 Not Found GET /api/admin/videos/:videoId',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'admin', password: '12345678' });
+
+                    return request(app.getHttpServer())
+                        .get(`/api/admin/videos/${0xDEAD_BEEF}`)
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .expect(404);
+                },
+            );
+
+            it(
+                'should find video and return in format GET /api/admin/videos/:videoId',
+                async () => {
+                    const loginRes = await request(app.getHttpServer())
+                        .post('/auth/login')
+                        .send({ login: 'admin', password: '12345678' });
+                    const video = await getConnection()
+                        .getRepository(VideoEntity)
+                        .findOne({ animeId: 21, episode: 113 }, { relations: ['uploader'] });
+
+                    return request(app.getHttpServer())
+                        .get(`/api/admin/videos/${video.id}`)
+                        .set('Cookie', loginRes.get('Set-Cookie'))
+                        .expect(200)
+                        .expect({
+                            animeId: video.animeId,
+                            episode: video.episode,
+                            url: video.url,
+                            kind: video.kind,
+                            language: video.language,
+                            quality: video.quality,
+                            author: video.author,
+                            uploader: {
+                                shikimoriId: video.uploader.shikimoriId,
+                                banned: video.uploader.banned,
+                                id: video.uploader.id,
+                            },
+                            watchesCount: video.watchesCount,
+                            id: video.id,
+                            createdAt: video.createdAt.toISOString(),
+                            updatedAt: video.updatedAt.toISOString(),
+                        });
+                },
+            );
+
+            it(
                 'should delete video DELETE /api/admin/videos/:videoId',
                 async () => {
                     const loginRes = await request(app.getHttpServer())
@@ -394,6 +458,68 @@ describe('AppController (e2e)', () => {
                     return request(app.getHttpServer())
                         .get(`/api/videos/${animeId}/info`)
                         .expect(404);
+                },
+            );
+
+            it(
+                'should return 201 & create video POST /api/videos',
+                async () => {
+                    const animeId = 12345000;
+                    const episode = 5;
+                    const reqBody: CreateVideoRequest = {
+                        animeId,
+                        episode,
+                        language: 'ru',
+                        author: 'some author',
+                        kind: VideoKindEnum.ORIGINAL,
+                        quality: VideoQualityEnum.WEB,
+                        url: 'https://test.com/upload_video.mp4',
+                    };
+
+                    return request(app.getHttpServer())
+                        .post('/api/videos')
+                        .set('Authorization', 'Bearer user1-test-upload-token')
+                        .send(reqBody)
+                        .expect(201)
+                        .expect(async () => {
+                            const video = await getConnection()
+                                .getRepository(VideoEntity)
+                                .findOne({ animeId, episode });
+                            const foundVideoAsReqBody: CreateVideoRequest = {
+                                animeId: video.animeId,
+                                episode: video.episode,
+                                language: video.language,
+                                author: video.author,
+                                kind: +video.kind,
+                                quality: +video.quality,
+                                url: video.url,
+                            };
+
+                            expect(foundVideoAsReqBody).toStrictEqual(reqBody);
+                        });
+                },
+            );
+
+            it(
+                'should return 409 Already exists POST /api/videos',
+                async () => {
+                    const animeId = 21;
+                    const episode = 113;
+                    const reqBody: CreateVideoRequest = {
+                        animeId,
+                        episode,
+                        language: 'ru',
+                        author: 'some author',
+                        kind: VideoKindEnum.ORIGINAL,
+                        quality: VideoQualityEnum.WEB,
+                        url: 'https://test.com/upload_video.mp4',
+                    };
+
+                    return request(app.getHttpServer())
+                        .post('/api/videos')
+                        .set('Authorization', 'Bearer user1-test-upload-token')
+                        .send(reqBody)
+                        .expect(409);
                 },
             );
         });
