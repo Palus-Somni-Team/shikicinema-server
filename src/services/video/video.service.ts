@@ -106,10 +106,6 @@ export class VideoService {
             rawEpisodes.map((ep) => ep.episode)
         );
 
-        if (rawEpisodes.length === 0) {
-            throw new NotFoundException();
-        }
-
         for (const { episode, kind, url } of rawEpisodes) {
             const domain = new URL(url).hostname;
             let kinds = kindsMap.get(episode);

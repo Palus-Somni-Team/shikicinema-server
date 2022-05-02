@@ -452,13 +452,14 @@ describe('AppController (e2e)', () => {
             );
 
             it(
-                'should return 404 Not Found if cannot found anime with this id GET /api/videos/:animeId/info',
+                'should return 200 OK and empty body if cannot found anime with this id GET /api/videos/:animeId/info',
                 async () => {
                     const animeId = 404;
 
                     return request(app.getHttpServer())
                         .get(`/api/videos/${animeId}/info`)
-                        .expect(404);
+                        .expect(200)
+                        .expect({});
                 },
             );
 
