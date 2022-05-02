@@ -94,12 +94,12 @@ export class VideoService {
 
     async getInfo(animeId: number): Promise<AnimeEpisodeInfo> {
         const animeEpisodeInfo: AnimeEpisodeInfo = {};
-        const rawEpisodes: RawAnimeEpisodeInfoInterface[] = await this.repository
+        const rawEpisodes = await this.repository
             .createQueryBuilder()
             .select(['episode', 'kind', 'url'])
             .distinct(true)
             .where('anime_id = :animeId', { animeId })
-            .getRawMany();
+            .getRawMany<RawAnimeEpisodeInfoInterface>();
         const kindsMap = new Map<number, Set<VideoKindEnum>>();
         const domainsMap = new Map<number, Set<string>>();
         const episodes = new Set<number>(
@@ -129,7 +129,7 @@ export class VideoService {
                 domains = epDomains;
             }
 
-            kinds.add(+kind);
+            kinds.add(kind);
             domains.add(domain);
         }
 

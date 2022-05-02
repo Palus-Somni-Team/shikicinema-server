@@ -25,13 +25,13 @@ export class VideoEntity {
     @Column()
     url: string;
 
-    @Column({ enum: VideoKindEnum })
+    @Column('smallint')
     kind: VideoKindEnum;
 
     @Column()
     language: string;
 
-    @Column({ enum: VideoQualityEnum })
+    @Column('smallint')
     quality: VideoQualityEnum;
 
     @Column()
