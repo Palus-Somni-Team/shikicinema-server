@@ -15,8 +15,8 @@ import { VideoQualityEnum } from './VideoQualityEnum';
  */
 export interface UpdateVideoRequest {
     url?: string;
-    animeId: number;
-    episode: number;
+    animeId?: number;
+    episode?: number;
     kind?: VideoKindEnum;
     language?: string;
     quality?: VideoQualityEnum;

@@ -13,14 +13,16 @@ export class UpdateVideoRequest implements Request {
     @Expose()
     @IsInt()
     @Min(0)
+    @IsNonNullableOptional()
     @IsNumber({ allowNaN: false, allowInfinity: false })
-    animeId: number;
+    animeId?: number;
 
     @Expose()
     @IsInt()
     @Min(1)
+    @IsNonNullableOptional()
     @IsNumber({ allowNaN: false, allowInfinity: false })
-    episode: number;
+    episode?: number;
 
     @Expose()
     @IsNonNullableOptional()

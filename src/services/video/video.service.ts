@@ -56,6 +56,7 @@ export class VideoService {
                 throw new NotFoundException();
             }
 
+            entity.animeId = video?.animeId ?? entity.animeId;
             entity.episode = video?.episode ?? entity.episode;
             entity.url = video.url ?? entity.url;
             entity.kind = video.kind ?? entity.kind;

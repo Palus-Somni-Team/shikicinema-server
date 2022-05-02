@@ -194,6 +194,9 @@ describe('AppController (e2e)', () => {
             const animeId = 21;
             const episode = 113;
             const positivePatchReqBodies: UpdateVideoRequest[] = [
+                {},
+                { animeId },
+                { episode },
                 { animeId, episode, author: 'jfhbdfgjbfdgdfgkjdf' },
                 { animeId, episode, author: null },
                 { animeId, episode, url: 'https://kekeke.lel' },
@@ -213,9 +216,6 @@ describe('AppController (e2e)', () => {
                 { animeId, episode, watchesCount: 0xDEADBEEF },
             ];
             const negativePatchReqBodies: Partial<UpdateVideoRequest>[] = [
-                {},
-                { animeId },
-                { episode },
                 { animeId, episode: null },
                 { animeId: null, episode: null },
                 { animeId: -1, episode: -4 },
