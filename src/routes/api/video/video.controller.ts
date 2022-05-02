@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 
 import { BaseController } from '@app-routes/base.controller';
-import { CreateVideoRequest, GetVideosRequest } from './dto';
+import { CreateVideoRequest, GetVideosRequest } from '@app-routes/api/video/dto';
 import { IRequest } from '@app-routes/auth/dto/IRequest';
 import { UploadTokenGuard } from '@app/guards/upload-token.guard';
 import { VideoService } from '@app-services/video/video.service';

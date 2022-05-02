@@ -8,9 +8,9 @@ const seeds: VideoEntity[] = [];
 export class VideoSeed1621024590642 implements MigrationInterface {
     public async up(): Promise<void> {
         const uploaderRepo = await getRepository(UploaderEntity);
-        const user = await uploaderRepo.findOne({ shikimoriId: '278015' });
-        const admin = await uploaderRepo.findOne({ shikimoriId: '13371337' });
-        const banned = await uploaderRepo.findOne({ shikimoriId: '99999999' });
+        const user = await uploaderRepo.findOneBy({ shikimoriId: '278015' });
+        const admin = await uploaderRepo.findOneBy({ shikimoriId: '13371337' });
+        const banned = await uploaderRepo.findOneBy({ shikimoriId: '99999999' });
 
         seeds.push(
             new VideoEntity(21, 113, 'https://kek.lol', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, 'keker', user),

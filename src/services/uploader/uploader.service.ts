@@ -1,9 +1,15 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PgException, isPgException } from '@app-utils/postgres.utils';
 import { Repository, getConnection } from 'typeorm';
+
+import { PgException, isPgException } from '@app-utils/postgres.utils';
 import { UploaderEntity } from '@app-entities';
-import { UserService } from '../user/user.service';
+import { UserService } from '@app-services/user/user.service';
 
 @Injectable()
 export class UploaderService {
@@ -34,11 +40,11 @@ export class UploaderService {
     }
 
     getByUploaderId(uploaderId: number): Promise<UploaderEntity> {
-        return this.repository.findOne(uploaderId);
+        return this.repository.findOneBy({ id: uploaderId });
     }
 
     getByUserId(userId: number): Promise<UploaderEntity> {
-        return this.repository.findOne({ where: { userId } });
+        return this.repository.findOneBy({ user: { id: userId } });
     }
 
     getByShikimoriId(shikimoriId: string): Promise<UploaderEntity> {

@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { GetVideosResponse as Response } from '@lib-shikicinema';
 
-import { VideoResponse } from './VideoResponse.dto';
+import { VideoResponse } from '@app-routes/api/video/dto/VideoResponse.dto';
 
 export class GetVideosResponse implements Response {
     @Expose()

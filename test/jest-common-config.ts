@@ -1,4 +1,4 @@
-import { pathsToModuleNameMapper } from 'ts-jest/utils';
+import { pathsToModuleNameMapper } from 'ts-jest';
 import { InitialOptionsTsJest } from 'ts-jest/dist/types';
 
 const defaultJestConfig = require('./jest-default-config.json');

@@ -1,9 +1,10 @@
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreateUser, GetUserById, GetUsers, UpdateUser } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PgException, isPgException } from '@app-utils/postgres.utils';
 import { Repository } from 'typeorm';
 import { Role } from '@lib-shikicinema';
+
+import { CreateUser, GetUserById, GetUsers, UpdateUser } from '@app-services/user/dto';
+import { PgException, isPgException } from '@app-utils/postgres.utils';
 import { UserEntity } from '@app-entities';
 import { parseWhere } from '@app-utils/where-parser.utils';
 
@@ -14,8 +15,8 @@ export class UserService {
         private readonly repository: Repository<UserEntity>,
     ) {}
 
-    async findById(id: GetUserById): Promise<UserEntity> {
-        const user = await this.repository.findOne(id);
+    async findById({ id }: GetUserById): Promise<UserEntity> {
+        const user = await this.repository.findOne({ where: { id } });
 
         if (!user) {
             throw new NotFoundException();

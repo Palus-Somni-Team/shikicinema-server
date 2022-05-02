@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { UploaderEntity } from '@app-entities';
-import { UploaderService } from './uploader.service';
-import { UserSharedModule } from '../user/user.shared.module';
+import { UploaderService } from '@app-services/uploader/uploader.service';
+import { UserSharedModule } from '@app-services/user/user.shared.module';
 
 @Module({
     imports: [

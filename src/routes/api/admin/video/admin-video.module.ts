@@ -1,8 +1,8 @@
-import { AdminVideoController } from './admin-video.controller';
 import { Module } from '@nestjs/common';
 
-import { UserSharedModule } from '../../../../services/user/user.shared.module';
-import { VideoSharedModule } from '../../../../services/video/video.shared.module';
+import { AdminVideoController } from '@app-routes/api/admin/video/admin-video.controller';
+import { UserSharedModule } from '@app-services/user/user.shared.module';
+import { VideoSharedModule } from '@app-services/video/video.shared.module';
 
 @Module({
     imports: [

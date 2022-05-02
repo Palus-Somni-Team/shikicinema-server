@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+
 import { SessionEntity } from '@app-entities';
 
 @Injectable()
@@ -10,8 +11,8 @@ export class SessionService {
         private readonly repository: Repository<SessionEntity>
     ) {}
 
-    findById(sid: string) {
-        return this.repository.findOne(sid);
+    findById(id: string) {
+        return this.repository.findOneBy({ id });
     }
 
     async revokeById(sid: string) {

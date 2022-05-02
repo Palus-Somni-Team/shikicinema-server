@@ -3,7 +3,7 @@ import { GetByIdParamRequest, Role } from '@lib-shikicinema';
 import { plainToClass } from 'class-transformer';
 
 import { AllowRoles, RoleGuard } from '@app/guards/role.guard';
-import { UpdateVideoRequest } from './dto';
+import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 import { VideoController } from '@app-routes/api/video/video.controller';
 import { VideoResponse } from '@app-routes/api/video/dto';
 

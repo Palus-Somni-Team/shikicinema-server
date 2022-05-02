@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { GetEpisodesResponse as Response } from '@lib-shikicinema';
 
-import { AnimeEpisodeInfo } from './AnimeEpisodeInfo.dto';
+import { AnimeEpisodeInfo } from '@app-routes/api/video/dto/AnimeEpisodeInfo.dto';
 
 export class GetEpisodesResponse implements Response {
     @Expose()

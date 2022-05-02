@@ -58,13 +58,44 @@ module.exports = {
         'no-useless-rename': 'error',
         // see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md
         'indent': 'off',
-        '@typescript-eslint/indent': ['error'],
+        // see https://github.com/typescript-eslint/typescript-eslint/issues/1824#issuecomment-957559729
+        // indent rules are broken for decorators
+        '@typescript-eslint/indent': [
+            'error',
+            4,
+            {
+                'ignoredNodes': [
+                    'FunctionExpression > .params[decorators.length > 0]',
+                    'FunctionExpression > .params > :matches(Decorator, :not(:first-child))',
+                    'ClassBody.body > PropertyDefinition[decorators.length > 0] > .key',
+                ],
+            },
+        ],
         'new-cap': 'off',
         'require-jsdoc': 'off',
         // see https://github.com/marudor/eslint-plugin-sort-imports-es6-autofix/blob/master/README.md
         'sort-imports-es6-autofix/sort-imports-es6': ['error', {
             'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
         }],
+        'no-restricted-imports': [
+            'warn',
+            {
+                'patterns': [
+                    {
+                        'group': ['.*'],
+                        'message': 'Use @app/ or @app-{path}/ instead. Don\'t use relative path imports!',
+                    },
+                ],
+            },
+        ],
     },
+    'overrides': [
+        {
+            'files': ['lib/**'],
+            'rules': {
+                'no-restricted-imports': 'off',
+            },
+        },
+    ],
     'ignorePatterns': ['node_modules', 'dist', 'test/*-config.ts'],
 };
