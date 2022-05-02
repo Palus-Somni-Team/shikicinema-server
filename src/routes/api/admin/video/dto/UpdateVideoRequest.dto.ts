@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsEnum, IsISO31661Alpha2, IsInt, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
 import { IsNonNullableOptional } from '@app-utils/class-validate.utils';
 import { UpdateVideoRequest as Request, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
@@ -29,8 +29,7 @@ export class UpdateVideoRequest implements Request {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    @Length(2, 16)
+    @IsISO31661Alpha2()
     language?: string;
 
     @Expose()

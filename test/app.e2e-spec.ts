@@ -201,7 +201,7 @@ describe('AppController (e2e)', () => {
                 { animeId, episode, kind: VideoKindEnum.DUBBING },
                 { animeId, episode, kind: VideoKindEnum.SUBTITLES },
                 { animeId, episode, kind: VideoKindEnum.ORIGINAL },
-                { animeId, episode, language: 'en' },
+                { animeId, episode, language: 'us' },
                 { animeId, episode, language: null },
                 { animeId, episode, language: 'ru' },
                 { animeId, episode, quality: VideoQualityEnum.BD },
