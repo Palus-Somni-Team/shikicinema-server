@@ -423,10 +423,7 @@ describe('AppController (e2e)', () => {
                     const animeId = 1;
                     const videos = await getConnection()
                         .getRepository(VideoEntity)
-                        .find({
-                            where: { animeId },
-                            relations: ['uploader'],
-                        });
+                        .find({ where: { animeId } });
 
                     return request(app.getHttpServer())
                         .get(`/api/videos?animeId=${animeId}`)
