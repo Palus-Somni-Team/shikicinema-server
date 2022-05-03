@@ -563,6 +563,35 @@ describe('AppController (e2e)', () => {
                         .expect(404);
                 },
             );
+
+            it(
+                'should return 200 OK GET /api/videos/by-uploader',
+                async () => {
+                    const shikimoriId = '13371337';
+                    const videos = await getConnection()
+                        .getRepository(VideoEntity)
+                        .find({
+                            where: { uploader: { shikimoriId } },
+                        });
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos/by-uploader?shikimoriId=${shikimoriId}`)
+                        .expect(200)
+                        .expect((res) => res.body.length === videos.length);
+                },
+            );
+
+            it(
+                'should return 200 OK & empty array GET /api/videos/by-uploader',
+                async () => {
+                    const shikimoriId = '404404404';
+
+                    return request(app.getHttpServer())
+                        .get(`/api/videos/by-uploader?shikimoriId=${shikimoriId}`)
+                        .expect(200)
+                        .expect([]);
+                },
+            );
         });
     });
 });

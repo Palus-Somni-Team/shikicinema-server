@@ -4,3 +4,4 @@ export { GetVideosRequest } from '@app-routes/api/video/dto/GetVideosRequest.dto
 export { VideoResponse } from '@app-routes/api/video/dto/VideoResponse.dto';
 export { GetVideosResponse } from '@app-routes/api/video/dto/GetVideosResponse.dto';
 export { GetEpisodesResponse } from '@app-routes/api/video/dto/GetEpisodesResponse.dto';
+export { GetVideosByUploaderRequest } from '@app-routes/api/video/dto/GetVideosByUploaderRequest.dto';

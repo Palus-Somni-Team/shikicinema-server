@@ -2,7 +2,8 @@ import {
     Body,
     Controller,
     Get,
-    Param, Patch,
+    Param,
+    Patch,
     Post,
     Query,
     Req,
@@ -11,7 +12,11 @@ import {
 import { GetByIdParamRequest } from '@lib-shikicinema';
 
 import { BaseController } from '@app-routes/base.controller';
-import { CreateVideoRequest, GetVideosRequest } from '@app-routes/api/video/dto';
+import {
+    CreateVideoRequest,
+    GetVideosByUploaderRequest,
+    GetVideosRequest,
+} from '@app-routes/api/video/dto';
 import { IRequest } from '@app-routes/auth/dto/IRequest';
 import { UploadTokenGuard } from '@app/guards/upload-token.guard';
 import { VideoService } from '@app-services/video/video.service';
@@ -25,6 +30,11 @@ export class VideoController extends BaseController {
     @Get()
     async find(@Query() request: GetVideosRequest) {
         return this.videoService.find(request.animeId, request.episode);
+    }
+
+    @Get('by-uploader')
+    async findByUploader(@Query() query: GetVideosByUploaderRequest) {
+        return this.videoService.findByUploader(query);
     }
 
     @Get('info')

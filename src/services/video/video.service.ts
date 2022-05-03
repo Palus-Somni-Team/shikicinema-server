@@ -5,9 +5,11 @@ import { Repository, getManager } from 'typeorm';
 
 import { AlreadyExistsException } from '@app-utils/exceptions/already-exists.exception';
 import { AnimeEpisodeInfo } from '@app-routes/api/video/dto/AnimeEpisodeInfo.dto';
+import { GetVideosByUploaderRequest } from '@app-routes/api/video/dto';
 import { RawAnimeEpisodeInfoInterface } from '@app-routes/api/video/types/raw-anime-episode-info.interface';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 import { UploaderEntity, VideoEntity } from '@app-entities';
+import { parseWhere } from '@app-utils/where-parser.utils';
 
 @Injectable()
 export class VideoService {
@@ -90,6 +92,22 @@ export class VideoService {
         return this.repository.find({
             where: { animeId, episode },
             relations: ['uploader'],
+        });
+    }
+
+    async findByUploader(query: GetVideosByUploaderRequest): Promise<VideoEntity[]> {
+        const { where, limit, offset } = parseWhere(query);
+        const uploader: Partial<GetVideosByUploaderRequest> = {};
+
+        for (const [key, value] of Object.entries(where)) {
+            uploader[key] = value;
+        }
+
+        return this.repository.find({
+            where: { uploader },
+            relations: ['uploader'],
+            skip: offset ?? 0,
+            take: limit || 20,
         });
     }
 
