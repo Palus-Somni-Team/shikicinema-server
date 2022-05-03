@@ -27,9 +27,9 @@ export class VideoController extends BaseController {
         return this.videoService.find(request.animeId, request.episode);
     }
 
-    @Get(':animeId/info')
-    async getInfo(@Param() params: { animeId: number }) {
-        return this.videoService.getInfo(params.animeId);
+    @Get('info')
+    async getInfo(@Query() request: GetVideosRequest) {
+        return this.videoService.getInfo(request.animeId);
     }
 
     @Post()

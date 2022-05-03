@@ -446,12 +446,12 @@ describe('AppController (e2e)', () => {
             );
 
             it(
-                'should return correct info by animeId GET /api/videos/:animeId/info',
+                'should return correct info by animeId GET /api/videos/info',
                 async () => {
                     const animeId = 1;
 
                     return request(app.getHttpServer())
-                        .get(`/api/videos/${animeId}/info`)
+                        .get(`/api/videos/info?animeId=${animeId}`)
                         .expect(200)
                         .expect({
                             1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
@@ -462,12 +462,12 @@ describe('AppController (e2e)', () => {
             );
 
             it(
-                'should return 200 OK and empty body if cannot found anime with this id GET /api/videos/:animeId/info',
+                'should return 200 OK and empty body if cannot found anime with this id GET /api/videos/info',
                 async () => {
                     const animeId = 404;
 
                     return request(app.getHttpServer())
-                        .get(`/api/videos/${animeId}/info`)
+                        .get(`/api/videos/info?animeId=${animeId}`)
                         .expect(200)
                         .expect({});
                 },
