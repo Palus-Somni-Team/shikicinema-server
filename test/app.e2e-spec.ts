@@ -534,6 +534,35 @@ describe('AppController (e2e)', () => {
                         .expect(409);
                 },
             );
+
+            it(
+                'should return 200 OK PATCH /api/videos/:videoId/watch',
+                async () => {
+                    const animeId = 1;
+                    const episode = 1;
+                    const video = await getConnection()
+                        .getRepository(VideoEntity)
+                        .findOneBy({ animeId, episode });
+
+                    return request(app.getHttpServer())
+                        .patch(`/api/videos/${video.id}/watch`)
+                        .send()
+                        .expect(200)
+                        .expect({});
+                },
+            );
+
+            it(
+                'should return 404 Not Found for non-existing video PATCH /api/videos/:videoId/watch',
+                async () => {
+                    const videoId = 404;
+
+                    return request(app.getHttpServer())
+                        .patch(`/api/videos/${videoId}/watch`)
+                        .send()
+                        .expect(404);
+                },
+            );
         });
     });
 });

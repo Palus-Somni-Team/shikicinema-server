@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Param, Patch,
+    Post,
+    Query,
+    Req,
+    UseGuards,
+} from '@nestjs/common';
+import { GetByIdParamRequest } from '@lib-shikicinema';
 
 import { BaseController } from '@app-routes/base.controller';
 import { CreateVideoRequest, GetVideosRequest } from '@app-routes/api/video/dto';
@@ -26,5 +36,10 @@ export class VideoController extends BaseController {
     @UseGuards(UploadTokenGuard)
     async create(@Req() req: IRequest, @Body() request: CreateVideoRequest) {
         return this.videoService.create(req.user, request);
+    }
+
+    @Patch(':id/watch')
+    async watch(@Param() params: GetByIdParamRequest) {
+        return this.videoService.incrementWatches(params.id);
     }
 }

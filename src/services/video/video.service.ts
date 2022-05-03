@@ -139,4 +139,12 @@ export class VideoService {
 
         return animeEpisodeInfo;
     }
+
+    async incrementWatches(id: number): Promise<void> {
+        const { affected } = await this.repository.increment({ id }, 'watchesCount', 1);
+
+        if (affected === 0) {
+            throw new NotFoundException();
+        }
+    }
 }
