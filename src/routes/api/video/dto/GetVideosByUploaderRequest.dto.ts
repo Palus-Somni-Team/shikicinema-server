@@ -1,20 +1,63 @@
 import { Expose, Type } from 'class-transformer';
-import { IsInt, IsOptional, ValidateIf } from 'class-validator';
-import { PaginationRequest } from '@lib-shikicinema';
+import {
+    IsEnum,
+    IsISO31661Alpha2,
+    IsInt,
+    IsOptional,
+    Min,
+} from 'class-validator';
+import {
+    PaginationRequest,
+    Video,
+    VideoKindEnum,
+    VideoQualityEnum,
+} from '@lib-shikicinema';
 
 /**
  * Will validate if at least one of the fields present in query
  */
-export class GetVideosByUploaderRequest implements PaginationRequest {
+export class SearchVideosRequest implements PaginationRequest, Partial<Video> {
     @Expose()
     @IsInt()
-    @ValidateIf((query: GetVideosByUploaderRequest) => !query.shikimoriId || !!query.id)
+    @IsOptional()
     @Type(() => Number)
     id?: number;
 
     @Expose()
-    @ValidateIf((query: GetVideosByUploaderRequest) => !!query.shikimoriId || !query.id)
-    shikimoriId?: string;
+    @IsInt()
+    @IsOptional()
+    @Type(() => Number)
+    animeId?: number;
+
+    @Expose()
+    @IsOptional()
+    author?: string;
+
+    @Expose()
+    @IsInt()
+    @Min(1)
+    @IsOptional()
+    @Type(() => Number)
+    episode?: number;
+
+    @Expose()
+    @IsEnum(VideoKindEnum)
+    @IsOptional()
+    kind?: VideoKindEnum;
+
+    @Expose()
+    @IsISO31661Alpha2()
+    @IsOptional()
+    language?: string;
+
+    @Expose()
+    @IsEnum(VideoQualityEnum)
+    @IsOptional()
+    quality?: VideoQualityEnum;
+
+    @Expose()
+    @IsOptional()
+    uploader?: string;
 
     @Expose()
     @IsInt()

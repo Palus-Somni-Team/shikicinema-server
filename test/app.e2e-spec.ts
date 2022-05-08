@@ -565,7 +565,7 @@ describe('AppController (e2e)', () => {
             );
 
             it(
-                'should return 200 OK GET /api/videos/by-uploader',
+                'should return 200 OK GET /api/videos/search',
                 async () => {
                     const shikimoriId = '13371337';
                     const videos = await getConnection()
@@ -575,19 +575,19 @@ describe('AppController (e2e)', () => {
                         });
 
                     return request(app.getHttpServer())
-                        .get(`/api/videos/by-uploader?shikimoriId=${shikimoriId}`)
+                        .get(`/api/videos/search?uploader=${shikimoriId}`)
                         .expect(200)
                         .expect((res) => res.body.length === videos.length);
                 },
             );
 
             it(
-                'should return 200 OK & empty array GET /api/videos/by-uploader',
+                'should return 200 OK & empty array GET /api/videos/search',
                 async () => {
                     const shikimoriId = '404404404';
 
                     return request(app.getHttpServer())
-                        .get(`/api/videos/by-uploader?shikimoriId=${shikimoriId}`)
+                        .get(`/api/videos/search?uploader=${shikimoriId}`)
                         .expect(200)
                         .expect([]);
                 },
