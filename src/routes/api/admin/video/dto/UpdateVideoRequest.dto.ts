@@ -7,7 +7,7 @@ export class UpdateVideoRequest implements Request {
     @Expose()
     @IsNonNullableOptional()
     @IsString()
-    @Length(5, 256)
+    @Length(5, 2048)
     url?: string;
 
     @Expose()
