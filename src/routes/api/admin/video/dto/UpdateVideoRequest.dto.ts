@@ -42,6 +42,7 @@ export class UpdateVideoRequest implements Request {
     @Expose()
     @IsOptional()
     @IsString()
+    @Length(1, 256)
     author?: string | null;
 
     @Expose()
