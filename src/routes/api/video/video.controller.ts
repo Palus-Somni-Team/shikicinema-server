@@ -29,8 +29,8 @@ export class VideoController extends BaseController {
     }
 
     @Get()
-    async findByAnime(@Query() request: GetVideosRequest) {
-        return this.videoService.findByAnimeId(request.animeId, request.episode);
+    async findByAnime(@Query() { animeId, episode }: GetVideosRequest) {
+        return this.videoService.findByAnimeId(animeId, episode);
     }
 
     @Get('search')

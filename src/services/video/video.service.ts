@@ -87,7 +87,7 @@ export class VideoService {
         return video;
     }
 
-    async findByAnimeId(animeId: number, episode?: number): Promise<VideoEntity[]> {
+    async findByAnimeId(animeId: number, episode: number): Promise<VideoEntity[]> {
         return this.repository.find({
             where: { animeId, episode },
             relations: ['uploader'],

@@ -434,12 +434,13 @@ describe('AppController (e2e)', () => {
                 'should return all videos by animeId GET /api/videos',
                 async () => {
                     const animeId = 1;
+                    const episode = 3;
                     const videos = await getConnection()
                         .getRepository(VideoEntity)
-                        .find({ where: { animeId } });
+                        .find({ where: { animeId, episode } });
 
                     return request(app.getHttpServer())
-                        .get(`/api/videos?animeId=${animeId}`)
+                        .get(`/api/videos?animeId=${animeId}&episode=${episode}`)
                         .expect(200)
                         .expect((res) => res.body.length === videos.length);
                 },

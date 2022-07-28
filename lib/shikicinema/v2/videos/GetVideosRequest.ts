@@ -7,5 +7,5 @@
  */
 export interface GetVideosRequest {
     animeId: number;
-    episode?: number;
+    episode: number;
 }

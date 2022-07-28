@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, Min } from 'class-validator';
 import { GetVideosRequest as Request } from '@lib-shikicinema';
 
 export class GetVideosRequest implements Request {
@@ -10,9 +10,8 @@ export class GetVideosRequest implements Request {
     animeId: number;
 
     @Expose()
-    @IsOptional()
     @IsInt()
     @Min(1)
     @Type(() => Number)
-    episode?: number;
+    episode: number;
 }
