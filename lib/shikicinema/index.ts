@@ -8,22 +8,21 @@
 
 import { DataResponse } from './v2/DataResponse';
 import { LimitOffsetResponse } from './v2/LimitOffsetResponse';
-
-export { GetByIdParamRequest } from './v2/GetByIdParamRequest';
-
 //
 // Videos
 //
 import { AnimeEpisodeInfo } from './v2/videos/AnimeEpisodeInfo';
 import { Video } from './v2/videos/Video';
 
+export { GetByIdParamRequest } from './v2/GetByIdParamRequest';
+export { Video };
+export { AnimeEpisodeInfo };
 export { CreateVideoRequest } from './v2/videos/CreateVideoRequest';
-export { DeleteVideoRequest } from './v2/videos/DeleteVideoRequest';
 export { GetEpisodesRequest } from './v2/videos/GetEpisodesRequest';
 export { GetVideosRequest } from './v2/videos/GetVideosRequest';
 export { UpdateVideoRequest } from './v2/videos/UpdateVideoRequest';
-export { VideoKind } from './v2/videos/VideoKind';
-export { VideoQuality } from './v2/videos/VideoQuality';
+export { VideoKindEnum } from './v2/videos/VideoKindEnum';
+export { VideoQualityEnum } from './v2/videos/VideoQualityEnum';
 
 /**
  * Represents response for {@link GetEpisodesRequest} request.

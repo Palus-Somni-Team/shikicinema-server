@@ -1,8 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
-import { IRequest } from '../routes/auth/dto/IRequest';
+import {
+    CanActivate,
+    ExecutionContext,
+    Injectable,
+    SetMetadata,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '@lib-shikicinema';
-import { UserService } from '../services/user/user.service';
+
+import { IRequest } from '@app-routes/auth/dto/IRequest';
+import { UserService } from '@app-services/user/user.service';
 
 /**
  * List allowed user' roles for a handler or entire controller.

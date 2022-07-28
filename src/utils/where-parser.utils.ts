@@ -6,9 +6,9 @@ export type ParsedQuery = {
     offset?: number;
 };
 
-export function parseWhere(obj: any): ParsedQuery {
+export function parseWhere<T extends PaginationRequest>(obj: T): ParsedQuery {
     const where = {};
-    const { limit, offset } = obj as PaginationRequest;
+    const { limit, offset } = obj;
 
     delete obj.limit;
     delete obj.offset;

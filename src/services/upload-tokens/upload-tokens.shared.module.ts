@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { UploadTokenEntity, UploaderEntity } from '@app-entities';
-import { UploadTokensService } from './upload-tokens.service';
-import { UploaderService } from '../uploader/uploader.service';
-import { UploaderSharedModule } from '../uploader/uploader.shared.module';
-import { UserSharedModule } from '../user/user.shared.module';
+import { UploadTokensService } from '@app-services/upload-tokens/upload-tokens.service';
+import { UploaderService } from '@app-services/uploader/uploader.service';
+import { UploaderSharedModule } from '@app-services/uploader/uploader.shared.module';
+import { UserSharedModule } from '@app-services/user/user.shared.module';
 
 @Module({
     imports: [

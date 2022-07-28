@@ -1,6 +1,5 @@
-import './Video';
-import { VideoKind } from './VideoKind';
-import { VideoQuality } from './VideoQuality';
+import { VideoKindEnum } from './VideoKindEnum';
+import { VideoQualityEnum } from './VideoQualityEnum';
 
 /**
  * Interface for the classes representing video creation request.
@@ -8,17 +7,17 @@ import { VideoQuality } from './VideoQuality';
  * @property {string} url see {@link Video.url}.
  * @property {number} animeId see {@link Video.animeId}.
  * @property {number} episode see {@link Video.episode}.
- * @property {VideoKind} kind see {@link Video.kind}.
+ * @property {VideoKindEnum} kind see {@link Video.kind}.
  * @property {string} language see {@link Video.language}.
- * @property {VideoQuality} quality see {@link Video.quality}.
+ * @property {VideoQualityEnum} quality see {@link Video.quality}.
  * @property {string} author see {@link Video.author}.
  */
 export interface CreateVideoRequest {
     url: string;
     animeId: number;
     episode: number;
-    kind: VideoKind;
+    kind: VideoKindEnum;
     language: string;
-    quality: VideoQuality;
+    quality: VideoQualityEnum;
     author: string;
 }

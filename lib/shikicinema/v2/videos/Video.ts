@@ -1,12 +1,11 @@
-import { VideoKind } from './VideoKind';
-import { VideoQuality } from './VideoQuality';
+import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
 /**
  * Represents video.
  */
 export interface Video {
     /**
-     * Id of a video.
+     * Resource ID
      */
     id: number;
 
@@ -16,11 +15,6 @@ export interface Video {
      * @example https://video.sibnet.ru/shell.php?videoid=3388202&share=1.
      */
     url: string;
-
-    /**
-     * Domain part of url.
-     */
-    domain: string;
 
     /**
      * Id of an anime from shikimori.one.
@@ -37,17 +31,17 @@ export interface Video {
     /**
      * Kind of the video.
      */
-    kind: VideoKind;
+    kind: VideoKindEnum;
 
     /**
-     * Language of a subtitles or dubbing.
+     * Language of a subtitles or dubbing in ISO31661 Alpha2 format.
      */
     language: string;
 
     /**
      * Quality of the video.
      */
-    quality: VideoQuality;
+    quality: VideoQualityEnum;
 
     /**
      * Studio that prepared a release. AniLibria, OnibakuGroup, etc.
@@ -61,7 +55,7 @@ export interface Video {
     watchesCount: number;
 
     /**
-     * User who uploaded the video.
+     * Shikimori user who uploaded the video.
      */
-    uploader: number;
+    uploader: string;
 }

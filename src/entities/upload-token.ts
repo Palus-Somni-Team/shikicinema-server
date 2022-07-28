@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { UploaderEntity } from './uploader';
+
+import { UploaderEntity } from '@app-entities';
 
 @Entity('upload_tokens')
 export class UploadTokenEntity {
