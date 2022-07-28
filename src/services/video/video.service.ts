@@ -4,9 +4,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository, getManager } from 'typeorm';
 
 import { AlreadyExistsException } from '@app-utils/exceptions/already-exists.exception';
-import { AnimeEpisodeInfo } from '@app-routes/api/video/dto/AnimeEpisodeInfo.dto';
+import { AnimeEpisodeInfo, SearchVideosRequest } from '@app-routes/api/video/dto';
 import { RawAnimeEpisodeInfoInterface } from '@app-routes/api/video/types/raw-anime-episode-info.interface';
-import { SearchVideosRequest } from '@app-routes/api/video/dto';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 import { UploaderEntity, VideoEntity } from '@app-entities';
 import { parseWhere } from '@app-utils/where-parser.utils';
