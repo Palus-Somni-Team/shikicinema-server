@@ -5,7 +5,7 @@ import { CreateVideoRequest as Request, VideoKindEnum, VideoQualityEnum } from '
 export class CreateVideoRequest implements Request {
     @Expose()
     @IsString()
-    @Length(5, 256)
+    @Length(5, 2048)
     @IsUrl()
     url: string;
 
