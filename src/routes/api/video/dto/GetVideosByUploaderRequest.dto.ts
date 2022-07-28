@@ -25,6 +25,7 @@ export class SearchVideosRequest implements PaginationRequest, Partial<Video> {
 
     @Expose()
     @IsInt()
+    @Min(0)
     @IsOptional()
     @Type(() => Number)
     animeId?: number;

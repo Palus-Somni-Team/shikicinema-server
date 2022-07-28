@@ -5,6 +5,7 @@ import { GetVideosRequest as Request } from '@lib-shikicinema';
 export class GetVideosRequest implements Request {
     @Expose()
     @IsInt()
+    @Min(0)
     @Type(() => Number)
     animeId: number;
 
