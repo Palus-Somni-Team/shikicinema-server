@@ -70,7 +70,7 @@ export class AuthService {
         try {
             const sid = req.sessionID;
             await this.sessionService.revokeById(sid);
-            req.logout();
+            req.logout(() => ({}));
         } catch (e) {
             throw new InternalServerErrorException();
         }

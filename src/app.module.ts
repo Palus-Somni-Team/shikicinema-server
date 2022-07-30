@@ -23,7 +23,7 @@ import { RoutesModule } from '@app-routes/routes.module';
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: async (config: ConfigService) => config.get('database'),
+            useFactory: (config: ConfigService) => config.get('database'),
         }),
     ],
     controllers: [],

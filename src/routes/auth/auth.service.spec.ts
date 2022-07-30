@@ -31,8 +31,8 @@ describe('AuthService', () => {
     const fakeUserEntity = new UserEntity('fakeUser', fakeUserHashedPassword, 'fake@email.com');
     const fakeRequest = {
         user: 123,
-        logout() {
-            return;
+        logout(done) {
+            done();
         },
     } as IRequest;
     const fakeRegisterUserData = {

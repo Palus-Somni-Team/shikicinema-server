@@ -1,3 +1,4 @@
+import { SessionOptions } from 'express-session';
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('express-session', () => ({
@@ -12,5 +13,4 @@ export default registerAs('express-session', () => ({
         sameSite: 'lax',
         maxAge: process.env.SESSION_MAX_AGE || 24 * 60 * 60 * 1000,
     },
-}),
-);
+} as SessionOptions));

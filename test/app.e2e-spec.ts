@@ -3,10 +3,10 @@ import * as request from 'supertest';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
+import { DataSource } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
-import { getConnection, getRepository } from 'typeorm';
 
 import { AppModule } from '@app/app.module';
 import {
@@ -18,6 +18,7 @@ import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
+    let dataSource: DataSource;
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,11 +27,12 @@ describe('AppController (e2e)', () => {
 
 
         app = moduleFixture.createNestApplication();
-        await getConnection().runMigrations({ transaction: 'all' });
+        dataSource = app.get(DataSource);
+        await dataSource.runMigrations({ transaction: 'all' });
         const configService = app.get(ConfigService);
         const sessionsConfig = configService.get('express-session');
         const sessionStorage = new TypeormStore({ cleanupLimit: 2 });
-        const sessionStore = sessionStorage.connect(getRepository(SessionEntity));
+        const sessionStore = sessionStorage.connect(dataSource.getRepository(SessionEntity));
 
         app.use(session({ store: sessionStore, ...sessionsConfig }));
         app.use(passport.initialize());
@@ -71,7 +73,7 @@ describe('AppController (e2e)', () => {
         it(
             'should return 200 for correct credentials POST /auth/login',
             async () => {
-                const user1 = await getConnection()
+                const user1 = await dataSource
                     .getRepository(UserEntity)
                     .findOne({ where: { login: 'user1' } });
 
@@ -95,7 +97,7 @@ describe('AppController (e2e)', () => {
         it(
             'should return user\'s info for logged in user GET /auth/me',
             async () => {
-                const user1 = await getConnection()
+                const user1 = await dataSource
                     .getRepository(UserEntity)
                     .findOne({ where: { login: 'user1' } });
                 const loginRes = await request(app.getHttpServer())
@@ -121,7 +123,7 @@ describe('AppController (e2e)', () => {
         it(
             'should return 200 for logged in user on logout POST /auth/logout',
             async () => {
-                const user1 = await getConnection()
+                const user1 = await dataSource
                     .getRepository(UserEntity)
                     .findOne({ where: { login: 'user1' } });
                 const loginRes = await request(app.getHttpServer())
@@ -248,7 +250,7 @@ describe('AppController (e2e)', () => {
                         const loginRes = await request(app.getHttpServer())
                             .post('/auth/login')
                             .send({ login: 'admin', password: '12345678' });
-                        const video = await getConnection()
+                        const video = await dataSource
                             .getRepository(VideoEntity)
                             .findOne({
                                 where: { animeId, episode },
@@ -273,7 +275,7 @@ describe('AppController (e2e)', () => {
                         const loginRes = await request(app.getHttpServer())
                             .post('/auth/login')
                             .send({ login: 'admin', password: '12345678' });
-                        const video = await getConnection()
+                        const video = await dataSource
                             .getRepository(VideoEntity)
                             .findOne({
                                 where: { animeId, episode },
@@ -344,7 +346,7 @@ describe('AppController (e2e)', () => {
                     const loginRes = await request(app.getHttpServer())
                         .post('/auth/login')
                         .send({ login: 'admin', password: '12345678' });
-                    const video = await getConnection()
+                    const video = await dataSource
                         .getRepository(VideoEntity)
                         .findOne({
                             where: { animeId: 21, episode: 113 },
@@ -382,7 +384,7 @@ describe('AppController (e2e)', () => {
                     const loginRes = await request(app.getHttpServer())
                         .post('/auth/login')
                         .send({ login: 'admin', password: '12345678' });
-                    const video = await getConnection()
+                    const video = await dataSource
                         .getRepository(VideoEntity)
                         .findOneBy({ animeId: 21, episode: 113 });
 
@@ -435,7 +437,7 @@ describe('AppController (e2e)', () => {
                 async () => {
                     const animeId = 1;
                     const episode = 3;
-                    const videos = await getConnection()
+                    const videos = await dataSource
                         .getRepository(VideoEntity)
                         .find({ where: { animeId, episode } });
 
@@ -495,7 +497,7 @@ describe('AppController (e2e)', () => {
                         .send(reqBody)
                         .expect(201)
                         .expect(async () => {
-                            const video = await getConnection()
+                            const video = await dataSource
                                 .getRepository(VideoEntity)
                                 .findOneBy({ animeId, episode });
                             const foundVideoAsReqBody: CreateVideoRequest = {
@@ -541,7 +543,7 @@ describe('AppController (e2e)', () => {
                 async () => {
                     const animeId = 1;
                     const episode = 1;
-                    const video = await getConnection()
+                    const video = await dataSource
                         .getRepository(VideoEntity)
                         .findOneBy({ animeId, episode });
 
@@ -569,7 +571,7 @@ describe('AppController (e2e)', () => {
                 'should return 200 OK GET /api/videos/search',
                 async () => {
                     const shikimoriId = '13371337';
-                    const videos = await getConnection()
+                    const videos = await dataSource
                         .getRepository(VideoEntity)
                         .find({
                             where: { uploader: { shikimoriId } },
