@@ -1,7 +1,7 @@
 import { CreateVideoRequest, VideoKindEnum } from '@lib-shikicinema';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository, getManager } from 'typeorm';
 
 import { AlreadyExistsException } from '@app-utils/exceptions/already-exists.exception';
 import { AnimeEpisodeInfo, SearchVideosRequest } from '@app-routes/api/video/dto';
@@ -15,10 +15,11 @@ export class VideoService {
     constructor(
         @InjectRepository(VideoEntity)
         private readonly repository: Repository<VideoEntity>,
+        private readonly dataSource: DataSource,
     ) {}
 
     async create(uploaderId: number, video: CreateVideoRequest): Promise<VideoEntity> {
-        return getManager().transaction(async (entityManager) => {
+        return this.dataSource.transaction(async (entityManager) => {
             const uploaderRepo = await entityManager.getRepository(UploaderEntity);
             const videoRepo = await entityManager.getRepository(VideoEntity);
 
@@ -45,7 +46,7 @@ export class VideoService {
     }
 
     async update(id: number, video: UpdateVideoRequest): Promise<VideoEntity> {
-        return getManager().transaction(async (entityManager) => {
+        return this.dataSource.transaction(async (entityManager) => {
             const videoRepo = await entityManager.getRepository(VideoEntity);
 
             const entity = await videoRepo.findOne({

@@ -1,4 +1,4 @@
-import { MigrationInterface, getRepository } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 import { Role } from '@lib-shikicinema';
 import { UserEntity } from '@app-entities';
 
@@ -10,13 +10,13 @@ export const seeds = [
 ];
 
 export class UserSeed21607357974819 implements MigrationInterface {
-    public async up(): Promise<void> {
-        const usersRepo = await getRepository(UserEntity);
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        const usersRepo = await queryRunner.manager.getRepository(UserEntity);
         await usersRepo.save(seeds);
     }
 
-    public async down(): Promise<void> {
-        const usersRepo = await getRepository(UserEntity);
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        const usersRepo = await queryRunner.manager.getRepository(UserEntity);
         await usersRepo.clear();
     }
 }

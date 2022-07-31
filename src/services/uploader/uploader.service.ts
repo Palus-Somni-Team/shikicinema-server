@@ -4,8 +4,8 @@ import {
     Injectable,
     InternalServerErrorException,
 } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getConnection } from 'typeorm';
 
 import { PgException, isPgException } from '@app-utils/postgres.utils';
 import { UploaderEntity } from '@app-entities';
@@ -17,6 +17,7 @@ export class UploaderService {
         @InjectRepository(UploaderEntity)
         private readonly repository: Repository<UploaderEntity>,
         private readonly userService: UserService,
+        private readonly dataSource: DataSource,
     ) {}
 
     async newShikimoriUploader(shikimoriId: string, userId: number = null): Promise<UploaderEntity> {
@@ -24,7 +25,7 @@ export class UploaderService {
             const user = await this.userService.findById({ id: userId });
             const uploader = new UploaderEntity(shikimoriId, user, []);
 
-            await getConnection().transaction(async (manager) => {
+            await this.dataSource.transaction(async (manager) => {
                 user.uploader = await manager.save(uploader);
                 await manager.save(user);
             });

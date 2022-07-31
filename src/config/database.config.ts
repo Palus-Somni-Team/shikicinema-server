@@ -1,3 +1,5 @@
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { entities } from '@app-entities';
 import { registerAs } from '@nestjs/config';
 
@@ -8,19 +10,19 @@ import { UserSeed21607357974819 } from '@app-seeds/1607357974819-user-seed';
 import { VideoSeed1621024590642 } from '@app-seeds/1621024590642-video-seed';
 
 export default registerAs('database', () => {
-    const postgresConfig = {
-        type: process.env.SHIKICINEMA_DB_TYPE || 'postgres',
+    const postgresConfig: PostgresConnectionOptions = {
+        type: 'postgres',
         host: process.env.SHIKICINEMA_DB_HOST || 'localhost',
-        port: process.env.SHIKICINEMA_DB_PORT || 5432,
+        port: Number(process.env.SHIKICINEMA_DB_PORT) || 5432,
         database: process.env.SHIKICINEMA_DB_NAME || 'shikicinema-dev',
         username: process.env.SHIKICINEMA_DB_USER || 'postgres',
         password: process.env.SHIKICINEMA_DB_PASS || 'postgres',
-        logging: process.env.SHIKICINEMA_DB_LOG || false,
-        synchronize: process.env.SHIKICINEMA_DB_SYNC || false,
+        logging: !!process.env.SHIKICINEMA_DB_LOG,
+        synchronize: !!process.env.SHIKICINEMA_DB_SYNC,
         entities,
     };
 
-    const inMemoryConfig = {
+    const inMemoryConfig: SqliteConnectionOptions = {
         type: 'sqlite',
         database: ':memory:',
         entities,

@@ -1,12 +1,12 @@
-import { MigrationInterface, getRepository } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 import { UploadTokenEntity, UploaderEntity } from '@app-entities';
 
 const seeds = [];
 
 export class UploadTokenSeed1650995411336 implements MigrationInterface {
-    public async up(): Promise<void> {
-        const uploaderRepo = await getRepository(UploaderEntity);
-        const uploadTokenRepo = await getRepository(UploadTokenEntity);
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        const uploaderRepo = await queryRunner.manager.getRepository(UploaderEntity);
+        const uploadTokenRepo = await queryRunner.manager.getRepository(UploadTokenEntity);
 
         const admin = await uploaderRepo.findOneBy({ shikimoriId: '13371337' });
         const user1 = await uploaderRepo.findOneBy({ shikimoriId: '88005553535' });
@@ -21,8 +21,8 @@ export class UploadTokenSeed1650995411336 implements MigrationInterface {
         await uploadTokenRepo.save(seeds);
     }
 
-    public async down(): Promise<void> {
-        const uploadTokenRepo = await getRepository(UploadTokenEntity);
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        const uploadTokenRepo = await queryRunner.manager.getRepository(UploadTokenEntity);
         await uploadTokenRepo.clear();
     }
 }
