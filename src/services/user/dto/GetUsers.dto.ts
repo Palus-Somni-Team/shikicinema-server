@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { GetUsersRequest, Role } from '@lib-shikicinema';
 import { IsArray, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
@@ -10,29 +11,48 @@ export class GetUsers implements GetUsersRequest {
     @IsInt()
     @Min(0)
     @Type(() => Number)
+    @ApiProperty({ required: false })
     id?: number;
 
     @Expose()
     @IsOptional()
     @IsString()
     @Length(5, 32)
+    @ApiProperty({
+        required: false,
+        minimum: 5,
+        maximum: 32,
+    })
     login?: string;
 
     @Expose()
     @IsOptional()
     @IsString()
     @Length(5, 32)
+    @ApiProperty({
+        required: false,
+        minimum: 5,
+        maximum: 32,
+    })
     name?: string;
 
     @Expose()
     @IsOptional()
     @IsEmail()
+    @ApiProperty({
+        required: false,
+        format: 'email',
+    })
     email?: string;
 
     @Expose()
     @IsOptional()
     @IsString()
     @TransformNullableString()
+    @ApiProperty({
+        required: false,
+        nullable: true,
+    })
     shikimoriId?: string | null;
 
     @Expose()
@@ -40,12 +60,21 @@ export class GetUsers implements GetUsersRequest {
     @IsArray()
     @IsEnum(Role, { each: true })
     @TransformRoles()
+    @ApiProperty({
+        required: false,
+        enum: Role,
+        isArray: true,
+    })
     roles?: Role[];
 
     @Expose()
     @IsOptional()
     @IsDate()
     @TransformDate()
+    @ApiProperty({
+        required: false,
+        format: 'date',
+    })
     createdAt?: Date;
 
     @Expose()
@@ -53,6 +82,10 @@ export class GetUsers implements GetUsersRequest {
     @IsInt()
     @Min(0)
     @Type(() => Number)
+    @ApiProperty({
+        required: false,
+        minimum: 0,
+    })
     offset?: number;
 
     @Expose()
@@ -60,5 +93,9 @@ export class GetUsers implements GetUsersRequest {
     @IsInt()
     @Min(1)
     @Type(() => Number)
+    @ApiProperty({
+        required: false,
+        minimum: 1,
+    })
     limit?: number;
 }

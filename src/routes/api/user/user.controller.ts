@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
     ClassSerializerInterceptor,
     Controller,
@@ -23,12 +23,15 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
+    @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: UserInfo, isArray: true })
     async find(@Query() query: GetUsers): Promise<UserInfo[]> {
         const users = await this.userService.findAll(query);
         return plainToClass(UserInfo, users);
     }
 
     @Get(':id')
+    @ApiResponse({ status: 200, description: 'User with specified id', type: UserInfo })
+    @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async findById(@Param() id: GetUserById): Promise<UserInfo> {
         const user = await this.userService.findById(id);
         return plainToClass(UserInfo, user);
