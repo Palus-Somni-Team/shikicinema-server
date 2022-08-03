@@ -1,3 +1,4 @@
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     Body,
     Controller,
@@ -23,6 +24,7 @@ import { UploadTokenGuard } from '@app/guards/upload-token.guard';
 import { VideoService } from '@app-services/video/video.service';
 
 @Controller()
+@ApiTags('videos')
 export class VideoController extends BaseController {
     constructor(protected readonly videoService: VideoService) {
         super();
@@ -45,6 +47,7 @@ export class VideoController extends BaseController {
 
     @Post()
     @UseGuards(UploadTokenGuard)
+    @ApiBearerAuth()
     async create(@Req() req: IRequest, @Body() request: CreateVideoRequest) {
         return this.videoService.create(req.user, request);
     }

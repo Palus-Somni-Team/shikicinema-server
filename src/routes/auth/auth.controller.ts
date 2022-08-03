@@ -1,3 +1,4 @@
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '@app-routes/auth/auth.service';
 import { AuthenticatedGuard } from '@app/guards/authenticated.guard';
 import {
@@ -24,6 +25,7 @@ import { UploaderInfo } from '@app-routes/auth/dto/UploaderInfo.dto';
 
 @Controller('/')
 @UsePipes(new ValidationPipe({ transform: true }))
+@ApiTags('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
@@ -39,6 +41,7 @@ export class AuthController {
 
     @UseGuards(AuthenticatedGuard)
     @Get('me')
+    @ApiCookieAuth()
     async me(@Req() req: IRequest): Promise<OwnerUserInfo> {
         const user = await this.authService.getLoggedInUser(req);
         return plainToClass(OwnerUserInfo, user);
@@ -47,6 +50,7 @@ export class AuthController {
     @UseGuards(AuthenticatedGuard)
     @HttpCode(HttpStatus.OK)
     @Post('logout')
+    @ApiCookieAuth()
     logout(@Req() req: IRequest): Promise<void> {
         return this.authService.logout(req);
     }

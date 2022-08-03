@@ -1,3 +1,4 @@
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import {
     Body,
     ClassSerializerInterceptor,
@@ -31,6 +32,8 @@ import { UserService } from '@app-services/user/user.service';
 @UseInterceptors(ClassSerializerInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseGuards(RoleGuard)
+@ApiTags('users (admin)')
+@ApiCookieAuth()
 export class AdminUserController {
     constructor(private readonly userService: UserService) {}
 

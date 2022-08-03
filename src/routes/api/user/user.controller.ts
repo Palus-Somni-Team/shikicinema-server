@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import {
     ClassSerializerInterceptor,
     Controller,
@@ -17,6 +18,7 @@ import { UserService } from '@app-services/user/user.service';
 @Controller('/')
 @UseInterceptors(ClassSerializerInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
+@ApiTags('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
 

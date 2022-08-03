@@ -1,3 +1,4 @@
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Body, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { GetByIdParamRequest, Role } from '@lib-shikicinema';
 import { plainToClass } from 'class-transformer';
@@ -10,6 +11,8 @@ import { VideoResponse } from '@app-routes/api/video/dto';
 
 @UseGuards(RoleGuard)
 @AllowRoles(Role.admin)
+@ApiTags('videos (admin)')
+@ApiCookieAuth()
 export class AdminVideoController extends VideoController {
     @Get(':id')
     async getById(@Param() params: GetByIdParamRequest): Promise<VideoResponse> {

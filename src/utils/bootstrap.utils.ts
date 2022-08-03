@@ -23,12 +23,20 @@ export function initSession(
 }
 
 export function initSwagger(app: INestApplication): void {
+    const apiDocVersion = '1.0';
     const config = new DocumentBuilder()
         .setTitle('Shikicinema Swagger')
         .setDescription('API requests builder & documentation')
-        .setVersion('1.0')
+        .setVersion(apiDocVersion)
+        .addCookieAuth()
+        .addSecurity('bearer', {
+            type: 'apiKey',
+            in: 'headers',
+            name: 'Shikimori Authorization',
+            description: 'Shikimori Bearer Token',
+        })
         .build();
     const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup(`api/${apiDocVersion}`, app, document);
 }
