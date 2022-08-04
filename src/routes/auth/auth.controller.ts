@@ -1,4 +1,5 @@
 import {
+    ApiBody,
     ApiCookieAuth,
     ApiResponse,
     ApiTags,
@@ -21,6 +22,7 @@ import { plainToClass } from 'class-transformer';
 
 import { IRequest } from '@app-routes/auth/dto/IRequest';
 import { LocalGuard } from '@app-guards/local.guard';
+import { LoginRequest } from '@app-routes/auth/dto/LoginRequest.dto';
 import { OwnerUserInfo } from '@app-routes/auth/dto/OwnerUserInfo';
 import { RegisterUser } from '@app-routes/auth/dto/RegisterUser';
 import { ShikimoriAccessToken } from '@app-routes/auth/dto/ShikimoriAccessToken';
@@ -39,6 +41,8 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     @ApiResponse({ status: 200, description: 'Successfully logged in', type: OwnerUserInfo })
+    @ApiResponse({ status: 401, description: 'Login failed: wrong credentials' })
+    @ApiBody({ type: LoginRequest })
     async login(@Req() req: IRequest): Promise<OwnerUserInfo> {
         const user = await this.authService.getLoggedInUser(req);
         return plainToClass(OwnerUserInfo, user);
