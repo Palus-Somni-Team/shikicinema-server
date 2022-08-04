@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsISO31661Alpha2, IsInt, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
 import { IsNonNullableOptional } from '@app-utils/class-validate.utils';
@@ -8,6 +9,10 @@ export class UpdateVideoRequest implements Request {
     @IsNonNullableOptional()
     @IsString()
     @Length(5, 2048)
+    @ApiProperty({
+        minLength: 5,
+        maxLength: 2048,
+    })
     url?: string;
 
     @Expose()
@@ -15,6 +20,7 @@ export class UpdateVideoRequest implements Request {
     @Min(0)
     @IsNonNullableOptional()
     @IsNumber({ allowNaN: false, allowInfinity: false })
+    @ApiProperty({ minimum: 0 })
     animeId?: number;
 
     @Expose()
@@ -22,27 +28,36 @@ export class UpdateVideoRequest implements Request {
     @Min(1)
     @IsNonNullableOptional()
     @IsNumber({ allowNaN: false, allowInfinity: false })
+    @ApiProperty({ minimum: 1 })
     episode?: number;
 
     @Expose()
     @IsNonNullableOptional()
     @IsEnum(VideoKindEnum)
+    @ApiProperty({ enum: VideoKindEnum })
     kind?: VideoKindEnum;
 
     @Expose()
     @IsOptional()
     @IsISO31661Alpha2()
+    @ApiProperty()
     language?: string;
 
     @Expose()
     @IsNonNullableOptional()
     @IsEnum(VideoQualityEnum)
+    @ApiProperty({ enum: VideoQualityEnum })
     quality?: VideoQualityEnum;
 
     @Expose()
     @IsOptional()
     @IsString()
     @Length(1, 256)
+    @ApiProperty({
+        minLength: 1,
+        maxLength: 256,
+        nullable: true,
+    })
     author?: string | null;
 
     @Expose()
@@ -50,5 +65,6 @@ export class UpdateVideoRequest implements Request {
     @IsInt()
     @Min(0)
     @IsNumber({ allowNaN: false, allowInfinity: false })
+    @ApiProperty({ minimum: 0 })
     watchesCount?: number;
 }

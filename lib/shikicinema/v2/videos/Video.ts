@@ -1,3 +1,4 @@
+import { Uploader } from './Uploader';
 import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
 /**
@@ -57,5 +58,5 @@ export interface Video {
     /**
      * Shikimori user who uploaded the video.
      */
-    uploader: string;
+    uploader: Uploader;
 }
