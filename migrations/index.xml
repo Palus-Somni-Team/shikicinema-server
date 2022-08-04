@@ -15,5 +15,6 @@
     <include file="2022-05-02-01-add-index-videos-anime_id.xml" relativeToChangelogFile="true"/>
     <include file="2022-05-02-02-add-index-videos-uploader_id.xml" relativeToChangelogFile="true"/>
     <include file="2022-07-30-01-add-column-sessions-destroyed_at.xml" relativeToChangelogFile="true"/>
+    <include file="2022-08-04-01-change-column-sessions-destroyed_at.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
