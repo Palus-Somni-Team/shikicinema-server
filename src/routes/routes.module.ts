@@ -19,7 +19,7 @@ const routes: Routes = [
         module: ApiModule,
         children: [
             {
-                path: '/user',
+                path: '/users',
                 module: UserModule,
             },
             {
@@ -31,7 +31,7 @@ const routes: Routes = [
                 module: AdminModule,
                 children: [
                     {
-                        path: '/user',
+                        path: '/users',
                         module: AdminUserModule,
                     },
                     {

@@ -161,16 +161,16 @@ describe('AppController (e2e)', () => {
     });
 
     describe('/ADMIN', () => {
-        describe('/USER', () => {
+        describe('/USERS', () => {
             it(
-                'should not allow to access admin route without proper rights GET /api/admin/user',
+                'should not allow to access admin route without proper rights GET /api/admin/users',
                 async () => {
                     const loginRes = await request(app.getHttpServer())
                         .post('/auth/login')
                         .send({ login: 'user1', password: '12345678' });
 
                     return request(app.getHttpServer())
-                        .get('/api/admin/user')
+                        .get('/api/admin/users')
                         .set('Cookie', loginRes.get('Set-Cookie'))
                         .expect(403)
                         .expect({
@@ -182,14 +182,14 @@ describe('AppController (e2e)', () => {
             );
 
             it(
-                'should allow to access admin route for admin GET /api/admin/user',
+                'should allow to access admin route for admin GET /api/admin/users',
                 async () => {
                     const loginRes = await request(app.getHttpServer())
                         .post('/auth/login')
                         .send({ login: 'admin', password: '12345678' });
 
                     return request(app.getHttpServer())
-                        .get('/api/admin/user')
+                        .get('/api/admin/users')
                         .set('Cookie', loginRes.get('Set-Cookie'))
                         .expect(200);
                 },
