@@ -1,0 +1,5 @@
+name: "CodeQL config file"
+
+paths-ignore:
+  - 'test'
+  - '**/*spec.ts'
