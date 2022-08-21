@@ -89,6 +89,12 @@ module.exports = {
                 ],
             },
         ],
+        'spaced-comment': ['error', 'always', {
+            'line': {
+                'markers': ['#region', '#endregion', 'region', 'endregion'],
+            },
+        },
+        ],
     },
     'overrides': [
         {

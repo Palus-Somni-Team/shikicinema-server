@@ -23,6 +23,7 @@
             "@app-utils/*": ["<rootDir>/../src/utils/*"],
             "@app-seeds/*": ["<rootDir>/../seeds/*"],
             "@app/*": ["<rootDir>/../src/*"],
+            "@e2e/*": ["<rootDir>/../test/*"],
             "dist/*": ["<rootDir>/../dist/*"]
         }
     }

@@ -8,6 +8,9 @@
 
 import { DataResponse } from './v2/DataResponse';
 import { LimitOffsetResponse } from './v2/LimitOffsetResponse';
+
+export { LoginRequest } from './v2/LoginRequest';
+
 //
 // Videos
 //

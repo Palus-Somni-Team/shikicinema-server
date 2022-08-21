@@ -1,5 +1,4 @@
 import * as passport from 'passport';
-import * as request from 'supertest';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
@@ -14,11 +13,17 @@ import {
     UserEntity,
     VideoEntity,
 } from '@app-entities';
+import { TestClient } from '@e2e/test.client';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 
 describe('AppController (e2e)', () => {
+    const user1LoginData = { login: 'user1', password: '12345678' };
+    const adminLoginData = { login: 'admin', password: '12345678' };
+
     let app: INestApplication;
     let dataSource: DataSource;
+    let anonClient: TestClient;
+    let adminClient: TestClient;
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,34 +45,41 @@ describe('AppController (e2e)', () => {
         await app.init();
     });
 
+    beforeEach(() => {
+        anonClient = new TestClient(app.getHttpServer());
+    });
+
     afterAll(() => app.close());
 
     describe('/AUTH', () => {
         it(
             'should return 403 for unauthorized GET /auth/me',
-            () => request(app.getHttpServer())
-                .get('/auth/me')
-                .expect(403)
-                .expect({
+            async () => {
+                const unauthorizedMeRes = await anonClient.meRaw();
+
+                expect(unauthorizedMeRes.status).toBe(403);
+                expect(unauthorizedMeRes.body).toStrictEqual({
                     error: 'Forbidden',
                     message: 'Forbidden resource',
                     statusCode: 403,
-                }),
+                });
+            },
         );
 
         it(
             'should return 401 for unknown credentials POST /auth/login',
-            () => request(app.getHttpServer())
-                .post('/auth/login')
-                .send({
+            async () => {
+                const loginRes = await anonClient.loginRaw({
                     login: 'unknown',
                     password: '1234567890',
-                })
-                .expect(401)
-                .expect({
+                });
+
+                expect(loginRes.status).toBe(401);
+                expect(loginRes.body).toStrictEqual({
                     statusCode: 401,
                     message: 'Unauthorized',
-                }),
+                });
+            },
         );
 
         it(
@@ -75,22 +87,23 @@ describe('AppController (e2e)', () => {
             async () => {
                 const user1 = await dataSource
                     .getRepository(UserEntity)
-                    .findOne({ where: { login: 'user1' } });
+                    .findOne({ where: { login: user1LoginData.login } });
+                const loginRes = await anonClient.loginRaw(user1LoginData);
+                const setCookieHeader = loginRes.headers['set-cookie'];
+                const setCookieRegex = /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/;
 
-                return request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({ login: user1.login, password: '12345678' })
-                    .expect(200)
-                    .expect('Set-Cookie', /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/)
-                    .expect({
-                        id: user1.id,
-                        login: user1.login,
-                        name: user1.name,
-                        email: user1.email,
-                        roles: ['user'],
-                        createdAt: user1.createdAt.toISOString(),
-                        updatedAt: user1.updatedAt.toISOString(),
-                    });
+                expect(setCookieHeader).toEqual([
+                    expect.stringMatching(setCookieRegex),
+                ]);
+                expect(loginRes.body).toStrictEqual({
+                    id: user1.id,
+                    login: user1.login,
+                    name: user1.name,
+                    email: user1.email,
+                    roles: ['user'],
+                    createdAt: user1.createdAt.toISOString(),
+                    updatedAt: user1.updatedAt.toISOString(),
+                });
             },
         );
 
@@ -99,14 +112,10 @@ describe('AppController (e2e)', () => {
             async () => {
                 const user1 = await dataSource
                     .getRepository(UserEntity)
-                    .findOne({ where: { login: 'user1' } });
-                const loginRes = await request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({ login: user1.login, password: '12345678' });
-                const meRes = await request(app.getHttpServer())
-                    .get('/auth/me')
-                    .set('Cookie', loginRes.get('Set-Cookie'))
-                    .send();
+                    .findOne({ where: { login: user1LoginData.login } });
+
+                await anonClient.login(user1LoginData);
+                const meRes = await anonClient.meRaw();
 
                 expect(meRes.body).toStrictEqual({
                     id: user1.id,
@@ -123,18 +132,11 @@ describe('AppController (e2e)', () => {
         it(
             'should return 200 for logged in user on logout POST /auth/logout',
             async () => {
-                const user1 = await dataSource
-                    .getRepository(UserEntity)
-                    .findOne({ where: { login: 'user1' } });
-                const loginRes = await request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({ login: user1.login, password: '12345678' });
+                await anonClient.login(user1LoginData);
+                const logoutRes = await anonClient.logout();
 
-                return request(app.getHttpServer())
-                    .post('/auth/logout')
-                    .set('Cookie', loginRes.get('Set-Cookie'))
-                    .expect(200)
-                    .expect({});
+                expect(logoutRes.status).toBe(200);
+                expect(logoutRes.body).toStrictEqual({});
             },
         );
 
@@ -146,16 +148,18 @@ describe('AppController (e2e)', () => {
                     password: '12345678',
                     email: 'new_user@email.com',
                 };
-                const loginRes = await request(app.getHttpServer())
-                    .post('/auth/register')
-                    .send({ login, password, email });
 
-                return request(app.getHttpServer())
-                    .post('/auth/login')
-                    .send({ login, password })
-                    .expect(200)
-                    .expect('Set-Cookie', /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/)
-                    .expect(loginRes.body);
+                const registerRes = await anonClient.registerRaw({ login, password, email });
+                const loginRes = await anonClient.loginRaw({ login, password });
+                const setCookieHeader = loginRes.headers['set-cookie'];
+                const setCookieRegex = /sid=(.*); Path=\/; Expires=(.*); HttpOnly; SameSite=Lax/;
+
+                expect(registerRes.status).toBe(201);
+                expect(loginRes.status).toBe(200);
+                expect(loginRes.body).toEqual(registerRes.body);
+                expect(setCookieHeader).toEqual([
+                    expect.stringMatching(setCookieRegex),
+                ]);
             },
         );
     });
@@ -165,13 +169,9 @@ describe('AppController (e2e)', () => {
             it(
                 'should not allow to access admin route without proper rights GET /api/admin/users',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'user1', password: '12345678' });
+                    await anonClient.login(user1LoginData);
 
-                    return request(app.getHttpServer())
-                        .get('/api/admin/users')
-                        .set('Cookie', loginRes.get('Set-Cookie'))
+                    return anonClient.getUsersRaw()
                         .expect(403)
                         .expect({
                             statusCode: 403,
@@ -184,14 +184,9 @@ describe('AppController (e2e)', () => {
             it(
                 'should allow to access admin route for admin GET /api/admin/users',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'admin', password: '12345678' });
-
-                    return request(app.getHttpServer())
-                        .get('/api/admin/users')
-                        .set('Cookie', loginRes.get('Set-Cookie'))
-                        .expect(200);
+                    adminClient = new TestClient(app.getHttpServer());
+                    await adminClient.login(adminLoginData);
+                    return adminClient.getUsers();
                 },
             );
         });
@@ -241,15 +236,17 @@ describe('AppController (e2e)', () => {
                 { animeId, episode, kind: null },
             ];
 
+            beforeEach(async () => {
+                adminClient = new TestClient(app.getHttpServer());
+                await adminClient.login(adminLoginData);
+            });
+
             for (const [index, patchReqBody] of negativePatchReqBodies.entries()) {
                 const patchReqAsText = JSON.stringify(patchReqBody);
 
                 it(
                     `should return 400 Bad Request #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
                     async () => {
-                        const loginRes = await request(app.getHttpServer())
-                            .post('/auth/login')
-                            .send({ login: 'admin', password: '12345678' });
                         const video = await dataSource
                             .getRepository(VideoEntity)
                             .findOne({
@@ -257,11 +254,7 @@ describe('AppController (e2e)', () => {
                                 relations: ['uploader'],
                             });
 
-                        return request(app.getHttpServer())
-                            .patch(`/api/admin/videos/${video.id}`)
-                            .set('Cookie', loginRes.get('Set-Cookie'))
-                            .send(patchReqBody)
-                            .expect(400);
+                        return adminClient.updateVideoRaw(video.id, patchReqBody).expect(400);
                     },
                 );
             }
@@ -272,9 +265,6 @@ describe('AppController (e2e)', () => {
                 it(
                     `should return 200 OK & update video #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
                     async () => {
-                        const loginRes = await request(app.getHttpServer())
-                            .post('/auth/login')
-                            .send({ login: 'admin', password: '12345678' });
                         const video = await dataSource
                             .getRepository(VideoEntity)
                             .findOne({
@@ -282,31 +272,25 @@ describe('AppController (e2e)', () => {
                                 relations: ['uploader'],
                             });
 
-                        return request(app.getHttpServer())
-                            .patch(`/api/admin/videos/${video.id}`)
-                            .set('Cookie', loginRes.get('Set-Cookie'))
-                            .send(patchReqBody)
-                            .expect(200)
-                            .expect((res) => {
-                                expect(res.body).toEqual(expect.objectContaining({
-                                    id: video.id,
-                                    animeId: patchReqBody.animeId ?? video.animeId,
-                                    author: patchReqBody.author ?? video.author,
-                                    episode: patchReqBody.episode ?? video.episode,
-                                    kind: patchReqBody.kind ?? video.kind,
-                                    language: patchReqBody.language ?? video.language,
-                                    quality: patchReqBody.quality ?? video.quality,
-                                    uploader: {
-                                        shikimoriId: video.uploader.shikimoriId,
-                                        banned: video.uploader.banned,
-                                        id: video.uploader.id,
-                                    },
-                                    url: patchReqBody.url ?? video.url,
-                                    watchesCount: patchReqBody.watchesCount ?? video.watchesCount,
-                                    createdAt: expect.any(String),
-                                    updatedAt: expect.any(String),
-                                }));
-                            });
+                        const res = await adminClient.updateVideo(video.id, patchReqBody);
+                        expect(res).toEqual(expect.objectContaining({
+                            id: video.id,
+                            animeId: patchReqBody.animeId ?? video.animeId,
+                            author: patchReqBody.author ?? video.author,
+                            episode: patchReqBody.episode ?? video.episode,
+                            kind: patchReqBody.kind ?? video.kind,
+                            language: patchReqBody.language ?? video.language,
+                            quality: patchReqBody.quality ?? video.quality,
+                            uploader: {
+                                shikimoriId: video.uploader.shikimoriId,
+                                banned: video.uploader.banned,
+                                id: video.uploader.id,
+                            },
+                            url: patchReqBody.url ?? video.url,
+                            watchesCount: patchReqBody.watchesCount ?? video.watchesCount,
+                            createdAt: expect.any(String),
+                            updatedAt: expect.any(String),
+                        }));
                     },
                 );
             }
@@ -314,38 +298,20 @@ describe('AppController (e2e)', () => {
             it(
                 'should return 404 Not Found PATCH /api/admin/videos/:videoId',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'admin', password: '12345678' });
-
-                    return request(app.getHttpServer())
-                        .patch(`/api/admin/videos/${0xDEAD_BEEF}`)
-                        .set('Cookie', loginRes.get('Set-Cookie'))
-                        .send(positivePatchReqBodies[0])
-                        .expect(404);
+                    return adminClient.updateVideoRaw(0xDEAD_BEEF, {}).expect(404);
                 },
             );
 
             it(
                 'should return 404 Not Found GET /api/admin/videos/:videoId',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'admin', password: '12345678' });
-
-                    return request(app.getHttpServer())
-                        .get(`/api/admin/videos/${0xDEAD_BEEF}`)
-                        .set('Cookie', loginRes.get('Set-Cookie'))
-                        .expect(404);
+                    return adminClient.getVideosRaw(0xDEAD_BEEF).expect(404);
                 },
             );
 
             it(
                 'should find video and return in format GET /api/admin/videos/:videoId',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'admin', password: '12345678' });
                     const video = await dataSource
                         .getRepository(VideoEntity)
                         .findOne({
@@ -353,51 +319,50 @@ describe('AppController (e2e)', () => {
                             relations: ['uploader'],
                         });
 
-                    return request(app.getHttpServer())
-                        .get(`/api/admin/videos/${video.id}`)
-                        .set('Cookie', loginRes.get('Set-Cookie'))
-                        .expect(200)
-                        .expect({
-                            animeId: video.animeId,
-                            episode: video.episode,
-                            url: video.url,
-                            kind: video.kind,
-                            language: video.language,
-                            quality: video.quality,
-                            author: video.author,
-                            uploader: {
-                                shikimoriId: video.uploader.shikimoriId,
-                                banned: video.uploader.banned,
-                                id: video.uploader.id,
-                            },
-                            watchesCount: video.watchesCount,
-                            id: video.id,
-                            createdAt: video.createdAt.toISOString(),
-                            updatedAt: video.updatedAt.toISOString(),
-                        });
+                    const res = await adminClient.getVideos(video.id);
+                    expect(res).toStrictEqual({
+                        animeId: video.animeId,
+                        episode: video.episode,
+                        url: video.url,
+                        kind: video.kind,
+                        language: video.language,
+                        quality: video.quality,
+                        author: video.author,
+                        uploader: {
+                            shikimoriId: video.uploader.shikimoriId,
+                            banned: video.uploader.banned,
+                            id: video.uploader.id,
+                        },
+                        watchesCount: video.watchesCount,
+                        id: video.id,
+                        createdAt: video.createdAt.toISOString(),
+                        updatedAt: video.updatedAt.toISOString(),
+                    });
                 },
             );
 
             it(
                 'should delete video DELETE /api/admin/videos/:videoId',
                 async () => {
-                    const loginRes = await request(app.getHttpServer())
-                        .post('/auth/login')
-                        .send({ login: 'admin', password: '12345678' });
                     const video = await dataSource
                         .getRepository(VideoEntity)
                         .findOneBy({ animeId: 21, episode: 113 });
 
-                    return request(app.getHttpServer())
-                        .delete(`/api/admin/videos/${video.id}`)
-                        .set('Cookie', loginRes.get('Set-Cookie'))
-                        .expect(200);
+                    return adminClient.deleteVideos(video.id);
                 },
             );
         });
     });
 
     describe('/API', () => {
+        let shikiAuthClient: TestClient;
+
+        beforeEach(() => {
+            const authHeader = new Map<string, string>();
+            authHeader.set('Authorization', 'Bearer user1-test-upload-token');
+            shikiAuthClient = new TestClient(app.getHttpServer(), authHeader);
+        });
+
         describe('/VIDEOS', () => {
             it(
                 'should return video in correct format GET /api/videos',
@@ -405,30 +370,26 @@ describe('AppController (e2e)', () => {
                     const animeId = 1;
                     const episode = 1;
 
-                    return request(app.getHttpServer())
-                        .get(`/api/videos?animeId=${animeId}&episode=${episode}`)
-                        .expect(200)
-                        .expect((res) => {
-                            for (const video of res.body) {
-                                expect(video).toEqual(expect.objectContaining({
-                                    animeId, episode,
-                                    id: expect.any(Number),
-                                    author: expect.any(String),
-                                    url: expect.any(String),
-                                    kind: expect.any(Number),
-                                    quality: expect.any(Number),
-                                    language: expect.any(String),
-                                    watchesCount: expect.any(Number),
-                                    createdAt: expect.any(String),
-                                    updatedAt: expect.any(String),
-                                    uploader: expect.objectContaining({
-                                        id: expect.any(Number),
-                                        banned: expect.any(Boolean),
-                                        shikimoriId: expect.any(String),
-                                    }),
-                                }));
-                            }
-                        });
+                    const res = await anonClient.getVideosByEpisode({ animeId, episode });
+                    for (const video of res) {
+                        expect(video).toEqual(expect.objectContaining({
+                            animeId, episode,
+                            id: expect.any(Number),
+                            author: expect.any(String),
+                            url: expect.any(String),
+                            kind: expect.any(Number),
+                            quality: expect.any(Number),
+                            language: expect.any(String),
+                            watchesCount: expect.any(Number),
+                            createdAt: expect.any(String),
+                            updatedAt: expect.any(String),
+                            uploader: expect.objectContaining({
+                                id: expect.any(Number),
+                                banned: expect.any(Boolean),
+                                shikimoriId: expect.any(String),
+                            }),
+                        }));
+                    }
                 },
             );
 
@@ -441,10 +402,8 @@ describe('AppController (e2e)', () => {
                         .getRepository(VideoEntity)
                         .find({ where: { animeId, episode } });
 
-                    return request(app.getHttpServer())
-                        .get(`/api/videos?animeId=${animeId}&episode=${episode}`)
-                        .expect(200)
-                        .expect((res) => res.body.length === videos.length);
+                    const res = await anonClient.getVideosByEpisode({ animeId, episode });
+                    expect(res.length === videos.length);
                 },
             );
 
@@ -453,14 +412,12 @@ describe('AppController (e2e)', () => {
                 async () => {
                     const animeId = 1;
 
-                    return request(app.getHttpServer())
-                        .get(`/api/videos/info?animeId=${animeId}`)
-                        .expect(200)
-                        .expect({
-                            1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
-                            2: { kinds: [VideoKindEnum.DUBBING], domains: ['admin2.up'] },
-                            3: { kinds: [VideoKindEnum.DUBBING], domains: ['admin3.up'] },
-                        });
+                    const res = await anonClient.getVideosInfo({ animeId });
+                    expect(res).toStrictEqual({
+                        1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
+                        2: { kinds: [VideoKindEnum.DUBBING], domains: ['admin2.up'] },
+                        3: { kinds: [VideoKindEnum.DUBBING], domains: ['admin3.up'] },
+                    });
                 },
             );
 
@@ -469,10 +426,8 @@ describe('AppController (e2e)', () => {
                 async () => {
                     const animeId = 404;
 
-                    return request(app.getHttpServer())
-                        .get(`/api/videos/info?animeId=${animeId}`)
-                        .expect(200)
-                        .expect({});
+                    const res = await anonClient.getVideosInfo({ animeId });
+                    expect(res).toStrictEqual({});
                 },
             );
 
@@ -490,28 +445,31 @@ describe('AppController (e2e)', () => {
                         quality: VideoQualityEnum.WEB,
                         url: 'https://test.com/upload_video.mp4',
                     };
+                    const createVideoRes = await shikiAuthClient.createVideo(reqBody);
+                    const video = await dataSource
+                        .getRepository(VideoEntity)
+                        .findOneBy({ animeId, episode });
 
-                    return request(app.getHttpServer())
-                        .post('/api/videos')
-                        .set('Authorization', 'Bearer user1-test-upload-token')
-                        .send(reqBody)
-                        .expect(201)
-                        .expect(async () => {
-                            const video = await dataSource
-                                .getRepository(VideoEntity)
-                                .findOneBy({ animeId, episode });
-                            const foundVideoAsReqBody: CreateVideoRequest = {
-                                animeId: video.animeId,
-                                episode: video.episode,
-                                language: video.language,
-                                author: video.author,
-                                kind: +video.kind,
-                                quality: +video.quality,
-                                url: video.url,
-                            };
-
-                            expect(foundVideoAsReqBody).toStrictEqual(reqBody);
-                        });
+                    expect(createVideoRes).toEqual(
+                        expect.objectContaining({
+                            animeId: video.animeId,
+                            episode: video.episode,
+                            language: video.language,
+                            author: video.author,
+                            kind: +video.kind,
+                            quality: +video.quality,
+                            url: video.url,
+                            id: expect.any(Number),
+                            createdAt: expect.any(String),
+                            updatedAt: expect.any(String),
+                            watchesCount: 0,
+                            uploader: expect.objectContaining({
+                                id: expect.any(Number),
+                                banned: expect.any(Boolean),
+                                shikimoriId: expect.any(String),
+                            }),
+                        })
+                    );
                 },
             );
 
@@ -529,12 +487,9 @@ describe('AppController (e2e)', () => {
                         quality: VideoQualityEnum.WEB,
                         url: 'https://test.com/upload_video.mp4',
                     };
+                    const createVideoRes = await shikiAuthClient.createVideoRaw(reqBody);
 
-                    return request(app.getHttpServer())
-                        .post('/api/videos')
-                        .set('Authorization', 'Bearer user1-test-upload-token')
-                        .send(reqBody)
-                        .expect(409);
+                    expect(createVideoRes.status).toBe(409);
                 },
             );
 
@@ -547,11 +502,7 @@ describe('AppController (e2e)', () => {
                         .getRepository(VideoEntity)
                         .findOneBy({ animeId, episode });
 
-                    return request(app.getHttpServer())
-                        .patch(`/api/videos/${video.id}/watch`)
-                        .send()
-                        .expect(200)
-                        .expect({});
+                    return anonClient.watchVideoRaw(video.id).expect({});
                 },
             );
 
@@ -559,11 +510,7 @@ describe('AppController (e2e)', () => {
                 'should return 404 Not Found for non-existing video PATCH /api/videos/:videoId/watch',
                 async () => {
                     const videoId = 404;
-
-                    return request(app.getHttpServer())
-                        .patch(`/api/videos/${videoId}/watch`)
-                        .send()
-                        .expect(404);
+                    return anonClient.watchVideoRaw(videoId).expect(404);
                 },
             );
 
@@ -577,10 +524,8 @@ describe('AppController (e2e)', () => {
                             where: { uploader: { shikimoriId } },
                         });
 
-                    return request(app.getHttpServer())
-                        .get(`/api/videos/search?uploader=${shikimoriId}`)
-                        .expect(200)
-                        .expect((res) => res.body.length === videos.length);
+                    const res = await anonClient.searchVideo({ uploader: shikimoriId });
+                    expect(res.length === videos.length);
                 },
             );
 
@@ -588,11 +533,8 @@ describe('AppController (e2e)', () => {
                 'should return 200 OK & empty array GET /api/videos/search',
                 async () => {
                     const shikimoriId = '404404404';
-
-                    return request(app.getHttpServer())
-                        .get(`/api/videos/search?uploader=${shikimoriId}`)
-                        .expect(200)
-                        .expect([]);
+                    const res = await anonClient.searchVideo({ uploader: shikimoriId });
+                    expect(res).toStrictEqual([]);
                 },
             );
         });
