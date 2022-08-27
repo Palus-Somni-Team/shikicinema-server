@@ -4,7 +4,7 @@ import { TestEnvironment } from '@e2e/test.environment';
 export class TestAdminEnvironment extends TestEnvironment {
     private _adminClient: TestClient;
 
-    get AdminClient(): TestClient {
+    get adminClient(): TestClient {
         return this._adminClient;
     }
 
@@ -12,7 +12,7 @@ export class TestAdminEnvironment extends TestEnvironment {
         super.init();
 
         beforeEach(async () => {
-            this._adminClient = new TestClient(this.App.getHttpServer());
+            this._adminClient = new TestClient(this.app.getHttpServer());
             await this._adminClient.login(TestEnvironment.AdminLoginData);
         });
     }

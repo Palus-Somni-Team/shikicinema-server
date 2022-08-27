@@ -13,9 +13,9 @@ describe('Admin (e2e)', () => {
         it(
             'should not allow to access admin route without proper rights GET /api/admin/user',
             async () => {
-                await env.AnonClient.login(user1LoginData);
+                await env.anonClient.login(user1LoginData);
 
-                return env.AnonClient.getUsersRaw()
+                return env.anonClient.getUsersRaw()
                     .expect(403)
                     .expect({
                         statusCode: 403,
@@ -27,9 +27,7 @@ describe('Admin (e2e)', () => {
 
         it(
             'should allow to access admin route for admin GET /api/admin/user',
-            async () => {
-                return env.AdminClient.getUsers();
-            },
+            async () => env.adminClient.getUsers(),
         );
     });
 
@@ -84,14 +82,14 @@ describe('Admin (e2e)', () => {
             it(
                 `should return 400 Bad Request #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
                 async () => {
-                    const video = await env.DataSource
+                    const video = await env.dataSource
                         .getRepository(VideoEntity)
                         .findOne({
                             where: { animeId, episode },
                             relations: ['uploader'],
                         });
 
-                    return env.AdminClient.updateVideoRaw(video.id, patchReqBody).expect(400);
+                    return env.adminClient.updateVideoRaw(video.id, patchReqBody).expect(400);
                 },
             );
         }
@@ -102,14 +100,14 @@ describe('Admin (e2e)', () => {
             it(
                 `should return 200 OK & update video #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
                 async () => {
-                    const video = await env.DataSource
+                    const video = await env.dataSource
                         .getRepository(VideoEntity)
                         .findOne({
                             where: { animeId, episode },
                             relations: ['uploader'],
                         });
 
-                    const res = await env.AdminClient.updateVideo(video.id, patchReqBody);
+                    const res = await env.adminClient.updateVideo(video.id, patchReqBody);
                     expect(res).toEqual(expect.objectContaining({
                         id: video.id,
                         animeId: patchReqBody.animeId ?? video.animeId,
@@ -134,29 +132,25 @@ describe('Admin (e2e)', () => {
 
         it(
             'should return 404 Not Found PATCH /api/admin/videos/:videoId',
-            async () => {
-                return env.AdminClient.updateVideoRaw(0xDEAD_BEEF, {}).expect(404);
-            },
+            async () => env.adminClient.updateVideoRaw(0xDEAD_BEEF, {}).expect(404),
         );
 
         it(
             'should return 404 Not Found GET /api/admin/videos/:videoId',
-            async () => {
-                return env.AdminClient.getVideosRaw(0xDEAD_BEEF).expect(404);
-            },
+            async () => env.adminClient.getVideosRaw(0xDEAD_BEEF).expect(404),
         );
 
         it(
             'should find video and return in format GET /api/admin/videos/:videoId',
             async () => {
-                const video = await env.DataSource
+                const video = await env.dataSource
                     .getRepository(VideoEntity)
                     .findOne({
                         where: { animeId: 21, episode: 113 },
                         relations: ['uploader'],
                     });
 
-                const res = await env.AdminClient.getVideos(video.id);
+                const res = await env.adminClient.getVideos(video.id);
                 expect(res).toStrictEqual({
                     animeId: video.animeId,
                     episode: video.episode,
@@ -181,11 +175,11 @@ describe('Admin (e2e)', () => {
         it(
             'should delete video DELETE /api/admin/videos/:videoId',
             async () => {
-                const video = await env.DataSource
+                const video = await env.dataSource
                     .getRepository(VideoEntity)
                     .findOneBy({ animeId: 21, episode: 113 });
 
-                return env.AdminClient.deleteVideos(video.id);
+                return env.adminClient.deleteVideos(video.id);
             },
         );
     });

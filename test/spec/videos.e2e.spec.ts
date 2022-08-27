@@ -12,7 +12,7 @@ describe('Videos api (e2e)', () => {
             const animeId = 1;
             const episode = 1;
 
-            const res = await env.AnonClient.getVideosByEpisode({ animeId, episode });
+            const res = await env.anonClient.getVideosByEpisode({ animeId, episode });
             for (const video of res) {
                 expect(video).toEqual(expect.objectContaining({
                     animeId, episode,
@@ -40,12 +40,12 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 1;
             const episode = 3;
-            const videos = await env.DataSource
+            const videos = await env.dataSource
                 .getRepository(VideoEntity)
                 .find({ where: { animeId, episode } });
 
-            const res = await env.AnonClient.getVideosByEpisode({ animeId, episode });
-            expect(res.length === videos.length);
+            const res = await env.anonClient.getVideosByEpisode({ animeId, episode });
+            expect(res.length).toBe(videos.length);
         },
     );
 
@@ -54,7 +54,7 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 1;
 
-            const res = await env.AnonClient.getVideosInfo({ animeId });
+            const res = await env.anonClient.getVideosInfo({ animeId });
             expect(res).toStrictEqual({
                 1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
                 2: { kinds: [VideoKindEnum.DUBBING], domains: ['admin2.up'] },
@@ -68,7 +68,7 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 404;
 
-            const res = await env.AnonClient.getVideosInfo({ animeId });
+            const res = await env.anonClient.getVideosInfo({ animeId });
             expect(res).toStrictEqual({});
         },
     );
@@ -87,8 +87,8 @@ describe('Videos api (e2e)', () => {
                 quality: VideoQualityEnum.WEB,
                 url: 'https://test.com/upload_video.mp4',
             };
-            const createVideoRes = await env.ShikiAuthClient.createVideo(reqBody);
-            const video = await env.DataSource
+            const createVideoRes = await env.shikiAuthClient.createVideo(reqBody);
+            const video = await env.dataSource
                 .getRepository(VideoEntity)
                 .findOneBy({ animeId, episode });
 
@@ -129,7 +129,7 @@ describe('Videos api (e2e)', () => {
                 quality: VideoQualityEnum.WEB,
                 url: 'https://test.com/upload_video.mp4',
             };
-            const createVideoRes = await env.ShikiAuthClient.createVideoRaw(reqBody);
+            const createVideoRes = await env.shikiAuthClient.createVideoRaw(reqBody);
 
             expect(createVideoRes.status).toBe(409);
         },
@@ -140,11 +140,11 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 1;
             const episode = 1;
-            const video = await env.DataSource
+            const video = await env.dataSource
                 .getRepository(VideoEntity)
                 .findOneBy({ animeId, episode });
 
-            return env.AnonClient.watchVideoRaw(video.id).expect({});
+            return env.anonClient.watchVideoRaw(video.id).expect({});
         },
     );
 
@@ -152,7 +152,7 @@ describe('Videos api (e2e)', () => {
         'should return 404 Not Found for non-existing video PATCH /api/videos/:videoId/watch',
         async () => {
             const videoId = 404;
-            return env.AnonClient.watchVideoRaw(videoId).expect(404);
+            return env.anonClient.watchVideoRaw(videoId).expect(404);
         },
     );
 
@@ -160,14 +160,14 @@ describe('Videos api (e2e)', () => {
         'should return 200 OK GET /api/videos/search',
         async () => {
             const shikimoriId = '13371337';
-            const videos = await env.DataSource
+            const videos = await env.dataSource
                 .getRepository(VideoEntity)
                 .find({
                     where: { uploader: { shikimoriId } },
                 });
 
-            const res = await env.AnonClient.searchVideo({ uploader: shikimoriId });
-            expect(res.length === videos.length);
+            const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
+            expect(res.length).toBe(videos.length);
         },
     );
 
@@ -175,7 +175,7 @@ describe('Videos api (e2e)', () => {
         'should return 200 OK & empty array GET /api/videos/search',
         async () => {
             const shikimoriId = '404404404';
-            const res = await env.AnonClient.searchVideo({ uploader: shikimoriId });
+            const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
             expect(res).toStrictEqual([]);
         },
     );

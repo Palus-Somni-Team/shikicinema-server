@@ -1,4 +1,6 @@
 import * as request from 'supertest';
+
+import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto';
 import {
     AnimeEpisodeInfo,
     CreateVideoRequest,
@@ -7,16 +9,14 @@ import {
     RegisterUserRequest,
     UpdateVideoRequest,
 } from '@lib-shikicinema';
-
-import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto';
 import { GetVideosInfoRequest, SearchVideosRequest, VideoResponse } from '@app-routes/api/video/dto';
 import { OwnerUserInfo } from '@app-routes/auth/dto/OwnerUserInfo';
 import { VideoEntity } from '@app-entities';
-import { queryString } from '@app-utils/http.utils';
 
 export class TestClient {
     private readonly server: any;
     private readonly headers: Map<string, string>;
+    private readonly cookies: Set<string> = new Set<string>();
 
     constructor(server: any, headers: Map<string, string> = null) {
         this.server = server;
@@ -31,8 +31,9 @@ export class TestClient {
         return req.send(data);
     }
 
-    private get(url: string, callback?: request.CallbackHandler): request.Test {
+    private get(url: string, payload?: any, callback?: request.CallbackHandler): request.Test {
         let req = request(this.server).get(url, callback);
+        if (payload) req = req.query(payload);
         req = this.setHeaders(req);
         return req.send();
     }
@@ -54,15 +55,13 @@ export class TestClient {
             req.set(key, value);
         }
 
+        req.set('Cookie', Array.from(this.cookies));
         return req;
     }
 
     private async extractCookies(response: request.Response) {
         const cookie = (await response).get('Set-Cookie');
-
-        if (cookie?.length >= 0) {
-            this.headers.set('Cookie', cookie[0]);
-        }
+        if (cookie?.length >= 0) cookie.forEach((_) => this.cookies.add(_));
     }
 
     //#endregion HTTP
@@ -144,7 +143,7 @@ export class TestClient {
     //#region Video
 
     public getVideosByEpisodeRaw(req: GetVideosRequest): request.Test {
-        return this.get(`/api/videos${queryString(req)}`);
+        return this.get('/api/videos', req);
     }
 
     public getVideosByEpisode(req: GetVideosRequest): Promise<VideoEntity[]> {
@@ -152,7 +151,7 @@ export class TestClient {
     }
 
     public getVideosInfoRaw(req: GetVideosInfoRequest): request.Test {
-        return this.get(`/api/videos/info${queryString(req)}`);
+        return this.get('/api/videos/info', req);
     }
 
     public getVideosInfo(req: GetVideosInfoRequest): Promise<AnimeEpisodeInfo> {
@@ -176,7 +175,7 @@ export class TestClient {
     }
 
     public searchVideoRaw(req: SearchVideosRequest): request.Test {
-        return this.get(`/api/videos/search${queryString(req)}`);
+        return this.get('/api/videos/search', req);
     }
 
     public searchVideo(req: SearchVideosRequest): Promise<VideoEntity[]> {
