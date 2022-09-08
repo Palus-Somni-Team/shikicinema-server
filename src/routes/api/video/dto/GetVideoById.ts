@@ -4,7 +4,7 @@ import { GetByIdParamRequest } from '@lib-shikicinema';
 import { IsInt, Min } from 'class-validator';
 
 @Exclude()
-export class GetUserById implements GetByIdParamRequest {
+export class GetVideoById implements GetByIdParamRequest {
     @Expose()
     @IsInt()
     @Min(0)

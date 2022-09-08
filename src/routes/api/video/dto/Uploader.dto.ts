@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
+import { Uploader as UploaderDto } from '@lib-shikicinema';
 
-@Exclude()
-export class UploaderInfo {
+export class Uploader implements UploaderDto {
     @Expose()
     @ApiProperty()
     id: number;

@@ -26,6 +26,7 @@ export { GetVideosRequest } from './v2/videos/GetVideosRequest';
 export { UpdateVideoRequest } from './v2/videos/UpdateVideoRequest';
 export { VideoKindEnum } from './v2/videos/VideoKindEnum';
 export { VideoQualityEnum } from './v2/videos/VideoQualityEnum';
+export { Uploader } from './v2/videos/Uploader';
 
 /**
  * Represents response for {@link GetEpisodesRequest} request.

@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeormStore } from 'connect-typeorm';
+import { initSession, initSwagger } from '@app-utils/bootstrap.utils';
 
 import { AppModule } from '@app/app.module';
 import { SessionEntity } from '@app-entities';
@@ -41,13 +42,10 @@ export class TestEnvironment {
             this._dataSource = this.app.get(DataSource);
             await this._dataSource.runMigrations({ transaction: 'all' });
             const configService = this.app.get(ConfigService);
-            const sessionsConfig = configService.get('express-session');
-            const sessionStorage = new TypeormStore({ cleanupLimit: 2 });
-            const sessionStore = sessionStorage.connect(this._dataSource.getRepository(SessionEntity));
 
-            this.app.use(session({ store: sessionStore, ...sessionsConfig }));
-            this.app.use(passport.initialize());
-            this.app.use(passport.session());
+            initSession(this.app, this.dataSource, configService);
+            initSwagger(this.app);
+
             await this.app.init();
         });
 

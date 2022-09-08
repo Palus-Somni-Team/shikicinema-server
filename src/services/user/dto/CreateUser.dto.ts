@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { CreateUserRequest, Role } from '@lib-shikicinema';
 import { Exclude, Expose } from 'class-transformer';
 import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
@@ -7,16 +8,25 @@ import { TransformRoles } from '@app-utils/class-transform.utils';
 export class CreateUser implements CreateUserRequest {
     @Expose()
     @IsEmail()
+    @ApiProperty({ format: 'email' })
     email: string;
 
     @Expose()
     @IsString()
     @Length(5, 32)
+    @ApiProperty({
+        minimum: 5,
+        maximum: 32,
+    })
     login: string;
 
     @Expose()
     @IsString()
     @Length(5, 64)
+    @ApiProperty({
+        minimum: 5,
+        maximum: 64,
+    })
     password: string;
 
     @Expose()
@@ -24,5 +34,9 @@ export class CreateUser implements CreateUserRequest {
     @IsArray()
     @IsEnum(Role, { each: true })
     @TransformRoles()
+    @ApiProperty({
+        enum: Role,
+        isArray: true,
+    })
     roles: Role[];
 }

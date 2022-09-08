@@ -19,3 +19,7 @@ Clone this repository and execute commands from __the project root__:
     3.  `npm run migrate`
 
 After that you could run server app by executing: `node dist/bundle.js`
+
+## Documentation
+
+API docs reference available on `/api/1.0/` endpoint after deployment.
