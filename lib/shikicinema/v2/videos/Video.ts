@@ -1,3 +1,4 @@
+import { Author } from '../author/Author';
 import { Uploader } from './Uploader';
 import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
@@ -45,10 +46,9 @@ export interface Video {
     quality: VideoQualityEnum;
 
     /**
-     * Studio that prepared a release. AniLibria, OnibakuGroup, etc.
-     * You also can add people responsible for the release. Like Eladiel, Oriko, Ghost etc.
+     * Author who prepared release, see {@link Author}
      */
-    author: string;
+    author: Author;
 
     /**
      * Number of people who marked the video as viewed.

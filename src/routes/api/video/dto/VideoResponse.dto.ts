@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Author } from '@app-routes/api/author/dto/Author.dto';
 import { Expose } from 'class-transformer';
 import { Uploader } from '@app-routes/api/video/dto/Uploader.dto';
 import { Video, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
@@ -14,7 +15,7 @@ export class VideoResponse implements Video {
 
     @Expose()
     @ApiProperty()
-    author: string;
+    author: Author;
 
     @Expose()
     @ApiProperty()

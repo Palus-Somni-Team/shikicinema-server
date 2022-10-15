@@ -17,7 +17,7 @@ import {
 /**
  * Will validate if at least one of the fields present in query
  */
-export class SearchVideosRequest implements PaginationRequest, Partial<Omit<Video, 'uploader'>> {
+export class SearchVideosRequest implements PaginationRequest, Partial<Omit<Video, 'uploader' | 'author'>> {
     @Expose()
     @IsInt()
     @IsOptional()

@@ -1,3 +1,4 @@
+import { AuthorEntity, UploaderEntity } from '@app-entities';
 import {
     Column,
     CreateDateColumn,
@@ -7,7 +8,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { UploaderEntity } from '@app-entities';
 import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
 
@@ -34,8 +34,9 @@ export class VideoEntity {
     @Column('smallint')
     quality: VideoQualityEnum;
 
-    @Column()
-    author: string;
+    @ManyToOne(() => AuthorEntity, (author) => author.videos, { cascade: ['insert', 'update'] })
+    @JoinColumn({ name: 'author_id' })
+    author: AuthorEntity;
 
     @Column({ name: 'watches_count' })
     watchesCount: number;
@@ -46,7 +47,7 @@ export class VideoEntity {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-    @ManyToOne(() => UploaderEntity, (uploader) => uploader.videos, { cascade: true })
+    @ManyToOne(() => UploaderEntity, (uploader) => uploader.videos, { cascade: ['insert', 'update'] })
     @JoinColumn({ name: 'uploader_id' })
     uploader: UploaderEntity;
 
@@ -57,7 +58,7 @@ export class VideoEntity {
         kind: VideoKindEnum,
         language: string,
         quality: VideoQualityEnum,
-        author: string,
+        author: AuthorEntity,
         uploader: UploaderEntity,
         watchesCount = 0,
     ) {

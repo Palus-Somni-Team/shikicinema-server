@@ -12,6 +12,12 @@ import { LimitOffsetResponse } from './v2/LimitOffsetResponse';
 export { LoginRequest } from './v2/LoginRequest';
 
 //
+// Author
+//
+
+export { Author } from './v2/author/Author';
+
+//
 // Videos
 //
 import { AnimeEpisodeInfo } from './v2/videos/AnimeEpisodeInfo';

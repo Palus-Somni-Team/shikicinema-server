@@ -1,4 +1,5 @@
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
+import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
 import { VideoEntity } from '@app-entities';
 
@@ -17,7 +18,10 @@ describe('Videos api (e2e)', () => {
                 expect(video).toEqual(expect.objectContaining({
                     animeId, episode,
                     id: expect.any(Number),
-                    author: expect.any(String),
+                    author: expect.objectContaining({
+                        id: expect.any(Number),
+                        name: expect.any(String),
+                    }),
                     url: expect.any(String),
                     kind: expect.any(Number),
                     quality: expect.any(Number),
@@ -90,30 +94,56 @@ describe('Videos api (e2e)', () => {
             const createVideoRes = await env.shikiAuthClient.createVideo(reqBody);
             const video = await env.dataSource
                 .getRepository(VideoEntity)
-                .findOneBy({ animeId, episode });
+                .findOne({
+                    where: { animeId, episode },
+                    relations: ['uploader', 'author'],
+                });
 
             expect(createVideoRes).toEqual(
                 expect.objectContaining({
-                    animeId: video.animeId,
-                    episode: video.episode,
-                    language: video.language,
-                    author: video.author,
-                    kind: +video.kind,
-                    quality: +video.quality,
-                    url: video.url,
-                    id: expect.any(Number),
-                    createdAt: expect.any(String),
-                    updatedAt: expect.any(String),
+                    animeId: reqBody.animeId,
+                    episode: reqBody.episode,
+                    language: reqBody.language,
+                    author: expect.objectContaining({
+                        id: video.author.id,
+                        name: reqBody.author,
+                    }),
+                    kind: +reqBody.kind,
+                    quality: +reqBody.quality,
+                    url: reqBody.url,
+                    id: video.id,
+                    createdAt: video.createdAt.toISOString(),
+                    updatedAt: video.updatedAt.toISOString(),
                     watchesCount: 0,
                     uploader: expect.objectContaining({
-                        id: expect.any(Number),
-                        banned: expect.any(Boolean),
-                        shikimoriId: expect.any(String),
+                        id: video.uploader.id,
+                        banned: video.uploader.banned,
+                        shikimoriId: video.uploader.shikimoriId,
                     }),
                 }),
             );
         },
     );
+
+    it('shouldn\'t create author if it already exists POST /api/videos',
+        async () => {
+            const animeId = 123123;
+            const episode = 123123;
+            const reqBody: CreateVideoRequest = {
+                animeId,
+                episode,
+                language: 'ru',
+                author: 'some author',
+                kind: VideoKindEnum.ORIGINAL,
+                quality: VideoQualityEnum.WEB,
+                url: 'https://test.com/upload_video.mp4',
+            };
+            const createVideoRes1 = await env.shikiAuthClient.createVideo(reqBody);
+
+            reqBody.author = reqBody.author.toUpperCase() + ' ';
+            const createVideoRes2 = await env.shikiAuthClient.createVideo(reqBody);
+            expect(createVideoRes1.author).toStrictEqual(createVideoRes2.author);
+        });
 
     it(
         'should return 409 Already exists POST /api/videos',
@@ -156,27 +186,50 @@ describe('Videos api (e2e)', () => {
         },
     );
 
-    it(
-        'should return 200 OK GET /api/videos/search',
-        async () => {
-            const shikimoriId = '13371337';
-            const videos = await env.dataSource
-                .getRepository(VideoEntity)
-                .find({
-                    where: { uploader: { shikimoriId } },
-                });
+    describe('GET /api/videos/search', () => {
+        it(
+            'search by uploader returns correct data',
+            async () => {
+                const shikimoriId = '13371337';
+                const videos = await env.dataSource
+                    .getRepository(VideoEntity)
+                    .find({
+                        where: { uploader: { shikimoriId } },
+                    });
 
-            const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
-            expect(res.length).toBe(videos.length);
-        },
-    );
+                const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
+                expect(res.length).toBe(videos.length);
+            },
+        );
 
-    it(
-        'should return 200 OK & empty array GET /api/videos/search',
-        async () => {
-            const shikimoriId = '404404404';
-            const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
-            expect(res).toStrictEqual([]);
-        },
-    );
+        it(
+            'returns empty array when nothing is found',
+            async () => {
+                const shikimoriId = '404404404';
+                const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
+                expect(res).toStrictEqual([]);
+            },
+        );
+
+        it(
+            'returns correct data on search by author',
+            async () => {
+                const author = 'anidub';
+                const videos = await env.dataSource
+                    .getRepository(VideoEntity)
+                    .findBy({
+                        author: {
+                            name: Raw(
+                                (_) =>`UPPER(${_}) like :author`,
+                                { author: `%${author.trim().toUpperCase()}%` },
+                            ),
+                        },
+                    });
+
+                const res = await env.anonClient.searchVideo({ author });
+                expect(res.length).toBe(videos.length);
+                expect(res.map((_) => _.id)).toStrictEqual(videos.map((_) => _.id));
+            },
+        );
+    });
 });
