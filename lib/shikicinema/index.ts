@@ -15,7 +15,15 @@ export { LoginRequest } from './v2/LoginRequest';
 // Author
 //
 
-export { Author } from './v2/author/Author';
+import { Author } from './v2/author/Author';
+
+export { Author };
+export { GetAuthorsRequest } from './v2/author/GetAuthorsRequest';
+
+/**
+ * Represents response for {@link GetAuthorsRequest} request.
+ */
+export type GetAuthorResponse = LimitOffsetResponse<Author>;
 
 //
 // Videos

@@ -4,6 +4,8 @@ import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto'
 import {
     AnimeEpisodeInfo,
     CreateVideoRequest,
+    GetAuthorResponse,
+    GetAuthorsRequest,
     GetVideosRequest,
     LoginRequest,
     RegisterUserRequest,
@@ -183,6 +185,18 @@ export class TestClient {
     }
 
     //#endregion Video
+
+    //#region Author
+
+    public getAuthorsRaw(req: GetAuthorsRequest): request.Test {
+        return this.get('/api/authors', req);
+    }
+
+    public getAuthors(req?: GetAuthorsRequest): Promise<GetAuthorResponse> {
+        return this.checkResponse(this.getAuthorsRaw(req));
+    }
+
+    //#endregion Author
 
     //#region Util
 

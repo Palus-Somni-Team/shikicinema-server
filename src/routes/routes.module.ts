@@ -6,6 +6,7 @@ import { AdminUserModule } from '@app-routes/api/admin/user/admin-user.module';
 import { AdminVideoModule } from '@app-routes/api/admin/video/admin-video.module';
 import { ApiModule } from '@app-routes/api/api.module';
 import { AuthModule } from '@app-routes/auth/auth.module';
+import { AuthorModule } from '@app-routes/api/author/authors.module';
 import { UserModule } from '@app-routes/api/user/user.module';
 import { VideoModule } from '@app-routes/api/video/video.module';
 
@@ -18,6 +19,10 @@ const routes: Routes = [
         path: '/api',
         module: ApiModule,
         children: [
+            {
+                path: '/authors',
+                module: AuthorModule,
+            },
             {
                 path: '/users',
                 module: UserModule,

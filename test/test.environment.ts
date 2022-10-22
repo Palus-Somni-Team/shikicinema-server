@@ -1,14 +1,10 @@
-import * as passport from 'passport';
-import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeormStore } from 'connect-typeorm';
 import { initSession, initSwagger } from '@app-utils/bootstrap.utils';
 
 import { AppModule } from '@app/app.module';
-import { SessionEntity } from '@app-entities';
 import { TestClient } from '@e2e/test.client';
 
 export class TestEnvironment {
