@@ -15,3 +15,7 @@ export function isPgException(e: any, exceptionCode?: PgException): boolean {
 
     return isInPgExceptionCodes(code);
 }
+
+export function normalizeString(value?: string): string {
+    return (value || '').trim().toUpperCase();
+}

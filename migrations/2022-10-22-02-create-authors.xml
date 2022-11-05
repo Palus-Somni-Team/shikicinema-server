@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2022-10-22-02-create-authors" author="BasicEC">
+
+        <createTable tableName="authors">
+
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addColumn tableName="videos">
+            <column name="author_id" type="int"/>
+        </addColumn>
+
+        <sql>
+            insert into authors (name) select distinct on (upper(author)) author from videos;
+            update videos set author_id = (select id from authors where authors.name = videos.author);
+        </sql>
+
+        <addForeignKeyConstraint baseTableName="videos"
+                                 baseColumnNames="author_id"
+                                 constraintName="fk_author_id"
+                                 onUpdate="CASCADE"
+                                 referencedTableName="authors"
+                                 referencedColumnNames="id"/>
+
+        <addNotNullConstraint columnDataType="int"
+                              columnName="author_id"
+                              tableName="videos"
+                              validate="true"/>
+
+        <dropColumn tableName="videos" columnName="author"/>
+
+        <createIndex indexName="authors_upper_name_uniq" tableName="authors" unique="true"> 
+            <column name="UPPER(name)" computed="true"/> 
+        </createIndex> 
+
+    </changeSet>
+</databaseChangeLog>

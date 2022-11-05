@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 
-import { UploaderEntity, VideoEntity } from '@app-entities';
+import { AuthorEntity, UploaderEntity, VideoEntity } from '@app-entities';
 
 const seeds: VideoEntity[] = [];
 
@@ -12,12 +12,16 @@ export class VideoSeed1621024590642 implements MigrationInterface {
         const admin = await uploaderRepo.findOneBy({ shikimoriId: '13371337' });
         const banned = await uploaderRepo.findOneBy({ shikimoriId: '99999999' });
 
+        const authorsRepo = await queryRunner.manager.getRepository(AuthorEntity);
+        const authors = await authorsRepo.find();
+        let i = 0;
+
         seeds.push(
-            new VideoEntity(21, 113, 'https://kek.lol', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, 'keker', user),
-            new VideoEntity(1, 1, 'https://admin1.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, 'AAA', admin),
-            new VideoEntity(1, 2, 'https://admin2.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, 'AAA', admin),
-            new VideoEntity(1, 3, 'https://admin3.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, 'AAA', admin),
-            new VideoEntity(1337, 7, 'https://banned.com', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, '???', banned),
+            new VideoEntity(21, 113, 'https://kek.lol', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], user),
+            new VideoEntity(1, 1, 'https://admin1.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
+            new VideoEntity(1, 2, 'https://admin2.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
+            new VideoEntity(1, 3, 'https://admin3.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, null, admin),
+            new VideoEntity(1337, 7, 'https://banned.com', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], banned),
         );
 
         const videoRepo = await queryRunner.manager.getRepository(VideoEntity);

@@ -12,6 +12,20 @@ import { LimitOffsetResponse } from './v2/LimitOffsetResponse';
 export { LoginRequest } from './v2/LoginRequest';
 
 //
+// Author
+//
+
+import { Author } from './v2/author/Author';
+
+export { Author };
+export { GetAuthorsRequest } from './v2/author/GetAuthorsRequest';
+
+/**
+ * Represents response for {@link GetAuthorsRequest} request.
+ */
+export type GetAuthorResponse = LimitOffsetResponse<Author>;
+
+//
 // Videos
 //
 import { AnimeEpisodeInfo } from './v2/videos/AnimeEpisodeInfo';

@@ -104,14 +104,16 @@ describe('Admin (e2e)', () => {
                         .getRepository(VideoEntity)
                         .findOne({
                             where: { animeId, episode },
-                            relations: ['uploader'],
+                            relations: ['uploader', 'author'],
                         });
 
                     const res = await env.adminClient.updateVideo(video.id, patchReqBody);
                     expect(res).toEqual(expect.objectContaining({
                         id: video.id,
                         animeId: patchReqBody.animeId ?? video.animeId,
-                        author: patchReqBody.author ?? video.author,
+                        author: expect.objectContaining({
+                            name: patchReqBody.author ?? video.author.name,
+                        }),
                         episode: patchReqBody.episode ?? video.episode,
                         kind: patchReqBody.kind ?? video.kind,
                         language: patchReqBody.language ?? video.language,
@@ -147,7 +149,7 @@ describe('Admin (e2e)', () => {
                     .getRepository(VideoEntity)
                     .findOne({
                         where: { animeId: 21, episode: 113 },
-                        relations: ['uploader'],
+                        relations: ['uploader', 'author'],
                     });
 
                 const res = await env.adminClient.getVideos(video.id);
@@ -158,7 +160,10 @@ describe('Admin (e2e)', () => {
                     kind: video.kind,
                     language: video.language,
                     quality: video.quality,
-                    author: video.author,
+                    author: {
+                        id: video.author.id,
+                        name: video.author.name,
+                    },
                     uploader: {
                         shikimoriId: video.uploader.shikimoriId,
                         banned: video.uploader.banned,

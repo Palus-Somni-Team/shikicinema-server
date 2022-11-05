@@ -3,6 +3,7 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { entities } from '@app-entities';
 import { registerAs } from '@nestjs/config';
 
+import { AuthorsSeed1621024400000 } from '@app-seeds/1621024400000-authors-seed';
 import { SessionSeed1607704017485 } from '@app-seeds/1607704017485-session-seed';
 import { UploadTokenSeed1650995411336 } from '@app-seeds/1650995411336-upload-token-seed';
 import { UploaderSeed1621024303293 } from '@app-seeds/1621024303293-uploader-seed';
@@ -32,6 +33,7 @@ export default registerAs('database', () => {
             UserSeed21607357974819,
             SessionSeed1607704017485,
             UploaderSeed1621024303293,
+            AuthorsSeed1621024400000,
             VideoSeed1621024590642,
             UploadTokenSeed1650995411336,
         ],
