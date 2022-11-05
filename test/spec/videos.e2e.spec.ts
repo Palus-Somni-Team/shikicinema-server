@@ -2,6 +2,7 @@ import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikic
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
 import { VideoEntity } from '@app-entities';
+import { normalizeString } from '@app-utils/postgres.utils';
 
 describe('Videos api (e2e)', () => {
     const env = new TestEnvironment();
@@ -221,7 +222,7 @@ describe('Videos api (e2e)', () => {
                         author: {
                             name: Raw(
                                 (_) =>`UPPER(${_}) like :author`,
-                                { author: `%${author.trim().toUpperCase()}%` },
+                                { author: `%${normalizeString(author)}%` },
                             ),
                         },
                     });

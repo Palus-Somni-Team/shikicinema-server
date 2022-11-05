@@ -8,6 +8,7 @@ import { AnimeEpisodeInfo, SearchVideosRequest } from '@app-routes/api/video/dto
 import { AuthorEntity, UploaderEntity, VideoEntity } from '@app-entities';
 import { RawAnimeEpisodeInfoInterface } from '@app-routes/api/video/types/raw-anime-episode-info.interface';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
+import { normalizeString } from '@app-utils/postgres.utils';
 import { parseWhere } from '@app-utils/where-parser.utils';
 
 @Injectable()
@@ -60,7 +61,7 @@ export class VideoService {
                 throw new NotFoundException();
             }
 
-            if (video.author && video.author.trim().toUpperCase() !== entity.author.name.toUpperCase()) {
+            if (video.author && normalizeString(video.author) !== normalizeString(entity.author.name)) {
                 const authorEntity = await this.getOrCreateAuthorEntity(entityManager, video.author);
                 entity.author = authorEntity;
             }
@@ -114,7 +115,9 @@ export class VideoService {
             const name = where['author'];
 
             where['author'] = {
-                name: Raw((_) => `UPPER(${_}) like :author`, { author: `%${name.trim().toUpperCase()}%` }),
+                name: Raw(
+                    (_) => `UPPER(${_}) like :author`, { author: `%${normalizeString(name)}%` }
+                ),
             };
         }
 
@@ -184,7 +187,7 @@ export class VideoService {
     private async getOrCreateAuthorEntity(entityManager: EntityManager, author: string): Promise<AuthorEntity> {
         const authorRepo = await entityManager.getRepository(AuthorEntity);
         const entity = await authorRepo.findOneBy({
-            name: Raw((_) => `UPPER(${_}) = :name`, { name: author.trim().toUpperCase() }),
+            name: Raw((_) => `UPPER(${_}) = :name`, { name: normalizeString(author) }),
         });
 
         return entity ?? new AuthorEntity(author);

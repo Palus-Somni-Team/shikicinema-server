@@ -3,6 +3,7 @@ import { GetAuthorResponse } from '@app-routes/api/author/dto/GetAuthorResponse'
 import { GetAuthorsRequest } from '@lib-shikicinema';
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
+import { normalizeString } from '@app-utils/postgres.utils';
 
 describe('Authors API (e2e)', () => {
     const env = new TestEnvironment();
@@ -16,7 +17,7 @@ describe('Authors API (e2e)', () => {
             const author = await env.dataSource
                 .getRepository(AuthorEntity)
                 .findOneBy({
-                    name: Raw((_) => `UPPER(${_}) like :name`, { name: `%${req.name.trim().toUpperCase()}%` }),
+                    name: Raw((_) => `UPPER(${_}) like :name`, { name: `%${normalizeString(req.name)}%` }),
                 });
 
             const res = await env.anonClient.getAuthors(req);
@@ -37,13 +38,12 @@ describe('Authors API (e2e)', () => {
             const authors = await env.dataSource
                 .getRepository(AuthorEntity)
                 .find({
-                    order: { id: 'asc' },
+                    order: { name: 'asc' },
                     skip: 0,
                     take: 20,
                 });
 
             const res = await env.anonClient.getAuthors();
-
             expect(res.data.length).toBe(authors.length);
             expect(res).toEqual(new GetAuthorResponse(authors, 20, 0));
         },

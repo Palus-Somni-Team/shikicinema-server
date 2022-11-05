@@ -18,6 +18,7 @@ export class GetAuthorsRequest implements Request {
     @ApiProperty({
         minimum: 0,
         required: false,
+        default: 0,
     })
     offset?: number;
 
@@ -25,11 +26,12 @@ export class GetAuthorsRequest implements Request {
     @IsInt()
     @IsOptional()
     @Min(1)
-    @Max(100)
+    @Max(1000)
     @ApiProperty({
         minimum: 1,
         maximum: 100,
         required: false,
+        default: 20,
     })
     limit?: number;
 }

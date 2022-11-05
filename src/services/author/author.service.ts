@@ -1,9 +1,9 @@
+import { Assert } from '@app-utils/validation/assert';
 import { AuthorEntity } from '@app-entities';
 import { FindManyOptions, Raw, Repository } from 'typeorm';
-import { GetAuthorResponse } from '@app-routes/api/author/dto/GetAuthorResponse';
-import { GetAuthorsRequest } from '@app-routes/api/author/dto/GetAuthorsRequest';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
+import { normalizeString } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class AuthorService {
@@ -12,21 +12,25 @@ export class AuthorService {
         private readonly repository: Repository<AuthorEntity>,
     ) {}
 
-    async get(query: GetAuthorsRequest): Promise<GetAuthorResponse> {
-        const limit = query.limit ?? 20;
-        const offset = query.offset ?? 0;
+    get(name: string, limit: number, offset: number): Promise<AuthorEntity[]> {
+        Assert.Argument('limit', limit).between(1, 100);
+        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+
         const queryOptions: FindManyOptions<AuthorEntity> = {
-            order: { id: 'asc' },
+            order: { name: 'asc' },
             take: limit,
             skip: offset,
         };
 
-        if (query.name && query.name.trim().length > 0) {
-            queryOptions.where = {
-                name: Raw((_) => `UPPER(${_}) like :name`, { name: `%${query.name.trim().toUpperCase()}%` }),
-            };
+        if (name) {
+            name = normalizeString(name);
+            if (name.length > 0) {
+                queryOptions.where = {
+                    name: Raw((_) => `UPPER(${_}) like :name`, { name: `%${name}%` }),
+                };
+            }
         }
 
-        return new GetAuthorResponse(await this.repository.find(queryOptions), limit, offset);
+        return this.repository.find(queryOptions);
     }
 }
