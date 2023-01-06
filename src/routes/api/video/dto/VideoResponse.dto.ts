@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Author } from '@app-routes/api/author/dto/Author.dto';
 import { Expose } from 'class-transformer';
-import { Uploader } from '@app-routes/api/video/dto/Uploader.dto';
+import { UploaderInfo } from '@app-routes/auth/dto';
 import { Video, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
+import { VideoEntity } from '@app-entities';
 
 export class VideoResponse implements Video {
     @Expose()
@@ -34,8 +35,8 @@ export class VideoResponse implements Video {
     quality: VideoQualityEnum;
 
     @Expose()
-    @ApiProperty({ type: () => Uploader })
-    uploader: Uploader;
+    @ApiProperty({ type: () => UploaderInfo })
+    uploader: UploaderInfo;
 
     @Expose()
     @ApiProperty()
@@ -45,11 +46,57 @@ export class VideoResponse implements Video {
     @ApiProperty()
     watchesCount: number;
 
-    @Expose()
-    @ApiProperty({ format: 'date-time' })
-    createdAt: string;
+    @ApiProperty()
+    createdAt: Date;
 
-    @Expose()
-    @ApiProperty({ format: 'date-time' })
-    updatedAt: string;
+    @ApiProperty()
+    updatedAt: Date;
+
+    constructor(
+        id: number,
+        animeId: number,
+        author: Author,
+        episode: number,
+        kind: VideoKindEnum,
+        language: string,
+        quality: VideoQualityEnum,
+        uploader: UploaderInfo,
+        url: string,
+        watchesCount: number,
+        createdAt: Date,
+        updatedAt: Date,
+    ) {
+        this.id = id;
+        this.animeId = animeId;
+        this.author = author;
+        this.episode = episode;
+        this.kind = kind;
+        this.language = language;
+        this.quality = quality;
+        this.uploader = uploader;
+        this.url = url;
+        this.watchesCount = watchesCount;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public static create(entity: VideoEntity): VideoResponse {
+        const author = entity.author === null ? null : Author.create(entity.author);
+        const uploader = entity.uploader === null ? null : UploaderInfo.create(entity.uploader);
+
+        return new VideoResponse(
+            entity.id,
+            entity.animeId,
+            author,
+            entity.episode,
+            entity.kind,
+            entity.language,
+            entity.quality,
+            uploader,
+            entity.url,
+            entity.watchesCount,
+            entity.createdAt,
+            entity.updatedAt,
+        );
+    }
 }

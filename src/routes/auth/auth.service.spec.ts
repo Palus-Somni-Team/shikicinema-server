@@ -9,8 +9,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AuthService } from '@app-routes/auth/auth.service';
-import { IRequest } from '@app-routes/auth/dto/IRequest';
-import { RegisterUser } from '@app-routes/auth/dto/RegisterUser';
+import { IRequest, RegisterUser, ShikimoriAccessToken } from '@app-routes/auth/dto';
 import {
     SessionEntity,
     UploadTokenEntity,
@@ -18,7 +17,6 @@ import {
     UserEntity,
 } from '@app-entities';
 import { SessionService } from '@app-services/session/session.service';
-import { ShikimoriAccessToken } from '@app-routes/auth/dto/ShikimoriAccessToken';
 import { ShikimoriClient } from '@app-services/shikimori/shikimori.client';
 import { ShikimoriUser } from '@app-services/shikimori/dto/ShikimoriUser.dto';
 import { UploadTokensService } from '@app-services/upload-tokens/upload-tokens.service';

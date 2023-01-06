@@ -5,4 +5,4 @@ export { GetVideosResponse } from '@app-routes/api/video/dto/GetVideosResponse.d
 export { AnimeEpisodeInfo } from '@app-routes/api/video/dto/AnimeEpisodeInfo.dto';
 export { SearchVideosRequest } from '@app-routes/api/video/dto/SearchVideosRequest.dto';
 export { GetVideosInfoRequest } from '@app-routes/api/video/dto/GetVideosInfoRequest.dto';
-export { GetVideoById } from '@app-routes/api/video/dto/GetVideoById';
+export { GetVideoById } from '@app-routes/api/video/dto/GetVideoById.dto';

@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Role } from '@lib-shikicinema';
 
-import { IRequest } from '@app-routes/auth/dto/IRequest';
+import { IRequest } from '@app-routes/auth/dto';
 import { UserService } from '@app-services/user/user.service';
 
 /**

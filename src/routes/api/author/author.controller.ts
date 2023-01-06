@@ -1,10 +1,8 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Author } from '@app-routes/api/author/dto/Author.dto';
+import { Author, GetAuthorResponse, GetAuthorsRequest } from '@app-routes/api/author/dto';
 import { AuthorService } from '@app-services/author/author.service';
 import { BaseController } from '@app-routes/base.controller';
 import { Get, Query } from '@nestjs/common';
-import { GetAuthorResponse } from '@app-routes/api/author/dto/GetAuthorResponse';
-import { GetAuthorsRequest } from '@app-routes/api/author/dto/GetAuthorsRequest';
 
 @ApiTags('authors')
 export class AuthorController extends BaseController {
@@ -19,7 +17,7 @@ export class AuthorController extends BaseController {
         query.offset ??= 0;
         const authors = await this.authorService.get(query.name, query.limit, query.offset);
         return new GetAuthorResponse(
-            authors.map((_) => new Author(_.id, _.name)),
+            authors.map(Author.create),
             query.limit,
             query.offset,
         );

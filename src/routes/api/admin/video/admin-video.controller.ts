@@ -1,7 +1,6 @@
 import { ApiCookieAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { Role } from '@lib-shikicinema';
-import { plainToClass } from 'class-transformer';
 
 import { AllowRoles, RoleGuard } from '@app/guards/role.guard';
 import { GetVideoById, VideoResponse } from '@app-routes/api/video/dto';
@@ -20,7 +19,7 @@ export class AdminVideoController extends VideoController {
     async getById(@Param() params: GetVideoById): Promise<VideoResponse> {
         const video = await this.videoService.findById(params.id);
 
-        return plainToClass(VideoResponse, video);
+        return VideoResponse.create(video);
     }
 
     @Patch(':id')
@@ -32,7 +31,7 @@ export class AdminVideoController extends VideoController {
     ): Promise<VideoResponse> {
         const video = await this.videoService.update(params.id, request);
 
-        return plainToClass(VideoResponse, video);
+        return VideoResponse.create(video);
     }
 
     @Delete(':id')

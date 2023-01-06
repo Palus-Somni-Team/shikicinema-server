@@ -5,8 +5,6 @@ import {
 } from '@nestjs/swagger';
 import {
     Body,
-    ClassSerializerInterceptor,
-    Controller,
     Delete,
     Get,
     Param,
@@ -14,15 +12,12 @@ import {
     Put,
     Query,
     UseGuards,
-    UseInterceptors,
-    UsePipes,
-    ValidationPipe,
 } from '@nestjs/common';
 import { Role } from '@lib-shikicinema';
-import { plainToClass } from 'class-transformer';
 
 import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto';
 import { AllowRoles, RoleGuard } from '@app-guards/role.guard';
+import { BaseController } from '@app-routes/base.controller';
 import {
     CreateUser,
     GetUserById,
@@ -31,22 +26,23 @@ import {
 } from '@app-services/user/dto';
 import { UserService } from '@app-services/user/user.service';
 
-@Controller('/')
 @AllowRoles(Role.admin)
-@UseInterceptors(ClassSerializerInterceptor)
-@UsePipes(new ValidationPipe({ transform: true }))
 @UseGuards(RoleGuard)
 @ApiTags('users (admin)')
 @ApiCookieAuth()
 @ApiResponse({ status: 403, description: 'Authorized only for admin accounts' })
-export class AdminUserController {
-    constructor(private readonly userService: UserService) {}
+export class AdminUserController extends BaseController {
+    constructor(
+        private readonly userService: UserService,
+    ) {
+        super();
+    }
 
     @Get()
     @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: AdminUserInfo, isArray: true })
     async find(@Query() query: GetUsers): Promise<AdminUserInfo[]> {
         const users = await this.userService.findAll(query);
-        return plainToClass(AdminUserInfo, users);
+        return users.map(AdminUserInfo.create);
     }
 
     @Get(':id')
@@ -54,7 +50,7 @@ export class AdminUserController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async findById(@Param() id: GetUserById): Promise<AdminUserInfo> {
         const user = await this.userService.findById(id);
-        return plainToClass(AdminUserInfo, user);
+        return AdminUserInfo.create(user);
     }
 
     @Post()
@@ -63,7 +59,7 @@ export class AdminUserController {
     @ApiResponse({ status: 500, description: 'Internal server error during operation' })
     async create(@Body() user: CreateUser): Promise<AdminUserInfo> {
         const createdUser = await this.userService.create(user);
-        return plainToClass(AdminUserInfo, createdUser);
+        return AdminUserInfo.create(createdUser);
     }
 
     @Put(':id')
@@ -71,7 +67,7 @@ export class AdminUserController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async update(@Param() id: GetUserById, @Body() request: UpdateUser): Promise<AdminUserInfo> {
         const updatedUser = await this.userService.update(id, request);
-        return plainToClass(AdminUserInfo, updatedUser);
+        return AdminUserInfo.create(updatedUser);
     }
 
     @Delete(':id')

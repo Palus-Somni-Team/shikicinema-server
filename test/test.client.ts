@@ -12,7 +12,7 @@ import {
     UpdateVideoRequest,
 } from '@lib-shikicinema';
 import { GetVideosInfoRequest, SearchVideosRequest, VideoResponse } from '@app-routes/api/video/dto';
-import { OwnerUserInfo } from '@app-routes/auth/dto/OwnerUserInfo';
+import { OwnerUserInfo } from '@app-routes/auth/dto';
 import { VideoEntity } from '@app-entities';
 
 export class TestClient {

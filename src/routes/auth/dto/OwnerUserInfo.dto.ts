@@ -1,11 +1,11 @@
-import { AdminUser, Role } from '@lib-shikicinema';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { Role } from '@lib-shikicinema';
 import { TransformRoles } from '@app-utils/class-transform.utils';
 import { UserEntity } from '@app-entities';
 
 @Exclude()
-export class AdminUserInfo implements AdminUser {
+export class OwnerUserInfo {
     @Expose()
     @ApiProperty()
     id: number;
@@ -19,7 +19,7 @@ export class AdminUserInfo implements AdminUser {
     name: string;
 
     @Expose()
-    @ApiProperty({ format: 'email' })
+    @ApiProperty()
     email: string;
 
     @Expose()
@@ -50,7 +50,8 @@ export class AdminUserInfo implements AdminUser {
         roles: Role[],
         shikimoriId: string | null,
         createdAt: Date,
-        updatedAt: Date) {
+        updatedAt: Date,
+    ) {
         this.id = id;
         this.login = login;
         this.name = name;
@@ -61,16 +62,16 @@ export class AdminUserInfo implements AdminUser {
         this.updatedAt = updatedAt;
     }
 
-    public static create(user: UserEntity): AdminUserInfo {
-        return new AdminUserInfo(
-            user.id,
-            user.login,
-            user.name,
-            user.email,
-            user.roles,
-            user.uploader?.shikimoriId,
-            user.createdAt,
-            user.updatedAt,
+    public static create(entity: UserEntity): OwnerUserInfo {
+        return new OwnerUserInfo(
+            entity.id,
+            entity.login,
+            entity.name,
+            entity.email,
+            entity.roles,
+            entity.uploader?.shikimoriId,
+            entity.createdAt,
+            entity.updatedAt,
         );
     }
 }

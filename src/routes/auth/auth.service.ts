@@ -7,10 +7,8 @@ import {
 } from '@nestjs/common';
 import { Role } from '@lib-shikicinema';
 
-import { IRequest } from '@app-routes/auth/dto/IRequest';
-import { RegisterUser } from '@app-routes/auth/dto/RegisterUser';
+import { IRequest, RegisterUser, ShikimoriAccessToken } from '@app-routes/auth/dto';
 import { SessionService } from '@app-services/session/session.service';
-import { ShikimoriAccessToken } from '@app-routes/auth/dto/ShikimoriAccessToken';
 import { ShikimoriClient } from '@app-services/shikimori/shikimori.client';
 import { ShikimoriUser } from '@app-services/shikimori/dto/ShikimoriUser.dto';
 import {
