@@ -43,14 +43,14 @@ export class VideoController extends BaseController {
     @ApiResponse({ status: 200, description: 'Videos by animeId and episode', type: VideoResponse, isArray: true })
     async findByAnime(@Query() { animeId, episode }: GetVideosRequest): Promise<VideoResponse[]> {
         const videos = await this.videoService.findByAnimeId(animeId, episode);
-        return videos.map(VideoResponse.create);
+        return videos.map((video) => new VideoResponse(video));
     }
 
     @Get('search')
     @ApiResponse({ status: 200, description: 'Videos with matched parameters', type: VideoResponse, isArray: true })
     async search(@Query() query: SearchVideosRequest): Promise<VideoResponse[]> {
         const videos = await this.videoService.search(query);
-        return videos.map(VideoResponse.create);
+        return videos.map((video) => new VideoResponse(video));
     }
 
     @Get('info')
@@ -66,7 +66,7 @@ export class VideoController extends BaseController {
     @ApiResponse({ status: 409, description: 'Video with this URL already exists' })
     async create(@Req() req: IRequest, @Body() request: CreateVideoRequest): Promise<VideoResponse> {
         const video = await this.videoService.create(req.user, request);
-        return VideoResponse.create(video);
+        return new VideoResponse(video);
     }
 
     @Patch(':id/watch')

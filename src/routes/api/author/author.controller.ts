@@ -17,7 +17,7 @@ export class AuthorController extends BaseController {
         query.offset ??= 0;
         const authors = await this.authorService.get(query.name, query.limit, query.offset);
         return new GetAuthorResponse(
-            authors.map(Author.create),
+            authors.map((author) => new Author(author)),
             query.limit,
             query.offset,
         );

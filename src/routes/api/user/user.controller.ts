@@ -22,7 +22,7 @@ export class UserController extends BaseController {
     @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: UserInfo, isArray: true })
     async find(@Query() query: GetUsers): Promise<UserInfo[]> {
         const users = await this.userService.findAll(query);
-        return users.map(UserInfo.create);
+        return users.map((user) => new UserInfo(user));
     }
 
     @Get(':id')
@@ -30,6 +30,6 @@ export class UserController extends BaseController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async findById(@Param() id: GetUserById): Promise<UserInfo> {
         const user = await this.userService.findById(id);
-        return UserInfo.create(user);
+        return new UserInfo(user);
     }
 }

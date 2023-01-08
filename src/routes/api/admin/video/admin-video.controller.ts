@@ -19,7 +19,7 @@ export class AdminVideoController extends VideoController {
     async getById(@Param() params: GetVideoById): Promise<VideoResponse> {
         const video = await this.videoService.findById(params.id);
 
-        return VideoResponse.create(video);
+        return new VideoResponse(video);
     }
 
     @Patch(':id')
@@ -31,7 +31,7 @@ export class AdminVideoController extends VideoController {
     ): Promise<VideoResponse> {
         const video = await this.videoService.update(params.id, request);
 
-        return VideoResponse.create(video);
+        return new VideoResponse(video);
     }
 
     @Delete(':id')

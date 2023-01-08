@@ -52,51 +52,33 @@ export class VideoResponse implements Video {
     @ApiProperty()
     updatedAt: Date;
 
-    constructor(
-        id: number,
-        animeId: number,
-        author: Author,
-        episode: number,
-        kind: VideoKindEnum,
-        language: string,
-        quality: VideoQualityEnum,
-        uploader: UploaderInfo,
-        url: string,
-        watchesCount: number,
-        createdAt: Date,
-        updatedAt: Date,
-    ) {
+    constructor(entity: VideoEntity) {
+        const {
+            id,
+            animeId,
+            episode,
+            kind,
+            language,
+            quality,
+            url,
+            watchesCount,
+            createdAt,
+            updatedAt,
+            author: authorEntity,
+            uploader: uploaderEntity,
+        } = entity;
+
         this.id = id;
         this.animeId = animeId;
-        this.author = author;
+        this.author = authorEntity ? new Author(authorEntity) : null;
         this.episode = episode;
         this.kind = kind;
         this.language = language;
         this.quality = quality;
-        this.uploader = uploader;
+        this.uploader = uploaderEntity ? new UploaderInfo(uploaderEntity) : null;
         this.url = url;
         this.watchesCount = watchesCount;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public static create(entity: VideoEntity): VideoResponse {
-        const author = entity.author === null ? null : Author.create(entity.author);
-        const uploader = entity.uploader === null ? null : UploaderInfo.create(entity.uploader);
-
-        return new VideoResponse(
-            entity.id,
-            entity.animeId,
-            author,
-            entity.episode,
-            entity.kind,
-            entity.language,
-            entity.quality,
-            uploader,
-            entity.url,
-            entity.watchesCount,
-            entity.createdAt,
-            entity.updatedAt,
-        );
     }
 }

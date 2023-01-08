@@ -42,7 +42,7 @@ export class AdminUserController extends BaseController {
     @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: AdminUserInfo, isArray: true })
     async find(@Query() query: GetUsers): Promise<AdminUserInfo[]> {
         const users = await this.userService.findAll(query);
-        return users.map(AdminUserInfo.create);
+        return users.map((user) => new AdminUserInfo(user));
     }
 
     @Get(':id')
@@ -50,7 +50,7 @@ export class AdminUserController extends BaseController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async findById(@Param() id: GetUserById): Promise<AdminUserInfo> {
         const user = await this.userService.findById(id);
-        return AdminUserInfo.create(user);
+        return new AdminUserInfo(user);
     }
 
     @Post()
@@ -59,7 +59,7 @@ export class AdminUserController extends BaseController {
     @ApiResponse({ status: 500, description: 'Internal server error during operation' })
     async create(@Body() user: CreateUser): Promise<AdminUserInfo> {
         const createdUser = await this.userService.create(user);
-        return AdminUserInfo.create(createdUser);
+        return new AdminUserInfo(createdUser);
     }
 
     @Put(':id')
@@ -67,7 +67,7 @@ export class AdminUserController extends BaseController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async update(@Param() id: GetUserById, @Body() request: UpdateUser): Promise<AdminUserInfo> {
         const updatedUser = await this.userService.update(id, request);
-        return AdminUserInfo.create(updatedUser);
+        return new AdminUserInfo(updatedUser);
     }
 
     @Delete(':id')

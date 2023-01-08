@@ -13,12 +13,10 @@ export class Author implements Interface {
     @ApiProperty()
     name: string;
 
-    constructor(id: number, name: string) {
+    constructor(author: AuthorEntity) {
+        const { id, name } = author;
+
         this.id = id;
         this.name = name;
-    }
-
-    public static create(author: AuthorEntity): Author {
-        return new Author(author.id, author.name);
     }
 }

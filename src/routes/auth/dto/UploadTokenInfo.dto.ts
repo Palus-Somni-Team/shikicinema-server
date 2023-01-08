@@ -12,18 +12,10 @@ export class UploadTokenInfo {
     @ApiProperty()
     expiredAt: Date;
 
-    constructor(
-        token: string,
-        expiredAt: Date,
-    ) {
+    constructor(entity: UploadTokenEntity) {
+        const { token, expiredAt } = entity;
+
         this.token = token;
         this.expiredAt = expiredAt;
-    }
-
-    public static create(entity: UploadTokenEntity): UploadTokenInfo {
-        return new UploadTokenInfo(
-            entity.token,
-            entity.expiredAt,
-        );
     }
 }

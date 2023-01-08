@@ -42,36 +42,25 @@ export class OwnerUserInfo {
     @ApiProperty()
     updatedAt: Date;
 
-    constructor(
-        id: number,
-        login: string,
-        name: string,
-        email: string,
-        roles: Role[],
-        shikimoriId: string | null,
-        createdAt: Date,
-        updatedAt: Date,
-    ) {
+    constructor(entity: UserEntity) {
+        const {
+            id,
+            login,
+            name,
+            email,
+            roles,
+            createdAt,
+            updatedAt,
+            uploader = null,
+        } = entity;
+
         this.id = id;
         this.login = login;
         this.name = name;
         this.email = email;
         this.roles = roles;
-        this.shikimoriId = shikimoriId;
+        this.shikimoriId = uploader?.shikimoriId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public static create(entity: UserEntity): OwnerUserInfo {
-        return new OwnerUserInfo(
-            entity.id,
-            entity.login,
-            entity.name,
-            entity.email,
-            entity.roles,
-            entity.uploader?.shikimoriId,
-            entity.createdAt,
-            entity.updatedAt,
-        );
     }
 }

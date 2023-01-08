@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { Uploader as Interface } from '@lib-shikicinema';
+import { Uploader } from '@lib-shikicinema';
 import { UploaderEntity } from '@app-entities';
 
 @Exclude()
-export class UploaderInfo implements Interface {
+export class UploaderInfo implements Uploader {
     @Expose()
     @ApiProperty()
     id: number;
@@ -17,21 +17,10 @@ export class UploaderInfo implements Interface {
     @ApiProperty()
     shikimoriId: string;
 
-    constructor(
-        id: number,
-        banned: boolean,
-        shikimoriId: string,
-    ) {
+    constructor(entity: UploaderEntity) {
+        const { id, banned, shikimoriId } = entity;
         this.id = id;
         this.banned = banned;
         this.shikimoriId = shikimoriId;
-    }
-
-    public static create(entity: UploaderEntity): UploaderInfo {
-        return new UploaderInfo(
-            entity.id,
-            entity.banned,
-            entity.shikimoriId,
-        );
     }
 }
