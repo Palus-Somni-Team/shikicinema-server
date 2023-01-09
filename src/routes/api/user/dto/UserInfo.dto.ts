@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { User } from '@lib-shikicinema';
+import { UserEntity } from '@app-entities';
 
 @Exclude()
 export class UserInfo implements User {
@@ -19,4 +20,18 @@ export class UserInfo implements User {
     @Expose()
     @ApiProperty({ nullable: true })
     shikimoriId: string | null;
+
+    constructor(entity: UserEntity) {
+        const {
+            id,
+            login,
+            name,
+            uploader,
+        } = entity;
+
+        this.id = id;
+        this.login = login;
+        this.name = name;
+        this.shikimoriId = uploader?.shikimoriId;
+    }
 }

@@ -14,23 +14,14 @@ export function TransformNullableString(options?: TransformOptions) {
 }
 
 export function TransformRoles() {
-    const toPlain = Transform(
-        ({ value }) => value instanceof Array
-            ? value.map((role) => Role[Role[role]])
-            : [],
-        { toPlainOnly: true }
-    );
-
-    const toClass = Transform(
+    const transform = Transform(
         ({ value }) => value instanceof Array
             ? value.map((role) => Role[role])
-            : [],
-        { toClassOnly: true }
+            : []
     );
 
     return function(target: any, key: string) {
-        toPlain(target, key);
-        toClass(target, key);
+        transform(target, key);
     };
 }
 

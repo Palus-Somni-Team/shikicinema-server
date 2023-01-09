@@ -1,5 +1,5 @@
 import { AuthorEntity } from '@app-entities';
-import { GetAuthorResponse } from '@app-routes/api/author/dto/GetAuthorResponse';
+import { GetAuthorResponse } from '@app-routes/api/author/dto';
 import { GetAuthorsRequest } from '@lib-shikicinema';
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';

@@ -59,4 +59,15 @@ export interface Video {
      * Shikimori user who uploaded the video.
      */
     uploader: Uploader;
+
+    /**
+     * Date when video was uploaded.
+     */
+    createdAt: Date;
+
+
+    /**
+     * Date when video was changed last time.
+     */
+    updatedAt: Date;
 }

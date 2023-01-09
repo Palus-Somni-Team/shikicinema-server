@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Author } from '@app-routes/api/author/dto/Author.dto';
 import { Expose } from 'class-transformer';
-import { Uploader } from '@app-routes/api/video/dto/Uploader.dto';
+import { UploaderInfo } from '@app-routes/auth/dto';
 import { Video, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
+import { VideoEntity } from '@app-entities';
 
 export class VideoResponse implements Video {
     @Expose()
@@ -34,8 +35,8 @@ export class VideoResponse implements Video {
     quality: VideoQualityEnum;
 
     @Expose()
-    @ApiProperty({ type: () => Uploader })
-    uploader: Uploader;
+    @ApiProperty({ type: () => UploaderInfo })
+    uploader: UploaderInfo;
 
     @Expose()
     @ApiProperty()
@@ -45,11 +46,39 @@ export class VideoResponse implements Video {
     @ApiProperty()
     watchesCount: number;
 
-    @Expose()
-    @ApiProperty({ format: 'date-time' })
-    createdAt: string;
+    @ApiProperty()
+    createdAt: Date;
 
-    @Expose()
-    @ApiProperty({ format: 'date-time' })
-    updatedAt: string;
+    @ApiProperty()
+    updatedAt: Date;
+
+    constructor(entity: VideoEntity) {
+        const {
+            id,
+            animeId,
+            episode,
+            kind,
+            language,
+            quality,
+            url,
+            watchesCount,
+            createdAt,
+            updatedAt,
+            author: authorEntity,
+            uploader: uploaderEntity,
+        } = entity;
+
+        this.id = id;
+        this.animeId = animeId;
+        this.author = authorEntity ? new Author(authorEntity) : null;
+        this.episode = episode;
+        this.kind = kind;
+        this.language = language;
+        this.quality = quality;
+        this.uploader = uploaderEntity ? new UploaderInfo(uploaderEntity) : null;
+        this.url = url;
+        this.watchesCount = watchesCount;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

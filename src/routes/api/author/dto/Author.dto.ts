@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthorEntity } from '@app-entities';
 import { Exclude, Expose } from 'class-transformer';
 import { Author as Interface } from '@lib-shikicinema';
 
@@ -12,7 +13,9 @@ export class Author implements Interface {
     @ApiProperty()
     name: string;
 
-    constructor(id: number, name: string) {
+    constructor(author: AuthorEntity) {
+        const { id, name } = author;
+
         this.id = id;
         this.name = name;
     }

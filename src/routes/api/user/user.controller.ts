@@ -1,32 +1,28 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
-    ClassSerializerInterceptor,
-    Controller,
     Get,
     Param,
     Query,
-    UseInterceptors,
-    UsePipes,
-    ValidationPipe,
 } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 
+import { BaseController } from '@app-routes/base.controller';
 import { GetUserById, GetUsers } from '@app-services/user/dto';
 import { UserInfo } from '@app-routes/api/user/dto/UserInfo.dto';
 import { UserService } from '@app-services/user/user.service';
 
-@Controller('/')
-@UseInterceptors(ClassSerializerInterceptor)
-@UsePipes(new ValidationPipe({ transform: true }))
 @ApiTags('users')
-export class UserController {
-    constructor(private readonly userService: UserService) {}
+export class UserController extends BaseController {
+    constructor(
+        private readonly userService: UserService,
+    ) {
+        super();
+    }
 
     @Get()
     @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: UserInfo, isArray: true })
     async find(@Query() query: GetUsers): Promise<UserInfo[]> {
         const users = await this.userService.findAll(query);
-        return plainToClass(UserInfo, users);
+        return users.map((user) => new UserInfo(user));
     }
 
     @Get(':id')
@@ -34,6 +30,6 @@ export class UserController {
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
     async findById(@Param() id: GetUserById): Promise<UserInfo> {
         const user = await this.userService.findById(id);
-        return plainToClass(UserInfo, user);
+        return new UserInfo(user);
     }
 }
