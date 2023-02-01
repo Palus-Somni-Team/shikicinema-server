@@ -7,6 +7,7 @@ import { AdminVideoModule } from '@app-routes/api/admin/video/admin-video.module
 import { ApiModule } from '@app-routes/api/api.module';
 import { AuthModule } from '@app-routes/auth/auth.module';
 import { AuthorModule } from '@app-routes/api/author/authors.module';
+import { OAuthModule } from '@app-routes/oauth/oauth.module';
 import { UserModule } from '@app-routes/api/user/user.module';
 import { VideoModule } from '@app-routes/api/video/video.module';
 
@@ -54,6 +55,7 @@ const routes: Routes = [
         RouterModule.forRoutes(routes),
         ApiModule,
         AuthModule,
+        OAuthModule,
     ],
 })
 export class RoutesModule {}
