@@ -1,5 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpModule, Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { Module } from '@nestjs/common';
 
 import { ShikimoriClient } from '@app-services/shikimori/shikimori.client';
 
