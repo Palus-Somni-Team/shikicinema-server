@@ -5,6 +5,7 @@ import {
     IsISO31661Alpha2,
     IsInt,
     IsOptional,
+    Max,
     Min,
 } from 'class-validator';
 import {
@@ -84,18 +85,24 @@ export class SearchVideosRequest implements PaginationRequest, Partial<Omit<Vide
     @Expose()
     @IsInt()
     @IsOptional()
+    @Max(100)
+    @Type(() => Number)
     @ApiProperty({
         minimum: 1,
         required: false,
+        maximum: 100,
     })
     limit?: number;
 
     @Expose()
     @IsInt()
     @IsOptional()
+    @Min(0)
+    @Type(() => Number)
     @ApiProperty({
         minimum: 0,
         required: false,
+        default: 0,
     })
     offset?: number;
 }

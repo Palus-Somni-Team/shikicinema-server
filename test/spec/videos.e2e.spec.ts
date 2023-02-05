@@ -1,3 +1,4 @@
+import { AnimeEpisodeInfo, GetEpisodesResponse, GetVideosRequest } from '@app-routes/api/video/dto';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
@@ -15,7 +16,7 @@ describe('Videos api (e2e)', () => {
             const episode = 1;
 
             const res = await env.anonClient.getVideosByEpisode({ animeId, episode });
-            for (const video of res) {
+            for (const video of res.data) {
                 expect(video).toEqual(expect.objectContaining({
                     animeId, episode,
                     id: expect.any(Number),
@@ -37,20 +38,33 @@ describe('Videos api (e2e)', () => {
                     }),
                 }));
             }
+            expect(res.limit).toEqual(expect.any(Number));
+            expect(res.offset).toEqual(expect.any(Number));
+            expect(res.total).toEqual(expect.any(Number));
         },
     );
 
     it(
-        'should return all videos by animeId GET /api/videos',
+        'should return correct page of videos by animeId GET /api/videos',
         async () => {
-            const animeId = 1;
-            const episode = 3;
-            const videos = await env.dataSource
+            const req = new GetVideosRequest();
+            req.animeId = 1;
+            req.episode = 3;
+            req.limit = 5;
+            req.offset = 2;
+            const [videos, total] = await env.dataSource
                 .getRepository(VideoEntity)
-                .find({ where: { animeId, episode } });
+                .findAndCount({
+                    take: req.limit,
+                    skip: req.offset,
+                    where: { animeId: req.animeId, episode: req.episode },
+                });
 
-            const res = await env.anonClient.getVideosByEpisode({ animeId, episode });
-            expect(res.length).toBe(videos.length);
+            const res = await env.anonClient.getVideosByEpisode(req);
+            expect(res.data.length).toBe(videos.length);
+            expect(res.limit).toBe(req.limit);
+            expect(res.offset).toBe(req.offset);
+            expect(res.total).toBe(total);
         },
     );
 
@@ -59,12 +73,12 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 1;
 
-            const res = await env.anonClient.getVideosInfo({ animeId });
-            expect(res).toStrictEqual({
-                1: { kinds: [VideoKindEnum.DUBBING], domains: ['admin1.up'] },
-                2: { kinds: [VideoKindEnum.DUBBING], domains: ['admin2.up'] },
-                3: { kinds: [VideoKindEnum.DUBBING], domains: ['admin3.up'] },
-            });
+            const res = await env.anonClient.getVideoInfo({ animeId });
+            expect(res).toEqual(new GetEpisodesResponse([
+                new AnimeEpisodeInfo(1, ['admin1.up'], [VideoKindEnum.DUBBING]),
+                new AnimeEpisodeInfo(2, ['admin2.up'], [VideoKindEnum.DUBBING]),
+                new AnimeEpisodeInfo(3, ['admin3.up'], [VideoKindEnum.DUBBING]),
+            ], 20, 0, 3));
         },
     );
 
@@ -73,8 +87,8 @@ describe('Videos api (e2e)', () => {
         async () => {
             const animeId = 404;
 
-            const res = await env.anonClient.getVideosInfo({ animeId });
-            expect(res).toStrictEqual({});
+            const res = await env.anonClient.getVideoInfo({ animeId });
+            expect(res).toEqual(new GetEpisodesResponse([], 20, 0, 0));
         },
     );
 
@@ -192,14 +206,15 @@ describe('Videos api (e2e)', () => {
             'search by uploader returns correct data',
             async () => {
                 const shikimoriId = '13371337';
-                const videos = await env.dataSource
+                const [videos, total] = await env.dataSource
                     .getRepository(VideoEntity)
-                    .find({
+                    .findAndCount({
                         where: { uploader: { shikimoriId } },
                     });
 
                 const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
-                expect(res.length).toBe(videos.length);
+                expect(res.data.length).toBe(videos.length);
+                expect(res.total).toBe(total);
             },
         );
 
@@ -208,7 +223,8 @@ describe('Videos api (e2e)', () => {
             async () => {
                 const shikimoriId = '404404404';
                 const res = await env.anonClient.searchVideo({ uploader: shikimoriId });
-                expect(res).toStrictEqual([]);
+                expect(res.data).toStrictEqual([]);
+                expect(res.total).toBe(0);
             },
         );
 
@@ -228,8 +244,8 @@ describe('Videos api (e2e)', () => {
                     });
 
                 const res = await env.anonClient.searchVideo({ author });
-                expect(res.length).toBe(videos.length);
-                expect(res.map((_) => _.id)).toStrictEqual(videos.map((_) => _.id));
+                expect(res.data.length).toBe(videos.length);
+                expect(res.data.map((_) => _.id)).toStrictEqual(videos.map((_) => _.id));
             },
         );
     });

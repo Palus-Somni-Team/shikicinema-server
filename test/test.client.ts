@@ -1,17 +1,18 @@
 import * as request from 'supertest';
 
-import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto';
 import {
-    AnimeEpisodeInfo,
     CreateVideoRequest,
+    GetAdminUsersResponse,
     GetAuthorResponse,
     GetAuthorsRequest,
+    GetEpisodesResponse,
     GetVideosRequest,
+    GetVideosResponse,
     LoginRequest,
     RegisterUserRequest,
     UpdateVideoRequest,
 } from '@lib-shikicinema';
-import { GetVideosInfoRequest, SearchVideosRequest, VideoResponse } from '@app-routes/api/video/dto';
+import { GetEpisodesRequest, SearchVideosRequest, VideoResponse } from '@app-routes/api/video/dto';
 import { OwnerUserInfo } from '@app-routes/auth/dto';
 import { VideoEntity } from '@app-entities';
 
@@ -112,24 +113,24 @@ export class TestClient {
         return this.get('/api/admin/users');
     }
 
-    public getUsers(): Promise<AdminUserInfo[]> {
+    public getUsers(): Promise<GetAdminUsersResponse> {
         return this.checkResponse(this.getUsersRaw());
     }
 
-    public getVideosRaw(id: number): request.Test {
+    public getVideoRaw(id: number): request.Test {
         return this.get(`/api/admin/videos/${id}`);
     }
 
-    public getVideos(id: number): Promise<VideoResponse> {
-        return this.checkResponse(this.getVideosRaw(id));
+    public getVideo(id: number): Promise<VideoResponse> {
+        return this.checkResponse(this.getVideoRaw(id));
     }
 
-    public deleteVideosRaw(id: number): request.Test {
+    public deleteVideoRaw(id: number): request.Test {
         return this.delete(`/api/admin/videos/${id}`);
     }
 
-    public deleteVideos(id: number): Promise<void> {
-        return this.checkResponse(this.deleteVideosRaw(id));
+    public deleteVideo(id: number): Promise<void> {
+        return this.checkResponse(this.deleteVideoRaw(id));
     }
 
     public updateVideoRaw(id: number, req: UpdateVideoRequest): request.Test {
@@ -148,16 +149,16 @@ export class TestClient {
         return this.get('/api/videos', req);
     }
 
-    public getVideosByEpisode(req: GetVideosRequest): Promise<VideoEntity[]> {
+    public getVideosByEpisode(req: GetVideosRequest): Promise<GetVideosResponse> {
         return this.checkResponse(this.getVideosByEpisodeRaw(req));
     }
 
-    public getVideosInfoRaw(req: GetVideosInfoRequest): request.Test {
+    public getVideoInfoRaw(req: GetEpisodesRequest): request.Test {
         return this.get('/api/videos/info', req);
     }
 
-    public getVideosInfo(req: GetVideosInfoRequest): Promise<AnimeEpisodeInfo> {
-        return this.checkResponse(this.getVideosInfoRaw(req));
+    public getVideoInfo(req: GetEpisodesRequest): Promise<GetEpisodesResponse> {
+        return this.checkResponse(this.getVideoInfoRaw(req));
     }
 
     public createVideoRaw(req: CreateVideoRequest): request.Test {
@@ -180,7 +181,7 @@ export class TestClient {
         return this.get('/api/videos/search', req);
     }
 
-    public searchVideo(req: SearchVideosRequest): Promise<VideoEntity[]> {
+    public searchVideo(req: SearchVideosRequest): Promise<GetVideosResponse> {
         return this.checkResponse(this.searchVideoRaw(req));
     }
 

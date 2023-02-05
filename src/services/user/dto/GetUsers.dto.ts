@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { GetUsersRequest, Role } from '@lib-shikicinema';
-import { IsArray, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsArray, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { TransformDate, TransformNullableString, TransformRoles } from '@app-utils/class-transform.utils';
 
 @Exclude()
@@ -92,10 +92,13 @@ export class GetUsers implements GetUsersRequest {
     @IsOptional()
     @IsInt()
     @Min(1)
+    @Max(100)
     @Type(() => Number)
     @ApiProperty({
         required: false,
         minimum: 1,
+        maximum: 100,
+        default: 20,
     })
     limit?: number;
 }

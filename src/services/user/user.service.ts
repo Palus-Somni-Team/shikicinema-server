@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from '@lib-shikicinema';
 
-import { CreateUser, GetUserById, GetUsers, UpdateUser } from '@app-services/user/dto';
-import { PgException, isPgException } from '@app-utils/postgres.utils';
+import { Assert } from '@app-utils/validation/assert';
+import { CreateUser, UpdateUser } from '@app-services/user/dto';
+import { PgException, isPgException, removeUndefinedWhereFields } from '@app-utils/postgres.utils';
 import { UserEntity } from '@app-entities';
-import { parseWhere } from '@app-utils/where-parser.utils';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
         private readonly repository: Repository<UserEntity>,
     ) {}
 
-    async findById({ id }: GetUserById): Promise<UserEntity> {
+    async findById(id: number): Promise<UserEntity> {
         const user = await this.repository.findOne({ where: { id } });
 
         if (!user) {
@@ -29,14 +29,23 @@ export class UserService {
         return this.repository.findOne({ where: { login } });
     }
 
-    findAll(query: GetUsers): Promise<UserEntity[]> {
-        const { where, limit, offset } = parseWhere(query);
+    findAll(
+        limit: number,
+        offset: number,
+        id?: number,
+        login?: string,
+        name?: string,
+        email?: string,
+        shikimoriId?: string | null,
+        roles?: Role[],
+        createdAt?: Date,
+    ): Promise<[UserEntity[], number]> {
+        Assert.Argument('limit', limit).between(1, 100);
+        Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        return this.repository.find({
-            where,
-            skip: offset ?? 0,
-            take: limit || 20,
-        });
+        const where = removeUndefinedWhereFields({ id, login, name, email, shikimoriId, roles, createdAt });
+
+        return this.repository.findAndCount({ where, skip: offset, take: limit });
     }
 
     async create(user: CreateUser): Promise<UserEntity> {
@@ -59,8 +68,7 @@ export class UserService {
         }
     }
 
-    async update(params: GetUserById, request: UpdateUser): Promise<UserEntity> {
-        const { id } = params;
+    async update(id: number, request: UpdateUser): Promise<UserEntity> {
         const { affected } = await this.repository.update(id, request);
 
         if (affected === 0) {
@@ -68,11 +76,10 @@ export class UserService {
         }
 
         // TODO: maybe we should use transaction for this?
-        return this.findById(params);
+        return this.findById(id);
     }
 
-    async delete(params: GetUserById): Promise<void> {
-        const { id } = params;
+    async delete(id: number): Promise<void> {
         const { affected } = await this.repository.delete({ id });
 
         if (affected === 0) {

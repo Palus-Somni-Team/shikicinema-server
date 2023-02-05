@@ -1,3 +1,5 @@
+import { PaginationRequest } from '../PaginationRequest';
+
 /**
  * Interface for the classes representing get videos request.
  *
@@ -5,7 +7,7 @@
  * @property {number} episode <p>Number of an episode for requested videos.</p>
  *                            <p><i>May be empty if you do not want select specific episode</i></p>
  */
-export interface GetVideosRequest {
+export interface GetVideosRequest extends PaginationRequest {
     animeId: number;
     episode: number;
 }

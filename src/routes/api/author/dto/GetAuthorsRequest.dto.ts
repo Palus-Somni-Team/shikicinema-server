@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { GetAuthorsRequest as Request } from '@lib-shikicinema';
 
@@ -15,6 +15,7 @@ export class GetAuthorsRequest implements Request {
     @IsInt()
     @IsOptional()
     @Min(0)
+    @Type(() => Number)
     @ApiProperty({
         minimum: 0,
         required: false,
@@ -26,7 +27,8 @@ export class GetAuthorsRequest implements Request {
     @IsInt()
     @IsOptional()
     @Min(1)
-    @Max(1000)
+    @Max(100)
+    @Type(() => Number)
     @ApiProperty({
         minimum: 1,
         maximum: 100,

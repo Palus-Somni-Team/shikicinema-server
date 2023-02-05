@@ -15,14 +15,15 @@ import {
     UseGuards,
 } from '@nestjs/common';
 
-import { AnimeEpisodeInfo } from '@lib-shikicinema';
 import { AnimeEpisodeInfoSchema } from '@app-routes/api/video/schemas/anime-episode-info.schema';
 import { BaseController } from '@app-routes/base.controller';
 import {
     CreateVideoRequest,
+    GetEpisodesRequest,
+    GetEpisodesResponse,
     GetVideoById,
-    GetVideosInfoRequest,
     GetVideosRequest,
+    GetVideosResponse,
     SearchVideosRequest,
     VideoResponse,
 } from '@app-routes/api/video/dto';
@@ -40,23 +41,43 @@ export class VideoController extends BaseController {
     }
 
     @Get()
-    @ApiResponse({ status: 200, description: 'Videos by animeId and episode', type: VideoResponse, isArray: true })
-    async findByAnime(@Query() { animeId, episode }: GetVideosRequest): Promise<VideoResponse[]> {
-        const videos = await this.videoService.findByAnimeId(animeId, episode);
-        return videos.map((video) => new VideoResponse(video));
+    @ApiResponse({ status: 200, description: 'Videos by animeId and episode', type: GetVideosResponse, isArray: true })
+    async findByAnime(@Query() query: GetVideosRequest): Promise<GetVideosResponse> {
+        const limit = query.limit ?? 20;
+        const offset = query.offset ?? 0;
+        const [videos, total] = await this.videoService.findByAnimeId(limit, offset, query.animeId, query.episode);
+        return new GetVideosResponse(videos.map((video) => new VideoResponse(video)), limit, offset, total);
     }
 
     @Get('search')
     @ApiResponse({ status: 200, description: 'Videos with matched parameters', type: VideoResponse, isArray: true })
-    async search(@Query() query: SearchVideosRequest): Promise<VideoResponse[]> {
-        const videos = await this.videoService.search(query);
-        return videos.map((video) => new VideoResponse(video));
+    async search(@Query() query: SearchVideosRequest): Promise<GetVideosResponse> {
+        const limit = query.limit ?? 20;
+        const offset = query.offset ?? 0;
+
+        const [videos, total] = await this.videoService.search(
+            limit,
+            offset,
+            query.id,
+            query.animeId,
+            query.author,
+            query.episode,
+            query.kind,
+            query.language,
+            query.quality,
+            query.uploader
+        );
+
+        return new GetVideosResponse(videos.map((video) => new VideoResponse(video)), limit, offset, total);
     }
 
     @Get('info')
     @ApiResponse({ status: 200, description: 'Anime episodes info', schema: AnimeEpisodeInfoSchema })
-    async getInfo(@Query() request: GetVideosInfoRequest): Promise<AnimeEpisodeInfo> {
-        return this.videoService.getInfo(request.animeId);
+    async getInfo(@Query() request: GetEpisodesRequest): Promise<GetEpisodesResponse> {
+        const limit = request.limit ?? 20;
+        const offset = request.offset ?? 0;
+        const [data, total] = await this.videoService.getInfo(request.animeId, limit, offset);
+        return new GetEpisodesResponse(data, limit, offset, total);
     }
 
     @Post()

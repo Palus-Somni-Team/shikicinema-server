@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { GetVideosResponse as Response } from '@lib-shikicinema';
-import { VideoResponse } from '@app-routes/api/video/dto/VideoResponse.dto';
+import { GetUsersResponse as Response, User } from '@lib-shikicinema';
 
-export class GetVideosResponse implements Response {
+export class GetUsersResponse implements Response {
     @Expose()
     @ApiProperty()
-    data: VideoResponse[];
+    data: User[];
 
     @Expose()
     @ApiProperty()
@@ -20,7 +19,7 @@ export class GetVideosResponse implements Response {
     @ApiProperty()
     total: number;
 
-    constructor(data: VideoResponse[], limit: number, offset: number, total: number) {
+    constructor(data: User[], limit: number, offset: number, total: number) {
         this.data = data;
         this.limit = limit;
         this.offset = offset;

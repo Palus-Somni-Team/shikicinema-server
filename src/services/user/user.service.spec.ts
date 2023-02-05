@@ -10,8 +10,6 @@ import { plainToClass } from 'class-transformer';
 
 import {
     CreateUser,
-    GetUserById,
-    GetUsers,
     UpdateUser,
 } from '@app-services/user/dto';
 import { UserEntity } from '@app-entities';
@@ -19,7 +17,6 @@ import { UserService } from '@app-services/user/user.service';
 
 describe('UserService', () => {
     const id = 123;
-    const byId = plainToClass(GetUserById, { id });
     const oneUserEntity = new UserEntity('user1', '12345678', 'user1@email.com');
     const userEntities = [
         new UserEntity('user2', '12345678', 'user2email.com'),
@@ -45,6 +42,7 @@ describe('UserService', () => {
                     provide: getRepositoryToken(UserEntity),
                     useValue: {
                         find: jest.fn().mockResolvedValue(userEntities),
+                        findAndCount: jest.fn().mockResolvedValue([userEntities, userEntities.length]),
                         findOne: jest.fn().mockResolvedValue(oneUserEntity),
                         create: jest.fn().mockReturnValue(oneUserEntity),
                         save: jest.fn().mockReturnValue(oneUserEntity),
@@ -61,7 +59,7 @@ describe('UserService', () => {
 
     describe('findById', () => {
         it('should get a single user', async () => {
-            const user = await service.findById(byId);
+            const user = await service.findById(id);
 
             expect(user).toStrictEqual(oneUserEntity);
         });
@@ -69,15 +67,16 @@ describe('UserService', () => {
         it('should throw 404 Not Found HttpException', () => {
             repo.findOne = jest.fn().mockResolvedValueOnce(undefined);
 
-            expect(service.findById(byId)).rejects.toThrowError(NotFoundException);
+            expect(service.findById(id)).rejects.toThrowError(NotFoundException);
         });
     });
 
     describe('findAll', () => {
         it('should return an array of users', async () => {
-            const users = await service.findAll({} as GetUsers);
+            const [users, total] = await service.findAll(userEntities.length, 0);
 
             expect(users).toStrictEqual(userEntities);
+            expect(total).toStrictEqual(userEntities.length);
         });
     });
 
@@ -113,7 +112,7 @@ describe('UserService', () => {
 
     describe('update', () => {
         it('should call the update method', async () => {
-            const updatedUser = await service.update(byId, updateQuery);
+            const updatedUser = await service.update(id, updateQuery);
 
             expect(updatedUser).toStrictEqual(oneUserEntity);
         });
@@ -121,7 +120,7 @@ describe('UserService', () => {
         it('should throw 404 Not Found HttpException', () => {
             repo.update = jest.fn().mockResolvedValueOnce({ raw: [], affected: 0 });
 
-            expect(service.update(byId, updateQuery)).rejects.toThrowError(NotFoundException);
+            expect(service.update(id, updateQuery)).rejects.toThrowError(NotFoundException);
         });
     });
 
@@ -130,7 +129,7 @@ describe('UserService', () => {
             jest
                 .spyOn(repo, 'delete')
                 .mockResolvedValueOnce({ raw: [], affected: 1 } as DeleteResult);
-            const result = await service.delete(byId);
+            const result = await service.delete(id);
 
             expect(result).toStrictEqual(undefined);
         });
@@ -138,7 +137,7 @@ describe('UserService', () => {
         it('should throw 404 Not Found HttpException', () => {
             repo.delete = jest.fn().mockResolvedValueOnce({ raw: [], affected: 0 });
 
-            expect(service.delete(byId)).rejects.toThrowError(NotFoundException);
+            expect(service.delete(id)).rejects.toThrowError(NotFoundException);
         });
     });
 });
