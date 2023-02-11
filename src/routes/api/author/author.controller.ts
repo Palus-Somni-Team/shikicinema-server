@@ -15,11 +15,12 @@ export class AuthorController extends BaseController {
     async search(@Query() query: GetAuthorsRequest): Promise<GetAuthorResponse> {
         query.limit ??= 20;
         query.offset ??= 0;
-        const authors = await this.authorService.get(query.name, query.limit, query.offset);
+        const [authors, total] = await this.authorService.get(query.name, query.limit, query.offset);
         return new GetAuthorResponse(
             authors.map((author) => new Author(author)),
             query.limit,
             query.offset,
+            total,
         );
     }
 }

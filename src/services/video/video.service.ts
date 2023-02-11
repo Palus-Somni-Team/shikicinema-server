@@ -1,15 +1,14 @@
-import { CreateVideoRequest, VideoKindEnum } from '@lib-shikicinema';
-import { DataSource, EntityManager, Raw, Repository } from 'typeorm';
+import { Between, DataSource, EntityManager, Raw, Repository } from 'typeorm';
+import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { AlreadyExistsException } from '@app-utils/exceptions/already-exists.exception';
-import { AnimeEpisodeInfo, SearchVideosRequest } from '@app-routes/api/video/dto';
+import { AnimeEpisodeInfo } from '@app-routes/api/video/dto';
+import { Assert } from '@app-utils/validation/assert';
 import { AuthorEntity, UploaderEntity, VideoEntity } from '@app-entities';
-import { RawAnimeEpisodeInfoInterface } from '@app-routes/api/video/types/raw-anime-episode-info.interface';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
-import { normalizeString } from '@app-utils/postgres.utils';
-import { parseWhere } from '@app-utils/where-parser.utils';
+import { normalizeString, removeUndefinedWhereFields } from '@app-utils/postgres.utils';
 
 @Injectable()
 export class VideoService {
@@ -95,85 +94,128 @@ export class VideoService {
         return video;
     }
 
-    async findByAnimeId(animeId: number, episode: number): Promise<VideoEntity[]> {
-        return this.repository.find({
+    async findByAnimeId(
+        limit: number,
+        offset: number,
+        animeId: number,
+        episode: number
+    ): Promise<[VideoEntity[], number]> {
+        Assert.Argument('limit', limit).between(1, 100);
+        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        Assert.Argument('animeId', animeId).greaterOrEqualTo(0);
+        Assert.Argument('episode', episode).greaterOrEqualTo(1);
+
+        return this.repository.findAndCount({
             where: { animeId, episode },
+            take: limit,
+            skip: offset,
             relations: ['uploader', 'author'],
         });
     }
 
-    async search(query: SearchVideosRequest): Promise<VideoEntity[]> {
-        const { where, limit, offset } = parseWhere(query);
+    async search(
+        limit: number,
+        offset: number,
+        id?: number,
+        animeId?: number,
+        author?: string,
+        episode?: number,
+        kind?: VideoKindEnum,
+        language?: string,
+        quality?: VideoQualityEnum,
+        uploader?: string,
+    ): Promise<[VideoEntity[], number]> {
+        Assert.Argument('limit', limit).between(1, 100);
+        Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        if ('uploader' in where) {
-            const shikimoriId = where['uploader'];
+        const where = removeUndefinedWhereFields({ id, animeId, episode, kind, language, quality });
 
+        if (uploader !== undefined) {
+            const shikimoriId = uploader;
             where['uploader'] = { shikimoriId };
         }
 
-        if ('author' in where) {
-            const name = where['author'];
-
+        if (author !== undefined) {
             where['author'] = {
                 name: Raw(
-                    (_) => `UPPER(${_}) like :author`, { author: `%${normalizeString(name)}%` }
+                    (_) => `UPPER(${_}) like :author`, { author: `%${normalizeString(author)}%` }
                 ),
             };
         }
 
-        return this.repository.find({
+        return this.repository.findAndCount({
             where,
-            skip: offset ?? 0,
-            take: limit || 20,
+            skip: offset,
+            take: limit,
             relations: ['uploader', 'author'],
         });
     }
 
-    async getInfo(animeId: number): Promise<AnimeEpisodeInfo> {
-        const animeEpisodeInfo: AnimeEpisodeInfo = {};
-        const rawEpisodes = await this.repository
-            .createQueryBuilder()
-            .select(['episode', 'kind', 'url'])
-            .distinct(true)
-            .where('anime_id = :animeId', { animeId })
-            .getRawMany<RawAnimeEpisodeInfoInterface>();
-        const kindsMap = new Map<number, Set<VideoKindEnum>>();
-        const domainsMap = new Map<number, Set<string>>();
-        const episodes = new Set<number>(
-            rawEpisodes.map((ep) => ep.episode)
-        );
+    async getInfo(animeId: number, limit: number, offset: number): Promise<[AnimeEpisodeInfo[], number]> {
+        Assert.Argument('limit', limit).between(1, 100);
+        Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        for (const { episode, kind, url } of rawEpisodes) {
-            const domain = new URL(url).hostname;
-            let kinds = kindsMap.get(episode);
-            let domains = domainsMap.get(episode);
+        return this.dataSource.transaction(async (manager) => {
+            const repo = manager.getRepository(VideoEntity);
+            const total = await repo.createQueryBuilder()
+                .distinct(true)
+                .setFindOptions({ where: { animeId } })
+                .getCount();
+            const episodes = (await repo.createQueryBuilder()
+                .distinct(true)
+                .setFindOptions({
+                    take: limit,
+                    skip: offset,
+                    order: { episode: 'asc' },
+                    select: { episode: true },
+                    where: { animeId },
+                })
+                .getMany()).map((_) => _.episode);
+            const rawInfo = await this.repository
+                .createQueryBuilder()
+                .distinct(true)
+                .setFindOptions({
+                    select: { episode: true, kind: true, url: true },
+                    where: {
+                        animeId,
+                        episode: Between(episodes[0], episodes[episodes.length - 1]),
+                    },
+                })
+                .getMany();
 
-            if (!kinds) {
-                const epKinds = new Set<VideoKindEnum>();
+            const kindsMap = new Map<number, Set<VideoKindEnum>>();
+            const domainsMap = new Map<number, Set<string>>();
 
-                kindsMap.set(episode, epKinds);
-                kinds = epKinds;
+            for (const { episode, kind, url } of rawInfo) {
+                const domain = new URL(url).hostname;
+                let kinds = kindsMap.get(episode);
+                let domains = domainsMap.get(episode);
+
+                if (!kinds) {
+                    const epKinds = new Set<VideoKindEnum>();
+
+                    kindsMap.set(episode, epKinds);
+                    kinds = epKinds;
+                }
+
+                if (!domains) {
+                    const epDomains = new Set<string>();
+
+                    domainsMap.set(episode, epDomains);
+                    domains = epDomains;
+                }
+
+                kinds.add(kind);
+                domains.add(domain);
             }
 
-            if (!domains) {
-                const epDomains = new Set<string>();
-
-                domainsMap.set(episode, epDomains);
-                domains = epDomains;
-            }
-
-            kinds.add(kind);
-            domains.add(domain);
-        }
-
-        for (const ep of episodes) {
-            animeEpisodeInfo[ep] = {
-                kinds: [...kindsMap.get(ep)],
-                domains: [...domainsMap.get(ep)],
-            };
-        }
-
-        return animeEpisodeInfo;
+            return [
+                episodes.map(
+                    (_) => new AnimeEpisodeInfo(_, Array.from(domainsMap.get(_)), Array.from(kindsMap.get(_)))
+                ),
+                total,
+            ];
+        });
     }
 
     async incrementWatches(id: number): Promise<void> {

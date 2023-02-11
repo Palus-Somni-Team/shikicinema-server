@@ -29,15 +29,16 @@ describe('Authors API (e2e)', () => {
             });
             expect(res.limit).toBe(20);
             expect(res.offset).toBe(0);
+            expect(res.total).toBe(1);
         },
     );
 
     it(
         'GET /api/authors should return 200 & first page without query params',
         async () => {
-            const authors = await env.dataSource
+            const [authors, total] = await env.dataSource
                 .getRepository(AuthorEntity)
-                .find({
+                .findAndCount({
                     order: { name: 'asc' },
                     skip: 0,
                     take: 20,
@@ -45,7 +46,7 @@ describe('Authors API (e2e)', () => {
 
             const res = await env.anonClient.getAuthors();
             expect(res.data.length).toBe(authors.length);
-            expect(res).toEqual(new GetAuthorResponse(authors, 20, 0));
+            expect(res).toEqual(new GetAuthorResponse(authors, 20, 0, total));
         },
     );
 

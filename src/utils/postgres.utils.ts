@@ -19,3 +19,13 @@ export function isPgException(e: any, exceptionCode?: PgException): boolean {
 export function normalizeString(value?: string): string {
     return (value || '').trim().toUpperCase();
 }
+
+export function removeUndefinedWhereFields(obj: any): any {
+    for (const [key, value] of Object.entries(obj)) {
+        if (value === undefined) {
+            delete obj[key];
+        }
+    }
+
+    return obj;
+}

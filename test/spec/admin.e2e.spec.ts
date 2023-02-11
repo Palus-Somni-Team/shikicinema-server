@@ -139,7 +139,7 @@ describe('Admin (e2e)', () => {
 
         it(
             'should return 404 Not Found GET /api/admin/videos/:videoId',
-            async () => env.adminClient.getVideosRaw(0xDEAD_BEEF).expect(404),
+            async () => env.adminClient.getVideoRaw(0xDEAD_BEEF).expect(404),
         );
 
         it(
@@ -152,7 +152,7 @@ describe('Admin (e2e)', () => {
                         relations: ['uploader', 'author'],
                     });
 
-                const res = await env.adminClient.getVideos(video.id);
+                const res = await env.adminClient.getVideo(video.id);
                 expect(res).toStrictEqual({
                     animeId: video.animeId,
                     episode: video.episode,
@@ -184,7 +184,7 @@ describe('Admin (e2e)', () => {
                     .getRepository(VideoEntity)
                     .findOneBy({ animeId: 21, episode: 113 });
 
-                return env.adminClient.deleteVideos(video.id);
+                return env.adminClient.deleteVideo(video.id);
             },
         );
     });

@@ -42,7 +42,7 @@ export class AuthService {
     }
 
     getLoggedInUser(req: IRequest): Promise<UserEntity> {
-        return this.userService.findById({ id: req.user });
+        return this.userService.findById(req.user);
     }
 
     async createUploadToken(shikimoriToken: ShikimoriAccessToken): Promise<UploadTokenEntity> {

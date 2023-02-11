@@ -12,7 +12,7 @@ export class AuthorService {
         private readonly repository: Repository<AuthorEntity>,
     ) {}
 
-    get(name: string, limit: number, offset: number): Promise<AuthorEntity[]> {
+    get(name: string, limit: number, offset: number): Promise<[AuthorEntity[], number]> {
         Assert.Argument('limit', limit).between(1, 100);
         Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
@@ -31,6 +31,6 @@ export class AuthorService {
             }
         }
 
-        return this.repository.find(queryOptions);
+        return this.repository.findAndCount(queryOptions);
     }
 }

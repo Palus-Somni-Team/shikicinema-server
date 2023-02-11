@@ -7,8 +7,8 @@
 //
 
 import { DataResponse } from './v2/DataResponse';
-import { LimitOffsetResponse } from './v2/LimitOffsetResponse';
 
+export { PaginationRequest } from './v2/PaginationRequest';
 export { LoginRequest } from './v2/LoginRequest';
 
 //
@@ -23,7 +23,7 @@ export { GetAuthorsRequest } from './v2/author/GetAuthorsRequest';
 /**
  * Represents response for {@link GetAuthorsRequest} request.
  */
-export type GetAuthorResponse = LimitOffsetResponse<Author>;
+export type GetAuthorResponse = DataResponse<Author>;
 
 //
 // Videos
@@ -45,7 +45,7 @@ export { Uploader } from './v2/videos/Uploader';
 /**
  * Represents response for {@link GetEpisodesRequest} request.
  */
-export type GetEpisodesResponse = LimitOffsetResponse<AnimeEpisodeInfo>;
+export type GetEpisodesResponse = DataResponse<AnimeEpisodeInfo>;
 
 /**
  * Represents response for a {@link GetVideosRequest} request.
@@ -55,17 +55,23 @@ export type GetVideosResponse = DataResponse<Video>;
 //
 // Users
 //
+import { User } from './v2/users/User';
+
 export { CreateUserRequest } from './v2/users/CreateUserRequest';
 export { RegisterUserRequest } from './v2/users/RegisterUserRequest';
 export { GetUsersRequest } from './v2/users/GetUsersRequest';
-export { PaginationRequest } from './v2/PaginationRequest';
 export { UpdateUserRequest } from './v2/users/UpdateUserRequest';
-export { User } from './v2/users/User';
+export { User };
 export { Role } from './v2/users/Role';
+
+export type GetUsersResponse = DataResponse<User>;
 
 //
 // For Admin only
 //
-export { AdminUser } from './v2/users/AdminUser';
+import { AdminUser } from './v2/users/AdminUser';
+
+export { AdminUser };
+export type GetAdminUsersResponse = DataResponse<AdminUser>;
 
 export { IShikimoriUser, IShikimoriUserImage } from './v2/shikimori/User';

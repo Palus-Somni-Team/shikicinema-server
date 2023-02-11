@@ -22,7 +22,7 @@ export class UploaderService {
 
     async newShikimoriUploader(shikimoriId: string, userId: number = null): Promise<UploaderEntity> {
         try {
-            const user = await this.userService.findById({ id: userId });
+            const user = await this.userService.findById(userId);
             const uploader = new UploaderEntity(shikimoriId, user, []);
 
             await this.dataSource.transaction(async (manager) => {

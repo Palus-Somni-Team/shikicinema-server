@@ -24,6 +24,7 @@ import {
     GetUsers,
     UpdateUser,
 } from '@app-services/user/dto';
+import { GetAdminUsersResponse } from '@app-routes/api/admin/user/dto';
 import { UserService } from '@app-services/user/user.service';
 
 @AllowRoles(Role.admin)
@@ -39,17 +40,36 @@ export class AdminUserController extends BaseController {
     }
 
     @Get()
-    @ApiResponse({ status: 200, description: 'Users list with matched parameters', type: AdminUserInfo, isArray: true })
-    async find(@Query() query: GetUsers): Promise<AdminUserInfo[]> {
-        const users = await this.userService.findAll(query);
-        return users.map((user) => new AdminUserInfo(user));
+    @ApiResponse({
+        status: 200,
+        description: 'Users list with matched parameters',
+        type: GetAdminUsersResponse,
+        isArray: true,
+    })
+    async find(@Query() query: GetUsers): Promise<GetAdminUsersResponse> {
+        const limit = query.limit ?? 20;
+        const offset = query.offset ?? 0;
+
+        const [users, total] = await this.userService.findAll(
+            limit,
+            offset,
+            query.id,
+            query.login,
+            query.name,
+            query.email,
+            query.shikimoriId,
+            query.roles,
+            query.createdAt,
+        );
+
+        return new GetAdminUsersResponse(users.map((user) => new AdminUserInfo(user)), limit, offset, total);
     }
 
     @Get(':id')
     @ApiResponse({ status: 200, description: 'User with specified id', type: AdminUserInfo })
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
-    async findById(@Param() id: GetUserById): Promise<AdminUserInfo> {
-        const user = await this.userService.findById(id);
+    async findById(@Param() request: GetUserById): Promise<AdminUserInfo> {
+        const user = await this.userService.findById(request.id);
         return new AdminUserInfo(user);
     }
 
@@ -65,15 +85,15 @@ export class AdminUserController extends BaseController {
     @Put(':id')
     @ApiResponse({ status: 200, description: 'Patched user with specified id', type: AdminUserInfo })
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
-    async update(@Param() id: GetUserById, @Body() request: UpdateUser): Promise<AdminUserInfo> {
-        const updatedUser = await this.userService.update(id, request);
+    async update(@Param() params: GetUserById, @Body() request: UpdateUser): Promise<AdminUserInfo> {
+        const updatedUser = await this.userService.update(params.id, request);
         return new AdminUserInfo(updatedUser);
     }
 
     @Delete(':id')
     @ApiResponse({ status: 200, description: 'User successfully deleted' })
     @ApiResponse({ status: 404, description: 'Cannot find resource with provided parameters' })
-    delete(@Param() id: GetUserById): Promise<void> {
-        return this.userService.delete(id);
+    delete(@Param() params: GetUserById): Promise<void> {
+        return this.userService.delete(params.id);
     }
 }
