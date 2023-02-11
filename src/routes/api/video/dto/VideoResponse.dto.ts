@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Author } from '@app-routes/api/author/dto/Author.dto';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { UploaderInfo } from '@app-routes/auth/dto';
 import { Video, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { VideoEntity } from '@app-entities';
@@ -16,6 +16,7 @@ export class VideoResponse implements Video {
 
     @Expose()
     @ApiProperty()
+    @Type(() => Author)
     author: Author;
 
     @Expose()
@@ -36,6 +37,7 @@ export class VideoResponse implements Video {
 
     @Expose()
     @ApiProperty({ type: () => UploaderInfo })
+    @Type(() => UploaderInfo)
     uploader: UploaderInfo;
 
     @Expose()
@@ -47,12 +49,16 @@ export class VideoResponse implements Video {
     watchesCount: number;
 
     @ApiProperty()
+    @Type(() => Date)
     createdAt: Date;
 
     @ApiProperty()
+    @Type(() => Date)
     updatedAt: Date;
 
-    constructor(entity: VideoEntity) {
+    constructor(entity?: VideoEntity) {
+        if (!entity) return;
+
         const {
             id,
             animeId,

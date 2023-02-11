@@ -13,7 +13,9 @@ export class Author implements Interface {
     @ApiProperty()
     name: string;
 
-    constructor(author: AuthorEntity) {
+    constructor(author?: AuthorEntity) {
+        if (!author) return;
+
         const { id, name } = author;
 
         this.id = id;
