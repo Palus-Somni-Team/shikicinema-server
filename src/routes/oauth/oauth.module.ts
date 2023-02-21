@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { OAuthModule as OAuth, OAuthController } from 'nestjs-oauth2';
+import { OAuthModule as OAuth } from 'nestjs-oauth2';
+import { OAuthWithAuthorizationController } from '@app-routes/oauth/oauth-with-authorization.controller';
 
 @Module({
     imports: [
@@ -13,6 +14,6 @@ import { OAuthModule as OAuth, OAuthController } from 'nestjs-oauth2';
             inject: [ConfigService],
         }),
     ],
-    controllers: [OAuthController],
+    controllers: [OAuthWithAuthorizationController],
 })
 export class OAuthModule {}
