@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['16.10']
+        node: ['16.13']
     name: Node ${{ matrix.node }} sample
     steps:
       - uses: actions/checkout@v2
