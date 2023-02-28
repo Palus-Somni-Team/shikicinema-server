@@ -18,8 +18,8 @@ interface ShikimoriOAuthResponse {
 @Injectable()
 export class ShikimoriTransformInterceptor<T> implements NestInterceptor<T, ShikimoriOAuthResponse> {
     intercept(context: ExecutionContext, next: CallHandler): Observable<ShikimoriOAuthResponse> {
-        const { provider } = context.switchToHttp().getRequest().params;
-        const isShikimoriRoute = provider === 'shikimori';
+        const request = context.switchToHttp().getRequest();
+        const isShikimoriRoute = request.url.startsWith('/oauth/shikimori/callback');
 
         return isShikimoriRoute
             ? next.handle()
