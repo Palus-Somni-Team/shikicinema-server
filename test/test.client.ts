@@ -198,6 +198,24 @@ export class TestClient {
 
     //#endregion Author
 
+    //#region OAuth
+
+    public getAccessToken(provider: string): request.Test {
+        return this.get(`/oauth/${provider}`);
+    }
+
+    /* <b>NOTE</b>: you will not normally go here on your own
+    only redirect from provider after oauth client authorization consent */
+    public getCallback(provider: string): request.Test {
+        return this.get(`/oauth/${provider}/callback`);
+    }
+
+    public refreshToken(provider: string, refresh: string): request.Test {
+        return this.get(`/oauth/${provider}/refresh?refreshToken=${refresh}`);
+    }
+
+    //#endregion OAuth
+
     //#region Util
 
     public async checkResponse<T>(response: request.Test | request.Response): Promise<T> {
