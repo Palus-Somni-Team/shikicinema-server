@@ -1,0 +1,33 @@
+{
+  "name": "@shikicinema/types",
+  "type": "commonjs",
+  "version": "0.0.1",
+  "description": "",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js",
+    "default": "./dist/esm/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/cjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "author": "Smarthard",
+  "private": true,
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc --project tsconfig.esm.json; tsc --project tsconfig.cjs.json",
+    "build:clean": "tsc --project tsconfig.esm.json --clean; tsc --project tsconfig.cjs.json --clean"
+  },
+  "dependencies": {
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
+}
