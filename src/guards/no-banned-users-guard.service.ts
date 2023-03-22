@@ -17,7 +17,7 @@ export class NoBannedUsersGuard implements CanActivate {
         try {
             const { user: id = null } = context.switchToHttp().getRequest() as IRequest;
             const user = id
-                ? await this.userService.findById({ id })
+                ? await this.userService.findById(id)
                 : null;
             // todo replace == with ===
             // eslint-disable-next-line eqeqeq
