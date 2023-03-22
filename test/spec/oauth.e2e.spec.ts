@@ -14,7 +14,7 @@ describe('OAuth endpoints (e2e)', () => {
         it(
             `should return 401 for unauthorized GET /oauth/${provider}`,
             async () => {
-                const unauthorizedAccessTokenRes = await env.anonClient.getAccessToken(provider);
+                const unauthorizedAccessTokenRes = await env.anonClient.getAccessTokenRaw(provider);
 
                 expect(unauthorizedAccessTokenRes.status).toBe(401);
                 expect(unauthorizedAccessTokenRes.body).toStrictEqual({
@@ -28,7 +28,7 @@ describe('OAuth endpoints (e2e)', () => {
             `should disallow redirect for banned users /oauth/${provider}`,
             async () => {
                 await env.anonClient.loginRaw(bannedUserLoginData);
-                const bannedAccessTokenRes = await env.anonClient.getAccessToken(provider);
+                const bannedAccessTokenRes = await env.anonClient.getAccessTokenRaw(provider);
 
                 expect(bannedAccessTokenRes.status).toBe(403);
                 expect(bannedAccessTokenRes.body).toStrictEqual({
@@ -43,7 +43,7 @@ describe('OAuth endpoints (e2e)', () => {
             `should redirect to provider's oauth endpoint /oauth/${provider}`,
             async () => {
                 await env.anonClient.loginRaw(user1LoginData);
-                const unauthorizedAccessTokenRes = await env.anonClient.getAccessToken(provider);
+                const unauthorizedAccessTokenRes = await env.anonClient.getAccessTokenRaw(provider);
 
                 expect(unauthorizedAccessTokenRes.status).toBe(302);
             },

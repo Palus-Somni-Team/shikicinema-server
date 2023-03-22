@@ -200,17 +200,17 @@ export class TestClient {
 
     //#region OAuth
 
-    public getAccessToken(provider: string): request.Test {
+    public getAccessTokenRaw(provider: string): request.Test {
         return this.get(`/oauth/${provider}`);
     }
 
     /* <b>NOTE</b>: you will not normally go here on your own
     only redirect from provider after oauth client authorization consent */
-    public getCallback(provider: string): request.Test {
+    public getCallbackRaw(provider: string): request.Test {
         return this.get(`/oauth/${provider}/callback`);
     }
 
-    public refreshToken(provider: string, refresh: string): request.Test {
+    public refreshTokenRaw(provider: string, refresh: string): request.Test {
         return this.get(`/oauth/${provider}/refresh?refreshToken=${refresh}`);
     }
 
