@@ -1,5 +1,6 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { IShikimoriUser } from '@lib-shikicinema';
+import { Injectable } from '@nestjs/common';
 
 import { ShikimoriUser } from '@app-services/shikimori/dto/ShikimoriUser.dto';
 

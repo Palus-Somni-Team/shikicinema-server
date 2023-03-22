@@ -1,5 +1,9 @@
 import { AuthGuard } from '@nestjs/passport';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+    ExecutionContext,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -9,6 +13,10 @@ export class AuthenticatedGuard extends AuthGuard('session') {
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
 
-        return request.isAuthenticated();
+        if (!request.isAuthenticated()) {
+            throw new UnauthorizedException();
+        }
+
+        return true;
     }
 }
