@@ -8,15 +8,14 @@ describe('Auth (e2e)', () => {
     env.init();
 
     it(
-        'should return 403 for unauthorized GET /auth/me',
+        'should return 401 for unauthorized GET /auth/me',
         async () => {
             const unauthorizedMeRes = await env.anonClient.meRaw();
 
-            expect(unauthorizedMeRes.status).toBe(403);
+            expect(unauthorizedMeRes.status).toBe(401);
             expect(unauthorizedMeRes.body).toStrictEqual({
-                error: 'Forbidden',
-                message: 'Forbidden resource',
-                statusCode: 403,
+                message: 'Unauthorized',
+                statusCode: 401,
             });
         },
     );

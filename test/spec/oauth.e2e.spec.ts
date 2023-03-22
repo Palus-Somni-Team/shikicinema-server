@@ -12,15 +12,14 @@ describe('OAuth endpoints (e2e)', () => {
 
     for (const provider of providers) {
         it(
-            `should return 403 for unauthorized GET /oauth/${provider}`,
+            `should return 401 for unauthorized GET /oauth/${provider}`,
             async () => {
                 const unauthorizedAccessTokenRes = await env.anonClient.getAccessToken(provider);
 
-                expect(unauthorizedAccessTokenRes.status).toBe(403);
+                expect(unauthorizedAccessTokenRes.status).toBe(401);
                 expect(unauthorizedAccessTokenRes.body).toStrictEqual({
-                    error: 'Forbidden',
-                    message: 'Forbidden resource',
-                    statusCode: 403,
+                    message: 'Unauthorized',
+                    statusCode: 401,
                 });
             },
         );
