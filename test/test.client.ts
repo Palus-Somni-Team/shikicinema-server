@@ -2,19 +2,18 @@ import * as request from 'supertest';
 
 import {
     CreateVideoRequest,
-    GetAdminUsersResponse,
-    GetAuthorResponse,
-    GetAuthorsRequest,
+    GetEpisodesRequest,
     GetEpisodesResponse,
     GetVideosRequest,
     GetVideosResponse,
-    LoginRequest,
-    RegisterUserRequest,
-    UpdateVideoRequest,
-} from '@lib-shikicinema';
-import { GetEpisodesRequest, SearchVideosRequest, VideoResponse } from '@app-routes/api/video/dto';
-import { OwnerUserInfo } from '@app-routes/auth/dto';
-import { VideoEntity } from '@app-entities';
+    SearchVideosRequest,
+    VideoResponse,
+} from '@app-routes/api/video/dto';
+import { GetAdminUsersResponse } from '@app-routes/api/admin/user/dto';
+import { GetAuthorResponse, GetAuthorsRequest } from '@app-routes/api/author/dto';
+import { LoginRequest, OwnerUserInfo, RegisterUser } from '@app-routes/auth/dto';
+import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
+import { plainToInstance } from 'class-transformer';
 
 export class TestClient {
     private readonly server: any;
@@ -79,7 +78,7 @@ export class TestClient {
     }
 
     public async login(req: LoginRequest): Promise<OwnerUserInfo> {
-        return this.checkResponse(await this.loginRaw(req));
+        return this.checkResponse(OwnerUserInfo, await this.loginRaw(req));
     }
 
     public meRaw(): request.Test {
@@ -87,22 +86,22 @@ export class TestClient {
     }
 
     public async me(): Promise<OwnerUserInfo> {
-        return this.checkResponse(await this.meRaw());
+        return this.checkResponse(OwnerUserInfo, await this.meRaw());
     }
 
     public async logout() {
         return this.post('/auth/logout');
     }
 
-    public async registerRaw(req: RegisterUserRequest) {
+    public async registerRaw(req: RegisterUser) {
         const res = this.post('/auth/register', req);
 
         await this.extractCookies(await res);
         return res;
     }
 
-    public async register(req: RegisterUserRequest): Promise<OwnerUserInfo> {
-        return this.checkResponse(await this.registerRaw(req));
+    public async register(req: RegisterUser): Promise<OwnerUserInfo> {
+        return this.checkResponse(OwnerUserInfo, await this.registerRaw(req));
     }
 
     //#endregion Auth
@@ -114,7 +113,7 @@ export class TestClient {
     }
 
     public getUsers(): Promise<GetAdminUsersResponse> {
-        return this.checkResponse(this.getUsersRaw());
+        return this.checkResponse(GetAdminUsersResponse, this.getUsersRaw());
     }
 
     public getVideoRaw(id: number): request.Test {
@@ -122,7 +121,7 @@ export class TestClient {
     }
 
     public getVideo(id: number): Promise<VideoResponse> {
-        return this.checkResponse(this.getVideoRaw(id));
+        return this.checkResponse(VideoResponse, this.getVideoRaw(id));
     }
 
     public deleteVideoRaw(id: number): request.Test {
@@ -130,7 +129,7 @@ export class TestClient {
     }
 
     public deleteVideo(id: number): Promise<void> {
-        return this.checkResponse(this.deleteVideoRaw(id));
+        return this.checkEmptyResponse(this.deleteVideoRaw(id));
     }
 
     public updateVideoRaw(id: number, req: UpdateVideoRequest): request.Test {
@@ -138,7 +137,7 @@ export class TestClient {
     }
 
     public updateVideo(id: number, req: UpdateVideoRequest): Promise<VideoResponse> {
-        return this.checkResponse(this.updateVideoRaw(id, req));
+        return this.checkResponse(VideoResponse, this.updateVideoRaw(id, req));
     }
 
     //#endregion Admin
@@ -150,7 +149,7 @@ export class TestClient {
     }
 
     public getVideosByEpisode(req: GetVideosRequest): Promise<GetVideosResponse> {
-        return this.checkResponse(this.getVideosByEpisodeRaw(req));
+        return this.checkResponse(GetVideosResponse, this.getVideosByEpisodeRaw(req));
     }
 
     public getVideoInfoRaw(req: GetEpisodesRequest): request.Test {
@@ -158,15 +157,15 @@ export class TestClient {
     }
 
     public getVideoInfo(req: GetEpisodesRequest): Promise<GetEpisodesResponse> {
-        return this.checkResponse(this.getVideoInfoRaw(req));
+        return this.checkResponse(GetEpisodesResponse, this.getVideoInfoRaw(req));
     }
 
     public createVideoRaw(req: CreateVideoRequest): request.Test {
         return this.post('/api/videos', req);
     }
 
-    public async createVideo(req: CreateVideoRequest): Promise<VideoEntity> {
-        return this.checkResponse(this.createVideoRaw(req));
+    public async createVideo(req: CreateVideoRequest): Promise<VideoResponse> {
+        return this.checkResponse(VideoResponse, this.createVideoRaw(req));
     }
 
     public watchVideoRaw(id: number): request.Test {
@@ -174,7 +173,7 @@ export class TestClient {
     }
 
     public watchVideo(id: number): Promise<void> {
-        return this.checkResponse(this.watchVideoRaw(id));
+        return this.checkEmptyResponse(this.watchVideoRaw(id));
     }
 
     public searchVideoRaw(req: SearchVideosRequest): request.Test {
@@ -182,7 +181,7 @@ export class TestClient {
     }
 
     public searchVideo(req: SearchVideosRequest): Promise<GetVideosResponse> {
-        return this.checkResponse(this.searchVideoRaw(req));
+        return this.checkResponse(GetVideosResponse, this.searchVideoRaw(req));
     }
 
     //#endregion Video
@@ -194,7 +193,7 @@ export class TestClient {
     }
 
     public getAuthors(req?: GetAuthorsRequest): Promise<GetAuthorResponse> {
-        return this.checkResponse(this.getAuthorsRaw(req));
+        return this.checkResponse(GetAuthorResponse, this.getAuthorsRaw(req));
     }
 
     //#endregion Author
@@ -219,10 +218,15 @@ export class TestClient {
 
     //#region Util
 
-    public async checkResponse<T>(response: request.Test | request.Response): Promise<T> {
+    public async checkResponse<T>(type: { new(): T }, response: request.Test | request.Response): Promise<T> {
         const res = await response;
         expect(res.status >= 200 && res.status < 300);
-        return res.body;
+        return plainToInstance(type, res.body);
+    }
+
+    public async checkEmptyResponse(response: request.Test | request.Response): Promise<void> {
+        const res = await response;
+        expect(res.status >= 200 && res.status < 300);
     }
 
     //#endregion Util

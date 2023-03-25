@@ -1,12 +1,27 @@
-import { AdminUser, GetAdminUsersResponse as Response } from '@lib-shikicinema';
+import { AdminUserInfo } from '@app-routes/api/admin/user/dto/AdminUserInfo.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
+import { GetAdminUsersResponse as Response } from '@lib-shikicinema';
 
 export class GetAdminUsersResponse implements Response {
-    data: AdminUser[];
+    @Expose()
+    @Type(() => AdminUserInfo)
+    @ApiProperty()
+    data: AdminUserInfo[];
+
+    @Expose()
+    @ApiProperty()
     limit: number;
+
+    @Expose()
+    @ApiProperty()
     offset: number;
+
+    @Expose()
+    @ApiProperty()
     total: number;
 
-    constructor(data: AdminUser[], limit: number, offset: number, total: number) {
+    constructor(data?: AdminUserInfo[], limit?: number, offset?: number, total?: number) {
         this.data = data;
         this.limit = limit;
         this.offset = offset;

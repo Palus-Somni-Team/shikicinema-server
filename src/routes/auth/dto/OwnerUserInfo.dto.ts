@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { Role } from '@lib-shikicinema';
 import { TransformRoles } from '@app-utils/class-transform.utils';
 import { UserEntity } from '@app-entities';
@@ -36,13 +36,17 @@ export class OwnerUserInfo {
 
     @Expose()
     @ApiProperty()
+    @Type(() => Date)
     createdAt: Date;
 
     @Expose()
     @ApiProperty()
+    @Type(() => Date)
     updatedAt: Date;
 
-    constructor(entity: UserEntity) {
+    constructor(entity?: UserEntity) {
+        if (!entity) return;
+
         const {
             id,
             login,

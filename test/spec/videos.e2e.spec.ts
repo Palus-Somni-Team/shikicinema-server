@@ -1,4 +1,10 @@
-import { AnimeEpisodeInfo, GetEpisodesResponse, GetVideosRequest } from '@app-routes/api/video/dto';
+import {
+    AnimeEpisodeInfo,
+    GetEpisodesResponse,
+    GetVideosRequest,
+    GetVideosResponse,
+    VideoResponse,
+} from '@app-routes/api/video/dto';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
@@ -10,37 +16,22 @@ describe('Videos api (e2e)', () => {
     env.init();
 
     it(
-        'should return video in correct format GET /api/videos',
+        'should return correct data GET /api/videos',
         async () => {
             const animeId = 1;
             const episode = 1;
 
+            const [videos, total] = await env.dataSource
+                .getRepository(VideoEntity)
+                .findAndCount({
+                    take: 20,
+                    skip: 0,
+                    where: { animeId, episode },
+                    relations: ['uploader', 'author'],
+                });
+
             const res = await env.anonClient.getVideosByEpisode({ animeId, episode });
-            for (const video of res.data) {
-                expect(video).toEqual(expect.objectContaining({
-                    animeId, episode,
-                    id: expect.any(Number),
-                    author: expect.objectContaining({
-                        id: expect.any(Number),
-                        name: expect.any(String),
-                    }),
-                    url: expect.any(String),
-                    kind: expect.any(Number),
-                    quality: expect.any(Number),
-                    language: expect.any(String),
-                    watchesCount: expect.any(Number),
-                    createdAt: expect.any(String),
-                    updatedAt: expect.any(String),
-                    uploader: expect.objectContaining({
-                        id: expect.any(Number),
-                        banned: expect.any(Boolean),
-                        shikimoriId: expect.any(String),
-                    }),
-                }));
-            }
-            expect(res.limit).toEqual(expect.any(Number));
-            expect(res.offset).toEqual(expect.any(Number));
-            expect(res.total).toEqual(expect.any(Number));
+            expect(res).toStrictEqual(new GetVideosResponse(videos.map((_) => new VideoResponse(_)), 20, 0, total));
         },
     );
 
@@ -74,7 +65,7 @@ describe('Videos api (e2e)', () => {
             const animeId = 1;
 
             const res = await env.anonClient.getVideoInfo({ animeId });
-            expect(res).toEqual(new GetEpisodesResponse([
+            expect(res).toStrictEqual(new GetEpisodesResponse([
                 new AnimeEpisodeInfo(1, ['admin1.up'], [VideoKindEnum.DUBBING]),
                 new AnimeEpisodeInfo(2, ['admin2.up'], [VideoKindEnum.DUBBING]),
                 new AnimeEpisodeInfo(3, ['admin3.up'], [VideoKindEnum.DUBBING]),
@@ -88,7 +79,7 @@ describe('Videos api (e2e)', () => {
             const animeId = 404;
 
             const res = await env.anonClient.getVideoInfo({ animeId });
-            expect(res).toEqual(new GetEpisodesResponse([], 20, 0, 0));
+            expect(res).toStrictEqual(new GetEpisodesResponse([], 20, 0, 0));
         },
     );
 
@@ -114,29 +105,14 @@ describe('Videos api (e2e)', () => {
                     relations: ['uploader', 'author'],
                 });
 
-            expect(createVideoRes).toEqual(
-                expect.objectContaining({
-                    animeId: reqBody.animeId,
-                    episode: reqBody.episode,
-                    language: reqBody.language,
-                    author: expect.objectContaining({
-                        id: video.author.id,
-                        name: reqBody.author,
-                    }),
-                    kind: +reqBody.kind,
-                    quality: +reqBody.quality,
-                    url: reqBody.url,
-                    id: video.id,
-                    createdAt: video.createdAt.toISOString(),
-                    updatedAt: video.updatedAt.toISOString(),
-                    watchesCount: 0,
-                    uploader: expect.objectContaining({
-                        id: video.uploader.id,
-                        banned: video.uploader.banned,
-                        shikimoriId: video.uploader.shikimoriId,
-                    }),
-                }),
-            );
+            expect(video.animeId).toBe(reqBody.animeId);
+            expect(video.episode).toBe(reqBody.episode);
+            expect(video.author.name).toBe(reqBody.author);
+            expect(video.kind).toBe(reqBody.kind);
+            expect(video.quality).toBe(reqBody.quality);
+            expect(video.url).toBe(reqBody.url);
+
+            expect(createVideoRes).toStrictEqual(new VideoResponse(video));
         },
     );
 
@@ -237,7 +213,7 @@ describe('Videos api (e2e)', () => {
                     .findBy({
                         author: {
                             name: Raw(
-                                (_) =>`UPPER(${_}) like :author`,
+                                (_) => `UPPER(${_}) like :author`,
                                 { author: `%${normalizeString(author)}%` },
                             ),
                         },

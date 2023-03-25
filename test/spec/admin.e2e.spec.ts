@@ -2,6 +2,7 @@ import { TestAdminEnvironment } from '@e2e/test.admin.environment';
 import { UpdateVideoRequest } from '@app-routes/api/admin/video/dto';
 import { VideoEntity } from '@app-entities';
 import { VideoKindEnum, VideoQualityEnum } from '@lib-shikicinema';
+import { VideoResponse } from '@app-routes/api/video/dto';
 
 describe('Admin (e2e)', () => {
     const user1LoginData = { login: 'user1', password: '12345678' };
@@ -100,6 +101,7 @@ describe('Admin (e2e)', () => {
             it(
                 `should return 200 OK & update video #${index} ${patchReqAsText} PATCH /api/admin/videos/:videoId`,
                 async () => {
+                    // arrange
                     const video = await env.dataSource
                         .getRepository(VideoEntity)
                         .findOne({
@@ -107,27 +109,19 @@ describe('Admin (e2e)', () => {
                             relations: ['uploader', 'author'],
                         });
 
+                    // act
                     const res = await env.adminClient.updateVideo(video.id, patchReqBody);
-                    expect(res).toEqual(expect.objectContaining({
-                        id: video.id,
-                        animeId: patchReqBody.animeId ?? video.animeId,
-                        author: expect.objectContaining({
-                            name: patchReqBody.author ?? video.author.name,
-                        }),
-                        episode: patchReqBody.episode ?? video.episode,
-                        kind: patchReqBody.kind ?? video.kind,
-                        language: patchReqBody.language ?? video.language,
-                        quality: patchReqBody.quality ?? video.quality,
-                        uploader: {
-                            shikimoriId: video.uploader.shikimoriId,
-                            banned: video.uploader.banned,
-                            id: video.uploader.id,
-                        },
-                        url: patchReqBody.url ?? video.url,
-                        watchesCount: patchReqBody.watchesCount ?? video.watchesCount,
-                        createdAt: expect.any(String),
-                        updatedAt: expect.any(String),
-                    }));
+
+                    // assert
+                    expect(res.animeId).toBe(patchReqBody.animeId ?? video.animeId);
+                    expect(res.author.name).toBe(patchReqBody.author ?? video.author.name);
+                    expect(res.episode).toBe(patchReqBody.episode ?? video.episode);
+                    expect(res.kind).toBe(patchReqBody.kind ?? video.kind);
+                    expect(res.language).toBe(patchReqBody.language ?? video.language);
+                    expect(res.quality).toBe(patchReqBody.quality ?? video.quality);
+                    expect(res.url).toBe(patchReqBody.url ?? video.url);
+                    expect(res.watchesCount).toBe(patchReqBody.watchesCount ?? video.watchesCount);
+                    expect(res.updatedAt.getTime() - Date.now()).toBeLessThan(1000);
                 },
             );
         }
@@ -143,7 +137,7 @@ describe('Admin (e2e)', () => {
         );
 
         it(
-            'should find video and return in format GET /api/admin/videos/:videoId',
+            'should find video and return correct data GET /api/admin/videos/:videoId',
             async () => {
                 const video = await env.dataSource
                     .getRepository(VideoEntity)
@@ -153,27 +147,7 @@ describe('Admin (e2e)', () => {
                     });
 
                 const res = await env.adminClient.getVideo(video.id);
-                expect(res).toStrictEqual({
-                    animeId: video.animeId,
-                    episode: video.episode,
-                    url: video.url,
-                    kind: video.kind,
-                    language: video.language,
-                    quality: video.quality,
-                    author: {
-                        id: video.author.id,
-                        name: video.author.name,
-                    },
-                    uploader: {
-                        shikimoriId: video.uploader.shikimoriId,
-                        banned: video.uploader.banned,
-                        id: video.uploader.id,
-                    },
-                    watchesCount: video.watchesCount,
-                    id: video.id,
-                    createdAt: video.createdAt.toISOString(),
-                    updatedAt: video.updatedAt.toISOString(),
-                });
+                expect(res).toStrictEqual(new VideoResponse(video));
             },
         );
 

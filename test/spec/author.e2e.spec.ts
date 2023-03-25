@@ -1,5 +1,5 @@
+import { Author, GetAuthorResponse } from '@app-routes/api/author/dto';
 import { AuthorEntity } from '@app-entities';
-import { GetAuthorResponse } from '@app-routes/api/author/dto';
 import { GetAuthorsRequest } from '@lib-shikicinema';
 import { Raw } from 'typeorm';
 import { TestEnvironment } from '@e2e/test.environment';
@@ -23,10 +23,7 @@ describe('Authors API (e2e)', () => {
             const res = await env.anonClient.getAuthors(req);
 
             expect(res.data.length).toBe(1);
-            expect(res.data[0]).toStrictEqual({
-                id: author.id,
-                name: author.name,
-            });
+            expect(res.data[0]).toStrictEqual(new Author(author));
             expect(res.limit).toBe(20);
             expect(res.offset).toBe(0);
             expect(res.total).toBe(1);
@@ -46,7 +43,7 @@ describe('Authors API (e2e)', () => {
 
             const res = await env.anonClient.getAuthors();
             expect(res.data.length).toBe(authors.length);
-            expect(res).toEqual(new GetAuthorResponse(authors, 20, 0, total));
+            expect(res).toStrictEqual(new GetAuthorResponse(authors.map((_) => new Author(_)), 20, 0, total));
         },
     );
 

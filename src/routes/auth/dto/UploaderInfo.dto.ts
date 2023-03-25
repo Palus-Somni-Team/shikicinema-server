@@ -17,7 +17,9 @@ export class UploaderInfo implements Uploader {
     @ApiProperty()
     shikimoriId: string;
 
-    constructor(entity: UploaderEntity) {
+    constructor(entity?: UploaderEntity) {
+        if (!entity) return;
+
         const { id, banned, shikimoriId } = entity;
         this.id = id;
         this.banned = banned;
