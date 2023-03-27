@@ -1,6 +1,9 @@
-name: Tests and Code style
+name: "Backend: Tests and Code style"
 
-on: push
+on:
+  push:
+    paths:
+      - projects/backend**
 
 jobs:
   nodejs:
@@ -11,15 +14,16 @@ jobs:
         node: ['16.13']
     name: Node ${{ matrix.node }} sample
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
+      - run: npm run build:types
 
       - name: Check code style
-        run: npm run lint
+        run: npm run lint -w projects/backend
 
       - name: Run tests
-        run: npm run test
+        run: npm run test -w projects/backend

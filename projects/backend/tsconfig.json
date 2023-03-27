@@ -23,5 +23,8 @@
       "~backend-root/*": [ "<rootDir>/../*"],
       "@e2e/*": ["<rootDir>/../test/*"]
     }
-  }
+  },
+  "references": [
+    { "path": "../lib/shikicinema" }
+  ]
 }

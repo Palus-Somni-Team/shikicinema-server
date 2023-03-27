@@ -1,9 +1,13 @@
-name: Tests coverage
+name: "Backend: Tests coverage"
+
 on:
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - projects/backend**
+
 jobs:
   coverage:
     permissions:
@@ -12,8 +16,17 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run build:types
+
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           annotations: none
           test-script: npm test
+          working-directory: projects/backend

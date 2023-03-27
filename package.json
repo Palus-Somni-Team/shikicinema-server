@@ -5,6 +5,9 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
+    "build:backend": "npm run build --prefix projects/backend",
+    "build:types": "npm run build --prefix projects/lib/shikicinema",
+    "build": "npm run build:types && npm run build:backend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [

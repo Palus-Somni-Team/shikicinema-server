@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /projects/**/dist
+/projects/**/coverage
 
 # build info
 **/tsconfig*.tsbuildinfo

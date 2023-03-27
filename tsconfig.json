@@ -2,10 +2,10 @@
     "files": [],
     "references": [
         {
-            "path": "./projects/backend/tsconfig.json"
+            "path": "./projects/lib/shikicinema/tsconfig.json"
         },
         {
-            "path": "./projects/lib/tsconfig.json"
+            "path": "./projects/backend/tsconfig.json"
         }
     ]
 }
