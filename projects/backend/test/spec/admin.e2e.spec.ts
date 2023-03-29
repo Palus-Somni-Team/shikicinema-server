@@ -1,4 +1,4 @@
-import { TestAdminEnvironment } from '~backend-root/test/test.admin.environment';
+import { TestAdminEnvironment } from '~backend-e2e/test.admin.environment';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import { VideoEntity } from '~backend/entities';
 import { VideoKindEnum, VideoQualityEnum } from '@shikicinema/types';

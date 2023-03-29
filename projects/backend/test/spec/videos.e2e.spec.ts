@@ -7,7 +7,7 @@ import {
 } from '~backend/routes/api/video/dto';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@shikicinema/types';
 import { Raw } from 'typeorm';
-import { TestEnvironment } from '~backend-root/test/test.environment';
+import { TestEnvironment } from '~backend-e2e/test.environment';
 import { VideoEntity } from '~backend/entities';
 import { normalizeString } from '~backend/utils/postgres.utils';
 

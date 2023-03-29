@@ -1,5 +1,5 @@
-import { TestClient } from '~backend-root/test/test.client';
-import { TestEnvironment } from '~backend-root/test/test.environment';
+import { TestClient } from '~backend-e2e/test.client';
+import { TestEnvironment } from '~backend-e2e/test.environment';
 
 export class TestAdminEnvironment extends TestEnvironment {
     private _adminClient: TestClient;

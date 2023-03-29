@@ -2,7 +2,7 @@ import { Author, GetAuthorResponse } from '~backend/routes/api/author/dto';
 import { AuthorEntity } from '~backend/entities';
 import { GetAuthorsRequest } from '@shikicinema/types';
 import { Raw } from 'typeorm';
-import { TestEnvironment } from '~backend-root/test/test.environment';
+import { TestEnvironment } from '~backend-e2e/test.environment';
 import { normalizeString } from '~backend/utils/postgres.utils';
 
 describe('Authors API (e2e)', () => {

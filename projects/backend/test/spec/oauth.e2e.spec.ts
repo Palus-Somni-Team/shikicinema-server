@@ -1,4 +1,4 @@
-import { TestEnvironment } from '@e2e/test.environment';
+import { TestEnvironment } from '~backend-e2e/test.environment';
 
 describe('OAuth endpoints (e2e)', () => {
     const user1LoginData = { login: 'user1', password: '12345678' };

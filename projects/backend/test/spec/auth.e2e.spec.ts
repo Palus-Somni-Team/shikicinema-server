@@ -1,4 +1,4 @@
-import { TestEnvironment } from '~backend-root/test/test.environment';
+import { TestEnvironment } from '~backend-e2e/test.environment';
 import { UserEntity } from '~backend/entities';
 
 describe('Auth (e2e)', () => {

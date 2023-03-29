@@ -21,7 +21,7 @@
     "paths": {
       "~backend/*": [ "<rootDir>/../src/*"],
       "~backend-root/*": [ "<rootDir>/../*"],
-      "@e2e/*": ["<rootDir>/../test/*"]
+      "~backend-e2e/*": ["<rootDir>/../test/*"]
     }
   },
   "references": [

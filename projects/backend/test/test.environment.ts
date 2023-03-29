@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { initSession, initSwagger } from '~backend/utils/bootstrap.utils';
 
 import { AppModule } from '~backend/app.module';
-import { TestClient } from '~backend-root/test/test.client';
+import { TestClient } from '~backend-e2e/test.client';
 
 export class TestEnvironment {
     public static readonly AdminLoginData = { login: 'admin', password: '12345678' };
