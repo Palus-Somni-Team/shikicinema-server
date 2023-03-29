@@ -1,0 +1,9 @@
+export { CreateVideoRequest } from '~backend/routes/api/video/dto/CreateVideoRequest.dto';
+export { GetVideosRequest } from '~backend/routes/api/video/dto/GetVideosRequest.dto';
+export { VideoResponse } from '~backend/routes/api/video/dto/VideoResponse.dto';
+export { GetVideosResponse } from '~backend/routes/api/video/dto/GetVideosResponse.dto';
+export { AnimeEpisodeInfo } from '~backend/routes/api/video/dto/AnimeEpisodeInfo.dto';
+export { SearchVideosRequest } from '~backend/routes/api/video/dto/SearchVideosRequest.dto';
+export { GetEpisodesRequest } from '~backend/routes/api/video/dto/GetEpisodesRequest.dto';
+export { GetEpisodesResponse } from '~backend/routes/api/video/dto/GetEpisodesResponse.dto';
+export { GetVideoById } from '~backend/routes/api/video/dto/GetVideoById.dto';

@@ -1,0 +1,15 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "./package.json"
+    ],
+    "exclude": [
+        "test",
+        "node_modules",
+        "**/*spec.ts"
+    ],
+    "compilerOptions": {
+        "composite": true,
+        "resolveJsonModule": true
+    }
+}

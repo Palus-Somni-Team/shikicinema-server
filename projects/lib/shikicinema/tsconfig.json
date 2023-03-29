@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "allowJs": true,
+        "moduleResolution": "Node",
+        "declarationMap": true,
+        "declaration": true,
+        "target": "es5",
+        "rootDir": "src",
+        "esModuleInterop": true,
+        "composite": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
