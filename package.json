@@ -8,7 +8,7 @@
     "build:backend": "npm run build --prefix projects/backend",
     "build:types": "npm run build --prefix projects/lib/shikicinema",
     "build": "npm run build --workspaces",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test --workspaces --if-present"
   },
   "workspaces": [
     "projects/lib/shikicinema",
