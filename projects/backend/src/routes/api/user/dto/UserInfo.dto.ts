@@ -7,19 +7,19 @@ import { UserEntity } from '~backend/entities';
 export class UserInfo implements User {
     @Expose()
     @ApiProperty()
-        id: number;
+    id: number;
 
     @Expose()
     @ApiProperty()
-        login: string;
+    login: string;
 
     @Expose()
     @ApiProperty()
-        name: string;
+    name: string;
 
     @Expose()
     @ApiProperty({ nullable: true })
-        shikimoriId: string | null;
+    shikimoriId: string | null;
 
     constructor(entity: UserEntity) {
         const {

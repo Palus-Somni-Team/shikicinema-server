@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer';
 
 class TestTransformNullableString {
     @TransformNullableString()
-        test: string | null;
+    test: string | null;
 
     constructor(test: string = undefined) {
         this.test = test;

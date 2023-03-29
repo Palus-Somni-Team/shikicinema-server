@@ -7,11 +7,11 @@ import { Author as Interface } from '@shikicinema/types';
 export class Author implements Interface {
     @Expose()
     @ApiProperty()
-        id: number;
+    id: number;
 
     @Expose()
     @ApiProperty()
-        name: string;
+    name: string;
 
     constructor(author?: AuthorEntity) {
         if (!author) return;

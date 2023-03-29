@@ -3,7 +3,7 @@ import { validateSync } from 'class-validator';
 
 class TestTransformNullableString {
     @IsNonNullableOptional()
-        test: string;
+    test: string;
 
     constructor(test: string = undefined) {
         this.test = test;

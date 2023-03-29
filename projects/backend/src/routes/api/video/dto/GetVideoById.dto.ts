@@ -10,5 +10,5 @@ export class GetVideoById implements GetByIdParamRequest {
     @Min(0)
     @Type(() => Number)
     @ApiProperty({ minimum: 0 })
-        id: number;
+    id: number;
 }

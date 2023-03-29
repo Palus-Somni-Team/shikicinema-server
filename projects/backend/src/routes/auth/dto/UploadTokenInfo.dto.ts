@@ -6,11 +6,11 @@ import { UploadTokenEntity } from '~backend/entities';
 export class UploadTokenInfo {
     @Expose()
     @ApiProperty()
-        token: string;
+    token: string;
 
     @Expose()
     @ApiProperty()
-        expiredAt: Date;
+    expiredAt: Date;
 
     constructor(entity: UploadTokenEntity) {
         const { token, expiredAt } = entity;

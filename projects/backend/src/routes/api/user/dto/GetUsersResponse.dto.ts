@@ -5,19 +5,19 @@ import { GetUsersResponse as Response, User } from '@shikicinema/types';
 export class GetUsersResponse implements Response {
     @Expose()
     @ApiProperty()
-        data: User[];
+    data: User[];
 
     @Expose()
     @ApiProperty()
-        limit: number;
+    limit: number;
 
     @Expose()
     @ApiProperty()
-        offset: number;
+    offset: number;
 
     @Expose()
     @ApiProperty()
-        total: number;
+    total: number;
 
     constructor(data: User[], limit: number, offset: number, total: number) {
         this.data = data;

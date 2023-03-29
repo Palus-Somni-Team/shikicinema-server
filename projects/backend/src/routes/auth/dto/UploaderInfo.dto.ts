@@ -7,15 +7,15 @@ import { UploaderEntity } from '~backend/entities';
 export class UploaderInfo implements Uploader {
     @Expose()
     @ApiProperty()
-        id: number;
+    id: number;
 
     @Expose()
     @ApiProperty()
-        banned: boolean;
+    banned: boolean;
 
     @Expose()
     @ApiProperty()
-        shikimoriId: string;
+    shikimoriId: string;
 
     constructor(entity?: UploaderEntity) {
         if (!entity) return;
