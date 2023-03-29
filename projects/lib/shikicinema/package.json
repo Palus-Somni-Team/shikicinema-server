@@ -18,8 +18,8 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --project tsconfig.esm.json; tsc --project tsconfig.cjs.json",
-    "build:clean": "tsc --project tsconfig.esm.json --clean; tsc --project tsconfig.cjs.json --clean"
+    "build": "tsc --project tsconfig.cjs.json",
+    "postbuild": "tsc --project tsconfig.esm.json"
   },
   "dependencies": {
     "rimraf": "^3.0.2"
