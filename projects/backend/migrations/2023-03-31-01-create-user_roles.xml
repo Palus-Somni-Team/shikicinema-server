@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2023-03-31-01-create-user_roles" author="Smarthard">
+
+        <createTable tableName="user_roles">
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <sql>
+            INSERT INTO user_roles (user_id, role) SELECT id AS user_id, unnest(roles) AS roles FROM users;
+        </sql>
+
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_id"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <addPrimaryKey tableName="user_roles"
+                       columnNames="user_id, role" />
+
+        <dropColumn tableName="users" columnName="roles"/>
+
+    </changeSet>
+</databaseChangeLog>

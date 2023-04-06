@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UploaderEntity } from '~backend/entities';
@@ -7,7 +7,7 @@ import { UserSharedModule } from '~backend/services/user/user.shared.module';
 
 @Module({
     imports: [
-        UserSharedModule,
+        forwardRef(() => UserSharedModule),
         TypeOrmModule.forFeature([UploaderEntity]),
     ],
     providers: [UploaderService],

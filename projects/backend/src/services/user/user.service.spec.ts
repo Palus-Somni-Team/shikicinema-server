@@ -3,7 +3,7 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
@@ -12,6 +12,7 @@ import {
     CreateUser,
     UpdateUser,
 } from '~backend/services/user/dto';
+import { UploaderService } from '~backend/services/uploader/uploader.service';
 import { UserEntity } from '~backend/entities';
 import { UserService } from '~backend/services/user/user.service';
 
@@ -33,10 +34,21 @@ describe('UserService', () => {
     } as UpdateUser);
     let service: UserService;
     let repo: Repository<UserEntity>;
+    let dataSource: DataSource;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
+                {
+                    provide: DataSource,
+                    useValue: {
+                        transaction: jest.fn().mockResolvedValue(oneUserEntity),
+                    },
+                },
+                {
+                    provide: UploaderService,
+                    useValue: jest.fn(),
+                },
                 UserService,
                 {
                     provide: getRepositoryToken(UserEntity),
@@ -44,6 +56,7 @@ describe('UserService', () => {
                         find: jest.fn().mockResolvedValue(userEntities),
                         findAndCount: jest.fn().mockResolvedValue([userEntities, userEntities.length]),
                         findOne: jest.fn().mockResolvedValue(oneUserEntity),
+                        findOneBy: jest.fn().mockResolvedValue(oneUserEntity),
                         create: jest.fn().mockReturnValue(oneUserEntity),
                         save: jest.fn().mockReturnValue(oneUserEntity),
                         update: jest.fn().mockResolvedValue(true),
@@ -55,6 +68,7 @@ describe('UserService', () => {
 
         service = module.get<UserService>(UserService);
         repo = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+        dataSource = module.get<DataSource>(DataSource);
     });
 
     describe('findById', () => {
@@ -87,13 +101,13 @@ describe('UserService', () => {
         });
 
         it('should throw 500 Internal Error HttpException', () => {
-            repo.save = jest.fn().mockRejectedValueOnce(new Error('Unexpected Error'));
+            dataSource.transaction = jest.fn().mockRejectedValueOnce(new Error('Unexpected Error'));
 
             expect(service.create(createQuery)).rejects.toThrowError(InternalServerErrorException);
         });
 
         it('should throw 409 Conflict HttpException', () => {
-            repo.save = jest.fn().mockRejectedValueOnce({
+            dataSource.transaction = jest.fn().mockRejectedValueOnce({
                 message: 'duplicate key violates unique constraint "users_email_key"',
                 length: 307,
                 name: 'QueryFailedError',
@@ -118,7 +132,7 @@ describe('UserService', () => {
         });
 
         it('should throw 404 Not Found HttpException', () => {
-            repo.update = jest.fn().mockResolvedValueOnce({ raw: [], affected: 0 });
+            dataSource.transaction = jest.fn().mockRejectedValueOnce(new NotFoundException());
 
             expect(service.update(id, updateQuery)).rejects.toThrowError(NotFoundException);
         });

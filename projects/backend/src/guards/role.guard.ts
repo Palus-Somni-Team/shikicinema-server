@@ -9,6 +9,7 @@ import { Role } from '@shikicinema/types';
 
 import { IRequest } from '~backend/routes/auth/dto';
 import { UserService } from '~backend/services/user/user.service';
+import { userRolesEntityMapToRole } from '~backend/utils/class-transform.utils';
 
 /**
  * List allowed user' roles for a handler or entire controller.
@@ -29,9 +30,7 @@ export class RoleGuard implements CanActivate {
     ) {}
 
     private matchRoles(allowed: Role[], roles: Role[]): boolean {
-        // todo replace == with ===
-        // eslint-disable-next-line eqeqeq
-        return allowed.some((role) => roles.some((r) => r == role));
+        return allowed.some((role) => roles.some((r) => r === role));
     }
 
     private getAllowedRoles(context: ExecutionContext): Role[] {
@@ -51,8 +50,10 @@ export class RoleGuard implements CanActivate {
         try {
             const request = context.switchToHttp().getRequest() as IRequest;
             const user = await this.userService.findById(request.user);
+            // TODO: undefined case should be covered!
+            const userRoles = user?.roles?.map(userRolesEntityMapToRole) || [];
 
-            return this.matchRoles(allowedRoles, user.roles);
+            return this.matchRoles(allowedRoles, userRoles);
         } catch (e) {
             return false;
         }

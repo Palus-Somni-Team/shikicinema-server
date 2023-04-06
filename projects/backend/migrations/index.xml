@@ -17,6 +17,7 @@
     <include file="2022-07-30-01-add-column-sessions-destroyed_at.xml" relativeToChangelogFile="true"/>
     <include file="2022-08-04-01-change-column-sessions-destroyed_at.xml" relativeToChangelogFile="true"/>
     <include file="2022-10-22-01-remove-video-cascading-deletion.xml" relativeToChangelogFile="true"/>
-    <include file="2022-10-22-02-create-authors.xml" relativeToChangelogFile="true"/> 
+    <include file="2022-10-22-02-create-authors.xml" relativeToChangelogFile="true"/>
+    <include file="2023-03-31-01-create-user_roles.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -6,6 +6,7 @@ import {
 import { IRequest } from '~backend/routes/auth/dto';
 import { Role } from '@shikicinema/types';
 import { UserService } from '~backend/services/user/user.service';
+import { userRolesEntityMapToRole } from '~backend/utils/class-transform.utils';
 
 @Injectable()
 export class NoBannedUsersGuard implements CanActivate {
@@ -19,9 +20,9 @@ export class NoBannedUsersGuard implements CanActivate {
             const user = id
                 ? await this.userService.findById(id)
                 : null;
-            // todo replace == with ===
-            // eslint-disable-next-line eqeqeq
-            const hasBannedRole = user.roles.some((role) => role == Role.banned);
+            // TODO: undefined case should be covered!
+            const roles = user?.roles?.map(userRolesEntityMapToRole);
+            const hasBannedRole = roles.some((role) => role === Role.banned);
 
             return !hasBannedRole;
         } catch (e) {

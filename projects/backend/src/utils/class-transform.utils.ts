@@ -1,6 +1,9 @@
 import { Role } from '@shikicinema/types';
 import { Transform, TransformOptions } from 'class-transformer';
 
+import { UserEntity } from '~backend/entities/user';
+import { UserRolesEntity } from '~backend/entities/user-roles';
+
 export function TransformNullableString(options?: TransformOptions) {
     return Transform(({ value }) => {
         if (value === undefined) {
@@ -13,10 +16,18 @@ export function TransformNullableString(options?: TransformOptions) {
     }, options);
 }
 
+export const userRolesEntityMapToRole = ({ role }: UserRolesEntity): Role => role;
+
+export const roleMapToString = (role: Role): string => Role[role];
+
+export function plainRoleMapToUserRolesEntity(user: UserEntity, roles: Role[]) {
+    return roles.map((role) => new UserRolesEntity(user, role));
+}
+
 export function TransformRoles() {
     const transform = Transform(
         ({ value }) => value instanceof Array
-            ? value.map((role) => Role[role])
+            ? value.map(roleMapToString)
             : []
     );
 

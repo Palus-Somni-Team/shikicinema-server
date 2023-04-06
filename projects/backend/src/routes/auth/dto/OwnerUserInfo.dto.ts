@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Role } from '@shikicinema/types';
-import { TransformRoles } from '~backend/utils/class-transform.utils';
+import { TransformRoles, userRolesEntityMapToRole } from '~backend/utils/class-transform.utils';
 import { UserEntity } from '~backend/entities';
 
 @Exclude()
@@ -52,7 +52,7 @@ export class OwnerUserInfo {
             login,
             name,
             email,
-            roles,
+            roles = [],
             createdAt,
             updatedAt,
             uploader = null,
@@ -62,7 +62,7 @@ export class OwnerUserInfo {
         this.login = login;
         this.name = name;
         this.email = email;
-        this.roles = roles;
+        this.roles = roles ? roles.map(userRolesEntityMapToRole) : [];
         this.shikimoriId = uploader?.shikimoriId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;

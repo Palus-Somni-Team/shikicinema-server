@@ -21,7 +21,7 @@ export class UploaderEntity {
     @Column()
     banned: boolean;
 
-    @OneToOne(() => UserEntity, (user) => user.id)
+    @OneToOne(() => UserEntity, (user) => user)
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 
