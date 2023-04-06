@@ -16,9 +16,9 @@ dotenv.config();
         await liquibase({
             username,
             password,
-            changeLogFile: path.resolve('migrations', 'index.xml'),
+            changeLogFile: path.resolve(__dirname, 'migrations', 'index.xml'),
             url: `jdbc:postgresql://${host}:${port}/${database}`,
-            classpath: path.resolve('node_modules', 'liquibase', 'lib', 'Drivers', 'postgresql-42.2.8.jar'),
+            classpath: path.resolve('../../node_modules', 'liquibase', 'lib', 'Drivers', 'postgresql-42.2.8.jar'),
         }).run('update');
         console.log('Migration was successful');
     } catch (e) {
