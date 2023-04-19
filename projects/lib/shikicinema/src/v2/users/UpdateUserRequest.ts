@@ -6,12 +6,10 @@ import { Role } from './Role';
  *
  * @property {string} [name]        - see {@link User.name}.
  * @property {string} [email]       - see {@link User.email}.
- * @property {number} [shikimoriId] - see {@link User.shikimoriId}.
  * @property {Array<Role>} [roles]  - see {@link User.roles}.
  */
 export interface UpdateUserRequest {
     name?: string;
     email?: string;
-    shikimoriId?: string | null;
     roles?: Role[];
 }

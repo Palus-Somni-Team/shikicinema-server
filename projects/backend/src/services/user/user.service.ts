@@ -10,8 +10,6 @@ import {
     isPgException,
     removeUndefinedWhereFields,
 } from '~backend/utils/postgres.utils';
-import { UploaderEntity } from '~backend/entities/uploader';
-import { UploaderService } from '~backend/services/uploader/uploader.service';
 import { UserEntity } from '~backend/entities';
 import { UserRolesEntity } from '~backend/entities/user-roles';
 import { plainRoleMapToUserRolesEntity } from '~backend/utils/class-transform.utils';
@@ -22,7 +20,6 @@ export class UserService {
         @InjectRepository(UserEntity)
         private readonly repository: Repository<UserEntity>,
         private readonly dataSource: DataSource,
-        private readonly uploaderService: UploaderService
     ) {}
 
     async findById(id: number): Promise<UserEntity> {
@@ -87,13 +84,11 @@ export class UserService {
             roles,
             password,
             name,
-            shikimoriId,
         } = request;
 
         return this.dataSource.transaction(async (entityManager) => {
             const usersRepo = await entityManager.getRepository(UserEntity);
             const rolesRepo = await entityManager.getRepository(UserRolesEntity);
-            const uploadersRepo = await entityManager.getRepository(UploaderEntity);
             const userEntity = await usersRepo.findOne({ where: { id }, relations: ['roles', 'uploader'] });
 
             if (!userEntity) {
@@ -105,17 +100,6 @@ export class UserService {
             userEntity.name = name ?? userEntity.name;
 
             await usersRepo.save(userEntity);
-
-            const { uploader } = userEntity;
-            if (shikimoriId && uploader && shikimoriId !== uploader.shikimoriId) {
-                if (uploader.shikimoriId) {
-                    await uploadersRepo.update(uploader.id, { shikimoriId });
-                } else {
-                    await this.uploaderService.newShikimoriUploader(shikimoriId, userEntity, entityManager);
-                }
-
-                uploader.shikimoriId = shikimoriId;
-            }
 
             if (roles) {
                 await rolesRepo.delete({ userId: userEntity.id });
