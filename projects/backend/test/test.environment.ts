@@ -36,7 +36,6 @@ export class TestEnvironment {
 
             this.app = moduleFixture.createNestApplication();
             this._dataSource = this.app.get(DataSource);
-            await this._dataSource.runMigrations({ transaction: 'all' });
             const configService = this.app.get(ConfigService);
 
             initSession(this.app, this.dataSource, configService);
