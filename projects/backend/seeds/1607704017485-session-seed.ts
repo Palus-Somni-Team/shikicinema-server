@@ -15,7 +15,7 @@ const sessionData = {
     },
 };
 
-export const seeds = [
+const seeds = [
     new SessionEntity('1', expireDateMsTomorrow, JSON.stringify(sessionData)),
 ];
 

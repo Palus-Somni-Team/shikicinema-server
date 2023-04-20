@@ -39,9 +39,9 @@
 
         <dropColumn tableName="videos" columnName="author"/>
 
-        <createIndex indexName="authors_upper_name_uniq" tableName="authors" unique="true"> 
-            <column name="UPPER(name)" computed="true"/> 
-        </createIndex> 
+        <createIndex indexName="authors_upper_name_uniq" tableName="authors" unique="true">
+            <column name="UPPER(name)" computed="true"/>
+        </createIndex>
 
     </changeSet>
 </databaseChangeLog>

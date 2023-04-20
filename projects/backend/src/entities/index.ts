@@ -3,6 +3,7 @@ import { SessionEntity } from '~backend/entities/session';
 import { UploadTokenEntity } from '~backend/entities/upload-token';
 import { UploaderEntity } from '~backend/entities/uploader';
 import { UserEntity } from '~backend/entities/user';
+import { UserRolesEntity } from '~backend/entities/user-roles';
 import { VideoEntity } from '~backend/entities/video';
 
 export const entities = [
@@ -12,6 +13,7 @@ export const entities = [
     UploadTokenEntity,
     SessionEntity,
     VideoEntity,
+    UserRolesEntity,
 ];
 
 export { AuthorEntity } from '~backend/entities/author';
@@ -20,3 +22,4 @@ export { UploadTokenEntity } from '~backend/entities/upload-token';
 export { UploaderEntity } from '~backend/entities/uploader';
 export { UserEntity } from '~backend/entities/user';
 export { VideoEntity } from '~backend/entities/video';
+export { UserRolesEntity } from '~backend/entities/user-roles';

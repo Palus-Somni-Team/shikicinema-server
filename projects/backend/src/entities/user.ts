@@ -3,15 +3,16 @@ import {
     BeforeInsert,
     Column,
     CreateDateColumn,
-    Entity, JoinColumn,
+    Entity,
+    JoinColumn,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '@shikicinema/types';
 
 import { UploaderEntity } from '~backend/entities';
-import { getIntArrayType } from '~backend/utils/typeorm-helper';
+import { UserRolesEntity } from '~backend/entities/user-roles';
 
 @Entity('users')
 export class UserEntity {
@@ -30,8 +31,8 @@ export class UserEntity {
     @Column()
     email: string;
 
-    @Column({ array: true, type: getIntArrayType() })
-    roles!: Role[];
+    @OneToMany(() => UserRolesEntity, ({ user }) => user)
+    roles: UserRolesEntity[];
 
     @OneToOne(() => UploaderEntity, (uploader) => uploader)
     @JoinColumn({ name: 'uploader_id' })
@@ -52,7 +53,6 @@ export class UserEntity {
         login: string,
         password: string,
         email: string,
-        roles: Role[] = [Role.user],
         uploader: UploaderEntity = null,
         name: string = login,
         createdAt: Date = new Date(),
@@ -61,7 +61,6 @@ export class UserEntity {
         this.login = login;
         this.password = password;
         this.email = email;
-        this.roles = roles;
         this.uploader = uploader;
         this.name = name;
         this.createdAt = createdAt;

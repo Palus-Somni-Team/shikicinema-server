@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Role, UpdateUserRequest } from '@shikicinema/types';
-import { TransformNullableString, TransformRoles } from '~backend/utils/class-transform.utils';
+import { TransformRoles } from '~backend/utils/class-transform.utils';
 
 export class UpdateUser implements UpdateUserRequest {
     @IsOptional()
@@ -26,12 +26,6 @@ export class UpdateUser implements UpdateUserRequest {
     @IsEmail()
     @ApiProperty({ format: 'email' })
     email: string;
-
-    @IsOptional()
-    @IsString()
-    @TransformNullableString()
-    @ApiProperty({ nullable: true })
-    shikimoriId: string | null;
 
     @IsOptional()
     @IsArray()

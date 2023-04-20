@@ -1,14 +1,17 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { entities } from '~backend/entities';
 import { registerAs } from '@nestjs/config';
 
-import { AuthorsSeed1621024400000 } from '~backend-root/seeds/1621024400000-authors-seed';
-import { SessionSeed1607704017485 } from '~backend-root/seeds/1607704017485-session-seed';
-import { UploadTokenSeed1650995411336 } from '~backend-root/seeds/1650995411336-upload-token-seed';
-import { UploaderSeed1621024303293 } from '~backend-root/seeds/1621024303293-uploader-seed';
-import { UserSeed21607357974819 } from '~backend-root/seeds/1607357974819-user-seed';
-import { VideoSeed1621024590642 } from '~backend-root/seeds/1621024590642-video-seed';
+import {
+    AuthorsSeed1621024400000,
+    SessionSeed1607704017485,
+    UploadTokenSeed1650995411336,
+    UploaderSeed1621024303293,
+    UserRolesSeed1607357974820,
+    UserSeed1607357974819,
+    VideoSeed1621024590642,
+} from '~backend-root/seeds';
+import { entities } from '~backend/entities';
 
 export default registerAs('database', () => {
     const postgresConfig: PostgresConnectionOptions = {
@@ -21,6 +24,8 @@ export default registerAs('database', () => {
         logging: !!process.env.SHIKICINEMA_DB_LOG,
         synchronize: !!process.env.SHIKICINEMA_DB_SYNC,
         entities,
+        // see: https://orkhan.gitbook.io/typeorm/docs/data-source-options#common-data-source-options (entitySkipConstructor)
+        entitySkipConstructor: true,
     };
 
     const inMemoryConfig: SqliteConnectionOptions = {
@@ -30,13 +35,15 @@ export default registerAs('database', () => {
         logging: false,
         synchronize: true,
         migrations: [
-            UserSeed21607357974819,
+            UserSeed1607357974819,
             SessionSeed1607704017485,
             UploaderSeed1621024303293,
             AuthorsSeed1621024400000,
             VideoSeed1621024590642,
             UploadTokenSeed1650995411336,
+            UserRolesSeed1607357974820,
         ],
+        entitySkipConstructor: true,
     };
 
     return process.env.NODE_ENV === 'testing' ? inMemoryConfig : postgresConfig;

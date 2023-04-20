@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcrypt';
-import { Role } from '@shikicinema/types';
 
 import { UserEntity } from '~backend/entities';
 
@@ -12,7 +11,6 @@ describe('UserEntity', () => {
         expect(entity.name).toBe(login);
         expect(entity.password).toBe(password);
         expect(entity.email).toBe(email);
-        expect(entity.roles).toStrictEqual([Role.user]);
         expect(entity.uploader).toBe(null);
     });
 

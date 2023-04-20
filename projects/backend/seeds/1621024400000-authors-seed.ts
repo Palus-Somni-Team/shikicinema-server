@@ -1,7 +1,7 @@
 import { AuthorEntity } from '~backend/entities';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export const seeds = [
+const seeds = [
     new AuthorEntity('AniDUB'),
     new AuthorEntity('AniLibria.TV'),
     new AuthorEntity('AnimeVost'),
