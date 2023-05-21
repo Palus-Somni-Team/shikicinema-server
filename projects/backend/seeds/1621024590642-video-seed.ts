@@ -20,7 +20,7 @@ export class VideoSeed1621024590642 implements MigrationInterface {
             new VideoEntity(21, 113, 'https://kek.lol', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], user),
             new VideoEntity(1, 1, 'https://admin1.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
             new VideoEntity(1, 2, 'https://admin2.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
-            new VideoEntity(1, 3, 'https://admin3.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, null, admin),
+            new VideoEntity(1, 3, 'https://admin3.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
             new VideoEntity(1337, 7, 'https://banned.com', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], banned),
         );
 
