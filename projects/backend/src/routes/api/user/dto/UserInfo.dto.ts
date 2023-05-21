@@ -21,7 +21,9 @@ export class UserInfo implements User {
     @ApiProperty({ nullable: true })
     shikimoriId: string | null;
 
-    constructor(entity: UserEntity) {
+    constructor(entity?: UserEntity) {
+        if (!entity) return;
+
         const {
             id,
             login,
