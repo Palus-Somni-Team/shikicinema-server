@@ -22,7 +22,7 @@ export class VideoRequestEntity {
     @Column('smallint')
     status: VideoRequestStatusEnum;
 
-    @Column({ name: 'episode', nullable: true })
+    @Column({ nullable: true })
     episode: number;
 
     @Column('smallint', { nullable: true })

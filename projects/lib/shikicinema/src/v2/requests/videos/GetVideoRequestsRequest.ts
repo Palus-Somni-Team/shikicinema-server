@@ -11,6 +11,6 @@ import { VideoRequestTypeEnum } from './VideoRequestTypeEnum';
 export interface GetVideoRequestsRequest extends PaginationRequest {
     id?: number,
     types?: VideoRequestTypeEnum[],
-    createdBy?: string,
-    reviewedBy?: string,
+    createdBy?: number,
+    reviewedBy?: number,
 }

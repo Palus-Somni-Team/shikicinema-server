@@ -7,8 +7,8 @@ import { Assert } from '~backend/utils/validation/assert';
 import { CreateUser, UpdateUser } from '~backend/services/user/dto';
 import {
     PgException,
-    convertToWhereCondition,
     isPgException,
+    toSqlWhere,
 } from '~backend/utils/postgres.utils';
 import { UserEntity } from '~backend/entities';
 import { UserRolesEntity } from '~backend/entities/user-roles';
@@ -50,7 +50,7 @@ export class UserService {
         Assert.Argument('limit', limit).between(1, 100);
         Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        const where = convertToWhereCondition({
+        const where = toSqlWhere({
             id,
             login,
             name,

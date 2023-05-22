@@ -27,7 +27,7 @@ export function normalizeString(value?: string): string {
  * @param {any} obj plain object.
  * @return {any} where condition for sql query.
  */
-export function convertToWhereCondition(obj: any): any {
+export function toSqlWhere(obj: any): any {
     for (const [key, value] of Object.entries(obj)) {
         if (value === undefined) {
             delete obj[key];

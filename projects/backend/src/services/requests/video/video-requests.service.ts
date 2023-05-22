@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { VideoRequestEntity } from '~backend/entities';
 import { VideoRequestStatusEnum, VideoRequestTypeEnum } from '@shikicinema/types';
-import { convertToWhereCondition } from '~backend/utils/postgres.utils';
+import { toSqlWhere } from '~backend/utils/postgres.utils';
 
 @Injectable()
 export class VideoRequestService {
@@ -19,18 +19,18 @@ export class VideoRequestService {
         id?: number,
         types?: VideoRequestTypeEnum[],
         statuses?: VideoRequestStatusEnum[],
-        createdBy?: string,
-        reviewedBy?: string,
+        createdBy?: number,
+        reviewedBy?: number,
     ): Promise<[VideoRequestEntity[], number]> {
         Assert.Argument('limit', limit).between(1, 100);
         Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        const where = convertToWhereCondition({
+        const where = toSqlWhere({
             id,
             status: statuses,
             type: types,
-            createdBy: createdBy ? { login: createdBy } : createdBy,
-            reviewedBy: reviewedBy ? { login: reviewedBy } : reviewedBy,
+            createdBy: createdBy ? { id: createdBy } : createdBy,
+            reviewedBy: reviewedBy ? { id: reviewedBy } : reviewedBy,
         });
 
         return this.repository.findAndCount({

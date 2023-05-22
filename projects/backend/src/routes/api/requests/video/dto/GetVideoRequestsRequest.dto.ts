@@ -4,8 +4,6 @@ import {
     ArrayMinSize,
     IsInt,
     IsOptional,
-    IsString,
-    Length,
     Max,
     Min,
 } from 'class-validator';
@@ -53,25 +51,29 @@ export class GetVideoRequestsRequest implements Interface {
     @ArrayMinSize(1)
     @ArrayMaxSize(2)
     @IsOptional()
+    @ApiProperty({ required: false })
     types?: VideoRequestTypeEnum[];
 
     @Expose()
     @ArrayMinSize(1)
     @ArrayMaxSize(3)
     @IsOptional()
+    @ApiProperty({ required: false })
     statuses?: VideoRequestStatusEnum[];
 
     @Expose()
     @IsOptional()
-    @IsString()
-    @Length(3, 32)
+    @IsInt()
+    @Min(0)
+    @Type(() => Number)
     @ApiProperty({ required: false })
-    createdBy?: string;
+    createdBy?: number;
 
     @Expose()
     @IsOptional()
-    @IsString()
-    @Length(3, 32)
+    @IsInt()
+    @Min(0)
+    @Type(() => Number)
     @ApiProperty({ required: false })
-    reviewedBy?: string;
+    reviewedBy?: number;
 }
