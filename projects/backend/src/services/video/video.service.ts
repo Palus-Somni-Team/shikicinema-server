@@ -8,7 +8,7 @@ import { AnimeEpisodeInfo } from '~backend/routes/api/video/dto';
 import { Assert } from '~backend/utils/validation/assert';
 import { AuthorEntity, UploaderEntity, VideoEntity } from '~backend/entities';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
-import { normalizeString, removeUndefinedWhereFields } from '~backend/utils/postgres.utils';
+import { normalizeString, toSqlWhere } from '~backend/utils/postgres.utils';
 
 @Injectable()
 export class VideoService {
@@ -128,7 +128,7 @@ export class VideoService {
         Assert.Argument('limit', limit).between(1, 100);
         Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        const where = removeUndefinedWhereFields({ id, animeId, episode, kind, language, quality });
+        const where = toSqlWhere({ id, animeId, episode, kind, language, quality });
 
         if (uploader !== undefined) {
             const shikimoriId = uploader;

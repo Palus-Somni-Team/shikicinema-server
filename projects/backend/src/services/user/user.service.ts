@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from '@shikicinema/types';
 
@@ -8,7 +8,7 @@ import { CreateUser, UpdateUser } from '~backend/services/user/dto';
 import {
     PgException,
     isPgException,
-    removeUndefinedWhereFields,
+    toSqlWhere,
 } from '~backend/utils/postgres.utils';
 import { UserEntity } from '~backend/entities';
 import { UserRolesEntity } from '~backend/entities/user-roles';
@@ -50,7 +50,15 @@ export class UserService {
         Assert.Argument('limit', limit).between(1, 100);
         Assert.Argument('offset', offset).greaterOrEqualTo(0);
 
-        const where = removeUndefinedWhereFields({ id, login, name, email, shikimoriId, roles, createdAt });
+        const where = toSqlWhere({
+            id,
+            login,
+            name,
+            email,
+            shikimoriId,
+            roles: roles ? { role: In(roles) } : roles,
+            createdAt,
+        });
 
         return this.repository.findAndCount({ where, skip: offset, take: limit });
     }

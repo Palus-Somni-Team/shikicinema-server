@@ -11,6 +11,7 @@ import {
 } from '~backend/routes/api/video/dto';
 import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
+import { GetVideoRequestsRequest, GetVideoRequestsResponse } from '~backend/routes/api/requests/video/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import { plainToInstance } from 'class-transformer';
@@ -215,6 +216,18 @@ export class TestClient {
     }
 
     //#endregion OAuth
+
+    //#region Video Requests
+
+    public getVideoRequestsRaw(req: GetVideoRequestsRequest): request.Test {
+        return this.get('/api/requests/videos', req);
+    }
+
+    public getVideoRequests(req: GetVideoRequestsRequest): Promise<GetVideoRequestsResponse> {
+        return this.checkResponse(GetVideoRequestsResponse, this.getVideoRequestsRaw(req));
+    }
+
+    //#endregion Video Requests
 
     //#region Util
 

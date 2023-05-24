@@ -9,6 +9,7 @@ import {
     UploaderSeed1621024303293,
     UserRolesSeed1607357974820,
     UserSeed1607357974819,
+    VideoRequestsSeed1650995411337,
     VideoSeed1621024590642,
 } from '~backend-root/seeds';
 import { entities } from '~backend/entities';
@@ -42,6 +43,7 @@ export default registerAs('database', () => {
             VideoSeed1621024590642,
             UploadTokenSeed1650995411336,
             UserRolesSeed1607357974820,
+            VideoRequestsSeed1650995411337,
         ],
         entitySkipConstructor: true,
     };
