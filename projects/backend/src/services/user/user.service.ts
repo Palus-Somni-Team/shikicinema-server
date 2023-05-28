@@ -3,13 +3,14 @@ import { DataSource, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from '@shikicinema/types';
 
-import { Assert } from '~backend/utils/validation/assert';
 import { CreateUser, UpdateUser } from '~backend/services/user/dto';
+import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
 import {
     PgException,
     isPgException,
     toSqlWhere,
 } from '~backend/utils/postgres.utils';
+import { UserAssert } from '~backend/utils/checks/user/user-assert';
 import { UserEntity } from '~backend/entities';
 import { UserRolesEntity } from '~backend/entities/user-roles';
 import { plainRoleMapToUserRolesEntity } from '~backend/utils/class-transform.utils';
@@ -23,16 +24,18 @@ export class UserService {
     ) {}
 
     async findById(id: number): Promise<UserEntity> {
+        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
+
         const user = await this.repository.findOne({ where: { id }, relations: ['roles', 'uploader'] });
 
-        if (!user) {
-            throw new NotFoundException();
-        }
+        UserAssert.Check('user', user).exists();
 
         return user;
     }
 
     findByLogin(login: string): Promise<UserEntity> {
+        DevAssert.Check('login', login).notNull().notEmpty();
+
         return this.repository.findOneBy({ login });
     }
 
@@ -47,8 +50,8 @@ export class UserService {
         roles?: Role[],
         createdAt?: Date,
     ): Promise<[UserEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.Check('limit', limit).notNull().between(1, 100);
+        DevAssert.Check('offset', offset).notNull().greaterOrEqualTo(0);
 
         const where = toSqlWhere({
             id,
@@ -64,6 +67,8 @@ export class UserService {
     }
 
     async create(user: CreateUser): Promise<UserEntity> {
+        DevAssert.Check('user', user).notNull();
+
         try {
             return await this.dataSource.transaction(async (entityManager) => {
                 const usersRepo = entityManager.getRepository(UserEntity);
@@ -87,6 +92,9 @@ export class UserService {
     }
 
     async update(id: number, request: UpdateUser): Promise<UserEntity> {
+        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
+        DevAssert.Check('request', request).notNull();
+
         const {
             email,
             roles,
@@ -99,9 +107,7 @@ export class UserService {
             const rolesRepo = await entityManager.getRepository(UserRolesEntity);
             const userEntity = await usersRepo.findOne({ where: { id }, relations: ['roles', 'uploader'] });
 
-            if (!userEntity) {
-                throw new NotFoundException();
-            }
+            UserAssert.Check('user', userEntity).exists();
 
             userEntity.email = email ?? userEntity.email;
             userEntity.password = password ?? userEntity.password;
@@ -119,6 +125,8 @@ export class UserService {
     }
 
     async delete(id: number): Promise<void> {
+        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
+
         const { affected } = await this.repository.delete({ id });
 
         if (affected === 0) {

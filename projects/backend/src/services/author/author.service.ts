@@ -1,5 +1,5 @@
-import { Assert } from '~backend/utils/validation/assert';
 import { AuthorEntity } from '~backend/entities';
+import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
 import { EntityManager, FindManyOptions, Raw, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
@@ -13,8 +13,8 @@ export class AuthorService {
     ) {}
 
     get(name: string, limit: number, offset: number): Promise<[AuthorEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.Check('limit', limit).notNull().between(1, 100);
+        DevAssert.Check('offset', offset).notNull().greaterOrEqualTo(0);
 
         const queryOptions: FindManyOptions<AuthorEntity> = {
             order: { name: 'asc' },
@@ -47,9 +47,9 @@ export class AuthorService {
         author: string,
         save = false,
     ): Promise<AuthorEntity> {
-        Assert.Argument('entityManager', entityManager);
+        DevAssert.Check('entityManager', entityManager).notNull();
         author = normalizeString(author);
-        Assert.Argument('author', author).lengthBetween(1, 256);
+        DevAssert.Check('author', author).notNull().lengthBetween(1, 256);
 
         const repo = await entityManager.getRepository(AuthorEntity);
         let entity = await repo.findOneBy({
