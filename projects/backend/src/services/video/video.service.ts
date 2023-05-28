@@ -1,4 +1,4 @@
-import { Between, DataSource, EntityManager, Raw, Repository } from 'typeorm';
+import { Between, DataSource, Raw, Repository } from 'typeorm';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@shikicinema/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -6,8 +6,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AlreadyExistsException } from '~backend/utils/exceptions/already-exists.exception';
 import { AnimeEpisodeInfo } from '~backend/routes/api/video/dto';
 import { Assert } from '~backend/utils/validation/assert';
-import { AuthorEntity, UploaderEntity, VideoEntity } from '~backend/entities';
+import { AuthorService } from '~backend/services/author/author.service';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
+import { UploaderEntity, VideoEntity } from '~backend/entities';
 import { normalizeString, toSqlWhere } from '~backend/utils/postgres.utils';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class VideoService {
         @InjectRepository(VideoEntity)
         private readonly repository: Repository<VideoEntity>,
         private readonly dataSource: DataSource,
+        private readonly authorService: AuthorService,
     ) {}
 
     async create(uploaderId: number, video: CreateVideoRequest): Promise<VideoEntity> {
@@ -29,7 +31,7 @@ export class VideoService {
             if (videoEntity) {
                 throw new AlreadyExistsException();
             } else {
-                const authorEntity = await this.getOrCreateAuthorEntity(entityManager, video.author);
+                const authorEntity = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
 
                 videoEntity = new VideoEntity(
                     video.animeId,
@@ -61,7 +63,7 @@ export class VideoService {
             }
 
             if (video.author && normalizeString(video.author) !== normalizeString(entity.author.name)) {
-                const authorEntity = await this.getOrCreateAuthorEntity(entityManager, video.author);
+                const authorEntity = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
                 entity.author = authorEntity;
             }
 
@@ -224,14 +226,5 @@ export class VideoService {
         if (affected === 0) {
             throw new NotFoundException();
         }
-    }
-
-    private async getOrCreateAuthorEntity(entityManager: EntityManager, author: string): Promise<AuthorEntity> {
-        const authorRepo = await entityManager.getRepository(AuthorEntity);
-        const entity = await authorRepo.findOneBy({
-            name: Raw((_) => `UPPER(${_}) = :name`, { name: normalizeString(author) }),
-        });
-
-        return entity ?? new AuthorEntity(author);
     }
 }
