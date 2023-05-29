@@ -1,0 +1,7 @@
+<div class="auth mat-elevation-z2" [formGroup]="form">
+  <h1>Schikicinema</h1>
+  <input placeholder="Логин" formControlName="login" type="text">
+  <input placeholder="Пароль" matInput formControlName="password" type="password">
+
+  <button type="submit" class="btn" (click)="auth()">Войти</button>
+</div>

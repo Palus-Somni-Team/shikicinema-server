@@ -1,0 +1,14 @@
+:host {
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  background: var(--bg-02);
+  border: 1px solid lightgray;
+
+  display: flex;
+  align-items: center;
+
+  h1 {
+    margin: 0 12px;
+  }
+}

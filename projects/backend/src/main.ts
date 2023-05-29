@@ -6,7 +6,8 @@ import { AppModule } from '~backend/app.module';
 import { initSession, initSwagger } from '~backend/utils/bootstrap.utils';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    // TODO: Возможно надо удалить options
+    const app = await NestFactory.create(AppModule, { cors: { credentials: true, origin: true} });
     const dataSource = app.get(DataSource);
     const configService = app.get(ConfigService);
     const serverPort = configService.get('server-port');

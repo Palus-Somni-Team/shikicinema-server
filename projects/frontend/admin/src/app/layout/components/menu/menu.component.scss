@@ -1,0 +1,26 @@
+
+:host {
+  height: 100vh;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: fixed;
+  margin-top: 60px;
+
+  overflow: hidden;
+  border-right: 1px solid lightgray;
+  background: var(--bg-02);
+}
+
+.menu-item {
+  width: 100%;
+  height: auto;
+  text-align: left;
+  color: black;
+
+
+  &.is-active {
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  }
+}
