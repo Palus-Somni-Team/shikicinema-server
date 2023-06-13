@@ -1,7 +1,7 @@
 import { Author } from '../author';
 import { VideoKindEnum } from './VideoKindEnum';
 import { VideoQualityEnum } from './VideoQualityEnum';
-import { Uploader } from './Uploader'
+import { Uploader } from '../uploaders'
 
 /**
  * Represents video.

@@ -7,3 +7,4 @@ export * from './v2/GetByIdParamRequest';
 export * from './v2/LoginRequest';
 export * from './v2/PaginationRequest';
 export * from './v2/requests';
+export * from './v2/uploaders';

@@ -3,6 +3,7 @@ import { Transform, TransformOptions } from 'class-transformer';
 
 import { UserEntity } from '~backend/entities/user';
 import { UserRolesEntity } from '~backend/entities/user-roles';
+import { ValidateIf, ValidationOptions } from 'class-validator';
 
 export function TransformNullableString(options?: TransformOptions) {
     return Transform(({ value }) => {
@@ -52,4 +53,12 @@ export function TransformDate() {
         toPlain(target, key);
         toClass(target, key);
     };
+}
+
+export function ToBoolean() {
+    return Transform(({ value }) => value ? ['1', 1, 'true', true].includes(value) : value);
+}
+
+export function IsNullable(validationOptions?: ValidationOptions) {
+    return ValidateIf((_, value) => value !== null, validationOptions);
 }

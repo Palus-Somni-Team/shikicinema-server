@@ -17,12 +17,17 @@ export class UploaderInfo implements Uploader {
     @ApiProperty()
     shikimoriId: string;
 
+    @Expose()
+    @ApiProperty()
+    userId: number | null;
+
     constructor(entity?: UploaderEntity) {
         if (!entity) return;
 
-        const { id, banned, shikimoriId } = entity;
+        const { id, banned, shikimoriId, user } = entity;
         this.id = id;
         this.banned = banned;
         this.shikimoriId = shikimoriId;
+        this.userId = user?.id || null;
     }
 }
