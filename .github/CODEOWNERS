@@ -1,0 +1,11 @@
+# Maintainers
+*                               @Smarthard
+
+# Backend-only maintainers
+/projects/backend/              @BasicEC
+
+# Frontend-only maintainers
+/projects/frontend              @akdlsl
+
+# Shared tools and libraries
+/projects/lib/                  @BasicEC @akdlsl
