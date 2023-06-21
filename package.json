@@ -5,6 +5,7 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
+    "build:admin": "npm run build --prefix projects/frontend/admin",
     "build:backend": "npm run build --prefix projects/backend",
     "build:types": "npm run build --prefix projects/lib/shikicinema",
     "build": "npm run build --workspaces",
@@ -13,7 +14,7 @@
   "workspaces": [
     "projects/lib/shikicinema",
     "projects/backend",
-    "projects/frontend"
+    "projects/frontend/admin"
   ],
   "repository": {
     "type": "git",

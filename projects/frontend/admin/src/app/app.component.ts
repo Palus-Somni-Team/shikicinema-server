@@ -1,20 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthStoreService } from './auth/services/auth-store.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent{
   title = 'admin';
-
-  constructor(
-    private readonly _authStore: AuthStoreService
-  ) {
-  }
-
-  ngOnInit() {
-    this._authStore.me();
-  }
 }

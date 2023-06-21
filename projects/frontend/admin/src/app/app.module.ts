@@ -8,6 +8,10 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CredentialsInterceptor } from '@core/interceptors/credentials.interceptor';
 import { RouterModule } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { StoreModule } from '@ngrx/store';
+import { authReducer } from './auth/state/auth.reducer';
+import { AuthEffects } from './auth/state/auth.effects';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BrowserAnimationsModule,
     HttpClientModule,
     RouterModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    StoreModule.forRoot({auth: authReducer}, {}),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [
     {

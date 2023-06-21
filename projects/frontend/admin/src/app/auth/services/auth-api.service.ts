@@ -12,10 +12,14 @@ export class AuthApiService {
 
   auth(login: string, password: string) {
     const body = { login, password };
-    return this._httpService.post<AdminUser>(`${this.api}/auth/login`, body);
+    return this._httpService.post<AdminUser>(`${this.api}/auth/login`, body).toPromise();
   }
 
   me() {
     return this._httpService.get<AdminUser>(`${this.api}/auth/me`);
+  }
+
+  logout() {
+    return this._httpService.post(`${this.api}/auth/logout`, {});
   }
 }
