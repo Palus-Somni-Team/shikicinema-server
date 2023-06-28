@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
     styleUrls: ['./auth-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthPageComponent implements OnInit {
+export class AuthPageComponent {
     form = this._fb.group({
         login: [],
         password: [],
@@ -23,9 +23,6 @@ export class AuthPageComponent implements OnInit {
         private readonly _router: Router,
         private readonly _api: AuthApiService
     ) { }
-
-    ngOnInit() {
-    }
 
     async auth() {
         const { login, password } = this.form.value as any;

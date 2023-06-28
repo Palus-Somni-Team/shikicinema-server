@@ -7,7 +7,7 @@ import { environment } from '@env/environment';
     providedIn: 'root',
 })
 export class AuthApiService {
-    api = environment.api;
+    readonly api = environment.api;
     constructor(private _httpService: HttpClient) { }
 
     auth(login: string, password: string) {

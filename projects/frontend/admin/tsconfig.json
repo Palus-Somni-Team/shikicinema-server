@@ -24,8 +24,8 @@
       "dom"
     ],
     "paths": {
-      "@env/*": ["environments/*"],
-      "@core/*": ["app/core/*"]
+      "~admin/*": [ "<rootDir>/../src/*"],
+      "~admin-root/*": [ "<rootDir>/../*"],
     }
   },
   "angularCompilerOptions": {
