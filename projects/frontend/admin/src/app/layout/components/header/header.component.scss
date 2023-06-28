@@ -1,4 +1,4 @@
-:host {
+.header {
   height: 60px;
   width: 100%;
   position: fixed;
@@ -8,11 +8,11 @@
   display: flex;
   align-items: center;
 
-  h1 {
+  &__title {
     margin: 0 12px;
   }
 
-  .btn {
+  &__button {
     margin: 0 12px 0 auto;
   }
 }

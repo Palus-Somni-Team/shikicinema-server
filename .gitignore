@@ -33,3 +33,6 @@ lerna-debug.log*
 
 # IDE - VSCode
 .vscode
+
+# Angular cache
+.angular
