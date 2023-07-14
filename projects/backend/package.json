@@ -41,7 +41,7 @@
     "@types/sqlite3": "^3.1.8",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "connect-typeorm": "^2.0.0",
     "express-session": "^1.17.3",
     "liquibase": "^1.0.1",
