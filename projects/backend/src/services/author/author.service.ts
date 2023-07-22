@@ -13,8 +13,8 @@ export class AuthorService {
     ) {}
 
     get(name: string, limit: number, offset: number): Promise<[AuthorEntity[], number]> {
-        DevAssert.Check('limit', limit).notNull().between(1, 100);
-        DevAssert.Check('offset', offset).notNull().greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const queryOptions: FindManyOptions<AuthorEntity> = {
             order: { name: 'asc' },
@@ -47,9 +47,9 @@ export class AuthorService {
         author: string,
         save = false,
     ): Promise<AuthorEntity> {
-        DevAssert.Check('entityManager', entityManager).notNull();
+        DevAssert.check('entityManager', entityManager).notNullish();
         author = normalizeString(author);
-        DevAssert.Check('author', author).notNull().lengthBetween(1, 256);
+        DevAssert.check('author', author).notNullish().minLength(1).maxLength(256);
 
         const repo = await entityManager.getRepository(AuthorEntity);
         let entity = await repo.findOneBy({

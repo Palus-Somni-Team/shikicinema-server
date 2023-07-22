@@ -32,7 +32,9 @@ export class TestValidator extends ValidatorBase {
         }
     }
 
-    throwCollected(): void {
-        return;
+    clear() {
+        this.rangeErrors.clear();
+        this.argumentNullErrors.clear();
+        this.argumentNotNullErrors.clear();
     }
 }

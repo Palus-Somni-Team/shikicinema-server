@@ -1,61 +1,48 @@
 import { TestValidator } from '~backend/utils/checks/test/test-validator';
 
 describe('notNull', () => {
+    const validator = new TestValidator();
+
+    beforeEach(() => {
+        validator.clear();
+    });
+
     it('throws if null', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
-        validator.checkValue(paramName, null).notNull();
+        validator.checkValue(paramName, null).notNullish();
 
         // assert
         expect(validator.argumentNullErrors.size).toBe(1);
         expect(validator.argumentNullErrors.has(paramName)).toBe(true);
         expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
         expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} not to be null.`);
+            .toBe(`Expected ${paramName} not to be nullish.`);
     });
 
     it('throws if undefined', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
-        validator.checkValue(paramName, undefined).notNull();
+        validator.checkValue(paramName, undefined).notNullish();
 
         // assert
         expect(validator.argumentNullErrors.size).toBe(1);
         expect(validator.argumentNullErrors.has(paramName)).toBe(true);
         expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
         expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} not to be null.`);
-    });
-
-    it('skip following checks', () => {
-        // arrange
-        const paramName = 'key';
-        const validator = new TestValidator();
-
-        // act
-        validator.checkValue(paramName, undefined).notNull().lengthBetween(1, 2);
-
-        // assert
-        expect(validator.argumentNullErrors.size).toBe(1);
-        expect(validator.argumentNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} not to be null.`);
+            .toBe(`Expected ${paramName} not to be nullish.`);
     });
 
     it('doesn\'t throw if argument not null or undefined', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
-        validator.checkValue(paramName, {}).notNull();
+        validator.checkValue(paramName, {}).notNullish();
 
         // assert
         expect(validator.argumentNullErrors.size).toBe(0);
@@ -64,7 +51,6 @@ describe('notNull', () => {
     it('exists method changes message', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
         validator.checkValue(paramName, undefined).exists();

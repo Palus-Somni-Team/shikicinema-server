@@ -9,6 +9,10 @@ import { ValidatorBase } from '~backend/utils/checks/validator-base';
 export class DevAssertionValidator extends ValidatorBase {
     public static readonly instance = new DevAssertionValidator();
 
+    private constructor() {
+        super();
+    }
+
     addRangeError(key: string, message?: string): void {
         throw new ArgumentOutOfRangeException(key, message);
     }
@@ -19,9 +23,5 @@ export class DevAssertionValidator extends ValidatorBase {
 
     addArgumentNotNullError(key: string, message?: string): void {
         throw new ArgumentNotNullException(key, message);
-    }
-
-    throwCollected(): void {
-        return;
     }
 }

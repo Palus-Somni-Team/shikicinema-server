@@ -29,11 +29,6 @@ export interface Validator {
     addArgumentNotNullError(key: string, message?: string): void;
 
     /**
-     * Throws exception if any error was added.
-     */
-    throwCollected(): void;
-
-    /**
      * Creates new Check with provided key/value pair and this validator.
      * @param key key for error creating
      * @param value value to validate

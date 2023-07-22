@@ -3,10 +3,14 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ValidatorBase } from '~backend/utils/checks/validator-base';
 
 /**
- * Throws dev exceptions on adding error.
+ * Throws user exceptions on adding error.
  */
 export class UserAssertionValidator extends ValidatorBase {
     public static readonly instance = new UserAssertionValidator();
+
+    private constructor() {
+        super();
+    }
 
     addRangeError(key: string, message?: string): void {
         throw new BadRequestException(message);
@@ -18,9 +22,5 @@ export class UserAssertionValidator extends ValidatorBase {
 
     addArgumentNotNullError(key: string, message?: string): void {
         throw new AlreadyExistsException(message);
-    }
-
-    throwCollected(): void {
-        return;
     }
 }

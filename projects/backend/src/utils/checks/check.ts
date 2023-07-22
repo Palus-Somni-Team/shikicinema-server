@@ -4,7 +4,6 @@ export class Check<T> {
     private readonly _name: string;
     private readonly _value: T;
     private readonly _validator;
-    private _validationIsStopped = false;
 
     get value(): T {
         return this._value;
@@ -22,37 +21,34 @@ export class Check<T> {
 
     //#region object
 
-    notNull(this: Check<T>, message?: string): Check<T> {
-        message ??= `Expected ${this.name} not to be null.`;
+    notNullish(this: Check<T>, message?: string): Check<T> {
+        message ??= `Expected ${this.name} not to be nullish.`;
 
         if (this.value === undefined || this.value === null) {
             this._validator.addArgumentNullError(this.name, message);
-            this._validationIsStopped = true;
         }
 
         return this;
     }
 
-    isNull(this: Check<T>, message?: string): Check<T> {
-        message ??= `Expected ${this.name} to be null.`;
+    isNullish(this: Check<T>, message?: string): Check<T> {
+        message ??= `Expected ${this.name} to be nullish.`;
 
         if (this.value !== undefined && this.value !== null) {
             this._validator.addArgumentNotNullError(this.name, message);
         }
-
-        this._validationIsStopped = true;
 
         return this;
     }
 
     exists(this: Check<T>, message?: string): Check<T> {
         message ??= `${this.name} is not found.`;
-        return this.notNull(message);
+        return this.notNullish(message);
     }
 
     notExists(this: Check<T>, message?: string): Check<T> {
         message ??= `${this.name} is already exists.`;
-        return this.isNull(message);
+        return this.isNullish(message);
     }
 
     //endregion object
@@ -60,8 +56,6 @@ export class Check<T> {
     //#region number
 
     greaterOrEqualTo<T extends number>(this: Check<T>, value: number): Check<T> {
-        if (this._validationIsStopped) return this;
-
         if (this.value < value) {
             this._validator.addRangeError(this.name, `Expected ${this.name} to be greater or equal to ${value}.`);
         }
@@ -69,9 +63,15 @@ export class Check<T> {
         return this;
     }
 
-    between<T extends number>(this: Check<T>, min: number, max: number): Check<T> {
-        if (this._validationIsStopped) return this;
+    lessOrEqualTo<T extends number>(this: Check<T>, value: number): Check<T> {
+        if (this.value > value) {
+            this._validator.addRangeError(this.name, `Expected ${this.name} to be less or equal to ${value}.`);
+        }
 
+        return this;
+    }
+
+    between<T extends number>(this: Check<T>, min: number, max: number): Check<T> {
         if (max < this.value || this.value < min) {
             this._validator.addRangeError(this._name, `Expected ${this.name} to be between ${min} and ${max}.`);
         }
@@ -83,15 +83,23 @@ export class Check<T> {
 
     //#region array-like
 
-    lengthBetween<TArray, TValue extends ArrayLike<TArray>>(
+    maxLength<TArray, TValue extends ArrayLike<TArray>>(
         this: Check<TValue>,
-        min: number,
-        max: number,
+        max: number
     ): Check<TValue> {
-        if (this._validationIsStopped) return this;
+        if (max < this.value.length) {
+            this._validator.addRangeError(this.name, `Expected ${this.name} length to be less or equal to ${max}.`);
+        }
 
-        if (max < this.value.length || this.value.length < min) {
-            this._validator.addRangeError(this.name, `Expected ${this.name} length to be between ${min} and ${max}.`);
+        return this;
+    }
+
+    minLength<TArray, TValue extends ArrayLike<TArray>>(
+        this: Check<TValue>,
+        min: number
+    ): Check<TValue> {
+        if (min > this.value.length) {
+            this._validator.addRangeError(this.name, `Expected ${this.name} length to be greater or equal to ${min}.`);
         }
 
         return this;
@@ -100,8 +108,6 @@ export class Check<T> {
     notEmpty<TArray, TValue extends ArrayLike<TArray>>(
         this: Check<TValue>,
     ): Check<TValue> {
-        if (this._validationIsStopped) return this;
-
         if (this.value.length === 0) {
             this._validator.addRangeError(this.name, `Expected ${this.name} not to be empty.`);
         }

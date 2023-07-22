@@ -6,54 +6,64 @@ describe('ArrayLike', () => {
         [1, 2, 3, 4],
     ];
 
+    const validator = new TestValidator();
+
+    beforeEach(() => {
+        validator.clear();
+    });
+
     for (const val of cases) {
-        it(`lengthBetween: throws if less than min value ${{ val }}`, () => {
+        it(`minLength: throws if less than min value ${{ val }}`, () => {
             // arrange
             const paramName = 'val';
             const min = val.length + 1;
-            const max = val.length + 2;
-            const validator = new TestValidator();
 
             // act
-            validator.checkValue(paramName, val).lengthBetween(min, max);
+            validator.checkValue(paramName, val).minLength(min);
 
             // assert
             expect(validator.rangeErrors.size).toBe(1);
             expect(validator.rangeErrors.has(paramName)).toBe(true);
             expect(validator.rangeErrors.get(paramName).length).toBe(1);
             expect(validator.rangeErrors.get(paramName)[0])
-                .toBe(`Expected ${paramName} length to be between ${min} and ${max}.`);
+                .toBe(`Expected ${paramName} length to be greater or equal to ${min}.`);
         });
 
-        it(`lengthBetween: throws if greater than max value ${{ val }}`, () => {
-            // arrange
-            const paramName = 'val';
-            const min = val.length - 2;
-            const max = val.length - 1;
-            const validator = new TestValidator();
-
-            // act
-            validator.checkValue(paramName, val).lengthBetween(min, max);
-
-            // assert
-            expect(validator.rangeErrors.size).toBe(1);
-            expect(validator.rangeErrors.has(paramName)).toBe(true);
-            expect(validator.rangeErrors.get(paramName).length).toBe(1);
-            expect(validator.rangeErrors.get(paramName)[0])
-                .toBe(`Expected ${paramName} length to be between ${min} and ${max}.`);
-        });
-
-        it(`lengthBetween: range include borders ${{ val }}`, () => {
+        it(`minLength: doesn't throw on equal length ${{ val }}`, () => {
             // arrange
             const paramName = 'middle';
-            const validator = new TestValidator();
 
             // act
-            validator.checkValue(paramName, val)
-                .lengthBetween(val.length, val.length + 1)
-                .lengthBetween(val.length - 1, val.length);
+            validator.checkValue(paramName, val).minLength(val.length);
 
+            // assert
+            expect(validator.rangeErrors.size).toBe(0);
+        });
 
+        it(`maxLength: throws if greater than max value ${{ val }}`, () => {
+            // arrange
+            const paramName = 'val';
+            const max = val.length - 1;
+
+            // act
+            validator.checkValue(paramName, val).maxLength(max);
+
+            // assert
+            expect(validator.rangeErrors.size).toBe(1);
+            expect(validator.rangeErrors.has(paramName)).toBe(true);
+            expect(validator.rangeErrors.get(paramName).length).toBe(1);
+            expect(validator.rangeErrors.get(paramName)[0])
+                .toBe(`Expected ${paramName} length to be less or equal to ${max}.`);
+        });
+
+        it(`maxLength: doesn't throw on equal length ${{ val }}`, () => {
+            // arrange
+            const paramName = 'middle';
+
+            // act
+            validator.checkValue(paramName, val).maxLength(val.length);
+
+            // assert
             expect(validator.rangeErrors.size).toBe(0);
         });
     }

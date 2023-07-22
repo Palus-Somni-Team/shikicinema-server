@@ -22,8 +22,8 @@ export class VideoRequestService {
         createdBy?: number,
         reviewedBy?: number,
     ): Promise<[VideoRequestEntity[], number]> {
-        DevAssert.Check('limit', limit).notNull().between(1, 100);
-        DevAssert.Check('offset', offset).notNull().greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const where = toSqlWhere({
             id,

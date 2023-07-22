@@ -59,19 +59,4 @@ describe('UserAssertionValidator', () => {
 
         expect(wasThrown).toBe(true);
     });
-
-    it('Do nothing on throwCollected', () => {
-        // arrange
-        let wasThrown = false;
-
-        // act
-        try {
-            UserAssertionValidator.instance.throwCollected();
-        } catch (e) {
-            wasThrown = true;
-        }
-
-        // assert
-        expect(wasThrown).toBe(false);
-    });
 });

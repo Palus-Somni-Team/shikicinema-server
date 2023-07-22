@@ -24,17 +24,17 @@ export class UserService {
     ) {}
 
     async findById(id: number): Promise<UserEntity> {
-        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
 
         const user = await this.repository.findOne({ where: { id }, relations: ['roles', 'uploader'] });
 
-        UserAssert.Check('user', user).exists();
+        UserAssert.check('user', user).exists();
 
         return user;
     }
 
     findByLogin(login: string): Promise<UserEntity> {
-        DevAssert.Check('login', login).notNull().notEmpty();
+        DevAssert.check('login', login).notNullish().notEmpty();
 
         return this.repository.findOneBy({ login });
     }
@@ -50,8 +50,8 @@ export class UserService {
         roles?: Role[],
         createdAt?: Date,
     ): Promise<[UserEntity[], number]> {
-        DevAssert.Check('limit', limit).notNull().between(1, 100);
-        DevAssert.Check('offset', offset).notNull().greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const where = toSqlWhere({
             id,
@@ -67,7 +67,7 @@ export class UserService {
     }
 
     async create(user: CreateUser): Promise<UserEntity> {
-        DevAssert.Check('user', user).notNull();
+        DevAssert.check('user', user).notNullish();
 
         try {
             return await this.dataSource.transaction(async (entityManager) => {
@@ -92,8 +92,8 @@ export class UserService {
     }
 
     async update(id: number, request: UpdateUser): Promise<UserEntity> {
-        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
-        DevAssert.Check('request', request).notNull();
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+        DevAssert.check('request', request).notNullish();
 
         const {
             email,
@@ -107,7 +107,7 @@ export class UserService {
             const rolesRepo = await entityManager.getRepository(UserRolesEntity);
             const userEntity = await usersRepo.findOne({ where: { id }, relations: ['roles', 'uploader'] });
 
-            UserAssert.Check('user', userEntity).exists();
+            UserAssert.check('user', userEntity).exists();
 
             userEntity.email = email ?? userEntity.email;
             userEntity.password = password ?? userEntity.password;
@@ -125,7 +125,7 @@ export class UserService {
     }
 
     async delete(id: number): Promise<void> {
-        DevAssert.Check('id', id).notNull().greaterOrEqualTo(0);
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
 
         const { affected } = await this.repository.delete({ id });
 

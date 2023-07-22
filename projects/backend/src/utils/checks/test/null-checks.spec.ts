@@ -1,26 +1,19 @@
 import { TestValidator } from '~backend/utils/checks/test/test-validator';
 
 describe('isNull', () => {
+    const validator = new TestValidator();
+
+    beforeEach(() => {
+        validator.clear();
+    });
+
     it('doesn\'t throw if null or undefined', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
-        validator.checkValue(paramName, null).isNull();
-        validator.checkValue(paramName, undefined).isNull();
-
-        // assert
-        expect(validator.argumentNotNullErrors.size).toBe(0);
-    });
-
-    it('skip following checks', () => {
-        // arrange
-        const paramName = 'key';
-        const validator = new TestValidator();
-
-        // act
-        validator.checkValue(paramName, null).isNull().lengthBetween(1, 2);
+        validator.checkValue(paramName, null).isNullish();
+        validator.checkValue(paramName, undefined).isNullish();
 
         // assert
         expect(validator.argumentNotNullErrors.size).toBe(0);
@@ -29,23 +22,21 @@ describe('isNull', () => {
     it('throws if argument not null or undefined', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
-        validator.checkValue(paramName, {}).isNull();
+        validator.checkValue(paramName, {}).isNullish();
 
         // assert
         expect(validator.argumentNotNullErrors.size).toBe(1);
         expect(validator.argumentNotNullErrors.has(paramName)).toBe(true);
         expect(validator.argumentNotNullErrors.get(paramName).length).toBe(1);
         expect(validator.argumentNotNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} to be null.`);
+            .toBe(`Expected ${paramName} to be nullish.`);
     });
 
     it('notExists method changes message', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
 
         // act
         validator.checkValue(paramName, {}).notExists();
@@ -61,7 +52,6 @@ describe('isNull', () => {
     it('uses custom message if passed', () => {
         // arrange
         const paramName = 'key';
-        const validator = new TestValidator();
         const message = 'custom message';
 
         // act
