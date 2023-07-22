@@ -1,15 +1,21 @@
 import { AuthAction } from '../../state/auth.action';
 import { AuthApiService } from '../../services/auth-api.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
     selector: 'app-auth-page',
     templateUrl: './auth-page.component.html',
     styleUrls: ['./auth-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [ReactiveFormsModule, MatButtonModule, MatDividerModule, MatFormFieldModule, MatInputModule],
 })
 export class AuthPageComponent {
     form = this._fb.group({

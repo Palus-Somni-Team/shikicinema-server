@@ -1,7 +1,7 @@
-import { AdminUser } from '@shikicinema/types';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
+import { environment } from '~admin-root/environments/environment';
+import { AdminUser } from '@shikicinema/types/dist/types';
 
 @Injectable({
     providedIn: 'root',

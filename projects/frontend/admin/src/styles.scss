@@ -1,20 +1,2 @@
 /* You can add global styles to this file, and also import other style files */
 @import './assets/styles/variables';
-@import './assets/styles/button';
-@import './assets/styles/input';
-
-html, body { height: 100%; }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-
-  background: var(--bg-01);
-}
-
-::ng-deep .mat-mdc-text-field-wrapper {
-  border-radius: 16px;
-}
-
-a {
-  text-decoration: none;
-}
