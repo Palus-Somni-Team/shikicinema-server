@@ -1,13 +1,14 @@
-import { Between, DataSource, EntityManager, Raw, Repository } from 'typeorm';
+import { Between, DataSource, Raw, Repository } from 'typeorm';
 import { CreateVideoRequest, VideoKindEnum, VideoQualityEnum } from '@shikicinema/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AlreadyExistsException } from '~backend/utils/exceptions/already-exists.exception';
 import { AnimeEpisodeInfo } from '~backend/routes/api/video/dto';
-import { Assert } from '~backend/utils/validation/assert';
-import { AuthorEntity, UploaderEntity, VideoEntity } from '~backend/entities';
+import { AuthorService } from '~backend/services/author/author.service';
+import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
+import { UploaderEntity, VideoEntity } from '~backend/entities';
+import { UserAssert } from '~backend/utils/checks/user/user-assert';
 import { normalizeString, toSqlWhere } from '~backend/utils/postgres.utils';
 
 @Injectable()
@@ -16,9 +17,13 @@ export class VideoService {
         @InjectRepository(VideoEntity)
         private readonly repository: Repository<VideoEntity>,
         private readonly dataSource: DataSource,
+        private readonly authorService: AuthorService,
     ) {}
 
     async create(uploaderId: number, video: CreateVideoRequest): Promise<VideoEntity> {
+        DevAssert.check('uploaderId', uploaderId).notNullish();
+        DevAssert.check('video', video).notNullish();
+
         return this.dataSource.transaction(async (entityManager) => {
             const uploaderRepo = await entityManager.getRepository(UploaderEntity);
             const videoRepo = await entityManager.getRepository(VideoEntity);
@@ -26,28 +31,29 @@ export class VideoService {
             const uploaderEntity = await uploaderRepo.findOneBy({ id: uploaderId });
             let videoEntity = await videoRepo.findOneBy({ url: video.url });
 
-            if (videoEntity) {
-                throw new AlreadyExistsException();
-            } else {
-                const authorEntity = await this.getOrCreateAuthorEntity(entityManager, video.author);
+            UserAssert.check('video', videoEntity).notExists();
 
-                videoEntity = new VideoEntity(
-                    video.animeId,
-                    video.episode,
-                    video.url,
-                    video.kind,
-                    video.language,
-                    video.quality,
-                    authorEntity,
-                    uploaderEntity,
-                );
+            const authorEntity = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
 
-                return videoRepo.save(videoEntity);
-            }
+            videoEntity = new VideoEntity(
+                video.animeId,
+                video.episode,
+                video.url,
+                video.kind,
+                video.language,
+                video.quality,
+                authorEntity,
+                uploaderEntity,
+            );
+
+            return videoRepo.save(videoEntity);
         });
     }
 
     async update(id: number, video: UpdateVideoRequest): Promise<VideoEntity> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+        DevAssert.check('video', video).notNullish();
+
         return this.dataSource.transaction(async (entityManager) => {
             const videoRepo = await entityManager.getRepository(VideoEntity);
 
@@ -56,12 +62,10 @@ export class VideoService {
                 relations: ['uploader', 'author'],
             });
 
-            if (!entity) {
-                throw new NotFoundException();
-            }
+            UserAssert.check('video', entity).exists();
 
             if (video.author && normalizeString(video.author) !== normalizeString(entity.author.name)) {
-                const authorEntity = await this.getOrCreateAuthorEntity(entityManager, video.author);
+                const authorEntity = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
                 entity.author = authorEntity;
             }
 
@@ -78,10 +82,14 @@ export class VideoService {
     }
 
     async delete(id: number): Promise<void> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+
         await this.repository.delete({ id });
     }
 
     async findById(id: number): Promise<VideoEntity> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+
         const video = await this.repository.findOne({
             where: { id },
             relations: ['uploader', 'author'],
@@ -100,10 +108,10 @@ export class VideoService {
         animeId: number,
         episode: number
     ): Promise<[VideoEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
-        Assert.Argument('animeId', animeId).greaterOrEqualTo(0);
-        Assert.Argument('episode', episode).greaterOrEqualTo(1);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
+        DevAssert.check('animeId', animeId).notNullish().greaterOrEqualTo(0);
+        DevAssert.check('episode', episode).notNullish().greaterOrEqualTo(1);
 
         return this.repository.findAndCount({
             where: { animeId, episode },
@@ -125,8 +133,8 @@ export class VideoService {
         quality?: VideoQualityEnum,
         uploader?: string,
     ): Promise<[VideoEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const where = toSqlWhere({ id, animeId, episode, kind, language, quality });
 
@@ -152,8 +160,9 @@ export class VideoService {
     }
 
     async getInfo(animeId: number, limit: number, offset: number): Promise<[AnimeEpisodeInfo[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.check('animeId', animeId).notNullish().greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         return this.dataSource.transaction(async (manager) => {
             const repo = manager.getRepository(VideoEntity);
@@ -219,19 +228,12 @@ export class VideoService {
     }
 
     async incrementWatches(id: number): Promise<void> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+
         const { affected } = await this.repository.increment({ id }, 'watchesCount', 1);
 
         if (affected === 0) {
             throw new NotFoundException();
         }
-    }
-
-    private async getOrCreateAuthorEntity(entityManager: EntityManager, author: string): Promise<AuthorEntity> {
-        const authorRepo = await entityManager.getRepository(AuthorEntity);
-        const entity = await authorRepo.findOneBy({
-            name: Raw((_) => `UPPER(${_}) = :name`, { name: normalizeString(author) }),
-        });
-
-        return entity ?? new AuthorEntity(author);
     }
 }

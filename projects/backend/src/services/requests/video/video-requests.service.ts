@@ -1,4 +1,4 @@
-import { Assert } from '~backend/utils/validation/assert';
+import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
@@ -22,8 +22,8 @@ export class VideoRequestService {
         createdBy?: number,
         reviewedBy?: number,
     ): Promise<[VideoRequestEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const where = toSqlWhere({
             id,

@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 
 export class AlreadyExistsException extends ConflictException {
-    constructor() {
-        super('Object already exists');
+    constructor(message?: string) {
+        super(message ? message : 'Object already exists');
     }
 }
