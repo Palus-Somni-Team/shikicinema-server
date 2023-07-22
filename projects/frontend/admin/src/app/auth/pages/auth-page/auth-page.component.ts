@@ -30,7 +30,7 @@ export class AuthPageComponent {
         private readonly _api: AuthApiService
     ) { }
 
-    async auth() {
+    auth() {
         const { login, password } = this.form.value as any;
         this._store.dispatch(AuthAction.Login({ login, password }));
     }

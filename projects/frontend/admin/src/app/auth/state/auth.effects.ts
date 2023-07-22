@@ -1,5 +1,4 @@
-import { Action } from '@ngrx/store';
-import { Actions, OnInitEffects, ROOT_EFFECTS_INIT, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { AdminUser } from '@shikicinema/types';
 import { AuthAction } from './auth.action';
 import { AuthApiService } from '../services/auth-api.service';
@@ -17,8 +16,9 @@ export class AuthEffects {
 
     logout$ = createEffect(() => this._actions$.pipe(
         ofType(AuthAction.Logout),
+        switchMap(() => this._api.logout()),
         tap(() => this._router.navigateByUrl('/auth'))
-    ));
+    ), { dispatch: false });
 
     login$ = createEffect(() => this._actions$.pipe(
         ofType(AuthAction.Login),
@@ -34,6 +34,7 @@ export class AuthEffects {
     init$ = createEffect(() => this._actions$.pipe(
         ofType(ROOT_EFFECTS_INIT),
         switchMap(() => this._api.me()),
-        map((user) => AuthAction.Check(user))
+        map((user) => AuthAction.Check(user)),
+        tap(() => this._router.navigateByUrl(''))
     ));
 }

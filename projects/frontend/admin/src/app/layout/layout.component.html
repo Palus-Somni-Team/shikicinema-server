@@ -1,5 +1,36 @@
-<app-header></app-header>
-<app-menu></app-menu>
-<div class="layout__content">
-  <router-outlet></router-outlet>
-</div>
+<mat-toolbar color="primary">
+  <span class="mat-headline-5 m-0">Schikicinema Admin</span>
+  <button mat-button color="basic" class="ml-auto" (click)="logout()">Выйти</button>
+</mat-toolbar>
+
+<mat-sidenav-container color="primary">
+  <mat-sidenav mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item
+         routerLink="/profile"
+         routerLinkActive="mdc-list-item--activated">
+        Профиль
+      </a>
+      <a mat-list-item
+         routerLink=""
+         routerLinkActive="mdc-list-item--activated"
+         [routerLinkActiveOptions]="{ exact: true }">
+        Показатели
+      </a>
+      <a mat-list-item
+         routerLink="/users"
+         routerLinkActive="mdc-list-item--activated">
+        Пользователи
+      </a>
+      <a mat-list-item
+         routerLink="/videos"
+         routerLinkActive="mdc-list-item--activated">
+        Видео
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

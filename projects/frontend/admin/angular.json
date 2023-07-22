@@ -33,7 +33,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "deeppurple-amber.scss"
+              "theme.scss"
             ],
             "scripts": []
           },
@@ -97,7 +97,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "deeppurple-amber.scss"
+              "theme.scss"
             ],
             "scripts": []
           }

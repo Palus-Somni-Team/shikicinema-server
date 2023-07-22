@@ -1,13 +1,12 @@
 import { AuthGuard } from './auth/services/auth.guard';
 import { LayoutComponent } from './layout/layout.component';
-import { LayoutModule } from './layout/layout.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
         path: 'auth',
-        loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+        loadChildren: () => import('./auth/auth-routing.module').then((m) => m.AuthRoutingModule),
     },
     {
         path: '',
@@ -16,11 +15,11 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+                loadChildren: () => import('./dashboard/dashboard-routing.module').then((m) => m.DashboardRoutingModule),
             },
             {
                 path: 'users',
-                loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+                loadChildren: () => import('./users/users-routing.module').then((m) => m.UsersRoutingModule),
             },
         ],
     },
@@ -32,8 +31,7 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(routes),
-        LayoutModule,
+        RouterModule.forRoot(routes)
     ],
     exports: [RouterModule],
 })
