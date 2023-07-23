@@ -1,0 +1,15 @@
+<form class="auth mat-elevation-z2" [formGroup]="form" (submit)="auth()">
+  <span class="mat-headline-5">Schikicinema</span>
+
+  <mat-form-field>
+    <mat-label>Логин:</mat-label>
+    <input formControlName="login" matInput>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Пароль:</mat-label>
+    <input type="password" formControlName="password" matInput>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary">Войти</button>
+</form>

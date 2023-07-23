@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$typography:  mat.define-typography-config();
+$theme: mat.define-light-theme((
+        color: (
+                primary: mat.define-palette(mat.$blue-grey-palette),
+                accent: mat.define-palette(mat.$teal-palette)
+        ),
+        typography: $typography
+));
+
+@include mat.typography-hierarchy($typography);
+@include mat.all-component-themes($theme);
+
+
+.material-icons {
+  font-size: 24px;
+  font-family: 'Material Icons', 'Material Icons';
+
+  .mat-badge-content {
+    font-family: 'Roboto';
+  }
+}

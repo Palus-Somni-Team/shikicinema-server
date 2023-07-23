@@ -1,6 +1,6 @@
 # compiled output
 /dist
-/node_modules
+node_modules
 /projects/**/dist
 /projects/**/coverage
 
@@ -33,3 +33,6 @@ lerna-debug.log*
 
 # IDE - VSCode
 .vscode
+
+# Angular cache
+.angular
