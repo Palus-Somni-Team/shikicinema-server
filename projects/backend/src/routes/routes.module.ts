@@ -8,8 +8,10 @@ import { ApiModule } from '~backend/routes/api/api.module';
 import { AuthModule } from '~backend/routes/auth/auth.module';
 import { AuthorModule } from '~backend/routes/api/author/authors.module';
 import { OAuthModule } from '~backend/routes/oauth/oauth.module';
+import { RequestsModule } from '~backend/routes/api/requests/requests.module';
 import { UserModule } from '~backend/routes/api/user/user.module';
 import { VideoModule } from '~backend/routes/api/video/video.module';
+import { VideoRequestsModule } from '~backend/routes/api/requests/video/video-requests.module';
 
 const routes: Routes = [
     {
@@ -43,6 +45,16 @@ const routes: Routes = [
                     {
                         path: '/videos',
                         module: AdminVideoModule,
+                    },
+                ],
+            },
+            {
+                path: '/requests',
+                module: RequestsModule,
+                children: [
+                    {
+                        path: '/videos',
+                        module: VideoRequestsModule,
                     },
                 ],
             },

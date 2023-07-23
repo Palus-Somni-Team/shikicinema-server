@@ -1,6 +1,6 @@
-import { Assert } from '~backend/utils/validation/assert';
 import { AuthorEntity } from '~backend/entities';
-import { FindManyOptions, Raw, Repository } from 'typeorm';
+import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
+import { EntityManager, FindManyOptions, Raw, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { normalizeString } from '~backend/utils/postgres.utils';
@@ -13,8 +13,8 @@ export class AuthorService {
     ) {}
 
     get(name: string, limit: number, offset: number): Promise<[AuthorEntity[], number]> {
-        Assert.Argument('limit', limit).between(1, 100);
-        Assert.Argument('offset', offset).greaterOrEqualTo(0);
+        DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
+        DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
 
         const queryOptions: FindManyOptions<AuthorEntity> = {
             order: { name: 'asc' },
@@ -32,5 +32,34 @@ export class AuthorService {
         }
 
         return this.repository.findAndCount(queryOptions);
+    }
+
+    /**
+     * Tries to find author in db and returns it.
+     * In case when author not found creates new.
+     * @param {EntityManager} entityManager Entity manager.
+     * @param {string} author Author's name.
+     * @param {boolean} save Whether the entity should be saved to db after creation or not.
+     * @return {Promise<AuthorEntity>} Author entity instance.
+     */
+    public async getOrCreateAuthorEntity(
+        entityManager: EntityManager,
+        author: string,
+        save = false,
+    ): Promise<AuthorEntity> {
+        DevAssert.check('entityManager', entityManager).notNullish();
+        author = normalizeString(author);
+        DevAssert.check('author', author).notNullish().minLength(1).maxLength(256);
+
+        const repo = await entityManager.getRepository(AuthorEntity);
+        let entity = await repo.findOneBy({
+            name: Raw((_) => `UPPER(${_}) = :name`, { name: author }),
+        });
+
+        if (save && !entity) {
+            entity = await repo.save(new AuthorEntity(author));
+        }
+
+        return entity ?? new AuthorEntity(author);
     }
 }

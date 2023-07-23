@@ -39,7 +39,7 @@ describe('Admin (e2e)', () => {
             {},
             { animeId },
             { episode },
-            { animeId, episode, author: 'jfhbdfgjbfdgdfgkjdf' },
+            { animeId, episode, author: 'UPDATED' },
             { animeId, episode, author: null },
             { animeId, episode, url: 'https://kekeke.lel' },
             { animeId, episode, url: 'http://lelelele.kek' },
