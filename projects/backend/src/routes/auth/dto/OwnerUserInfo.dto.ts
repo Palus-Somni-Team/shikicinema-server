@@ -63,7 +63,7 @@ export class OwnerUserInfo {
         this.name = name;
         this.email = email;
         this.roles = roles ? roles.map(userRolesEntityMapToRole) : [];
-        this.shikimoriId = uploader?.shikimoriId;
+        this.shikimoriId = uploader?.shikimoriId || null;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

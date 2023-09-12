@@ -2,9 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { GetUsersResponse as Response, User } from '@shikicinema/types';
 
+import { UserInfo } from '~backend/routes/api/user/dto/UserInfo.dto';
+
 export class GetUsersResponse implements Response {
     @Expose()
-    @ApiProperty()
+    @ApiProperty({ type: [UserInfo] })
     data: User[];
 
     @Expose()

@@ -34,6 +34,6 @@ export class UserInfo implements User {
         this.id = id;
         this.login = login;
         this.name = name;
-        this.shikimoriId = uploader?.shikimoriId;
+        this.shikimoriId = uploader?.shikimoriId || null;
     }
 }

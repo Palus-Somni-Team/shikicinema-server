@@ -28,6 +28,6 @@ export class UploaderInfo implements Uploader {
         this.id = id;
         this.banned = banned;
         this.shikimoriId = shikimoriId;
-        this.userId = user?.id || null;
+        this.userId = user ? user.id : null;
     }
 }
