@@ -57,6 +57,7 @@ describe('Auth (e2e)', () => {
                 roles: ['user'],
                 createdAt: user1.createdAt.toISOString(),
                 updatedAt: user1.updatedAt.toISOString(),
+                shikimoriId: null,
             });
         },
     );
@@ -79,6 +80,7 @@ describe('Auth (e2e)', () => {
                 roles: ['user'],
                 createdAt: user1.createdAt.toISOString(),
                 updatedAt: user1.updatedAt.toISOString(),
+                shikimoriId: null,
             });
         },
     );

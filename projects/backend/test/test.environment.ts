@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { initSession, initSwagger } from '~backend/utils/bootstrap.utils';
 
 import { AppModule } from '~backend/app.module';
+import { RequestsWithErrorsInterceptor } from '~backend/interceptors/requests-with-errors.interceptor';
 import { TestClient } from '~backend-e2e/test.client';
 
 export class TestEnvironment {
@@ -32,7 +33,10 @@ export class TestEnvironment {
         beforeAll(async () => {
             const moduleFixture: TestingModule = await Test.createTestingModule({
                 imports: [AppModule],
-            }).compile();
+            })
+                .overrideInterceptor(RequestsWithErrorsInterceptor)
+                .useValue(jest.fn())
+                .compile();
 
             this.app = moduleFixture.createNestApplication();
             this._dataSource = this.app.get(DataSource);

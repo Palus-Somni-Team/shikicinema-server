@@ -1,8 +1,11 @@
+import { PatchUploaderRequest } from '~backend/routes/api/admin/uploaders/dto/patch-uploader-request.dto';
 import { TestAdminEnvironment } from '~backend-e2e/test.admin.environment';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
+import { UploaderInfo } from '~backend/routes/auth/dto/UploaderInfo.dto';
 import { VideoEntity } from '~backend/entities';
 import { VideoKindEnum, VideoQualityEnum } from '@shikicinema/types';
 import { VideoResponse } from '~backend/routes/api/video/dto';
+import { plainToInstance } from 'class-transformer';
 
 describe('Admin (e2e)', () => {
     const user1LoginData = { login: 'user1', password: '12345678' };
@@ -161,5 +164,65 @@ describe('Admin (e2e)', () => {
                 return env.adminClient.deleteVideo(video.id);
             },
         );
+    });
+
+    describe('/UPLOADERS', () => {
+        const positivePatchReqBodies: Array<[number, PatchUploaderRequest, UploaderInfo]> = [
+            [
+                5,
+                { banned: true },
+                plainToInstance(UploaderInfo, { id: 5, banned: true, shikimoriId: 'has-no-user-1', userId: null }),
+            ],
+            [
+                6,
+                { banned: false },
+                plainToInstance(UploaderInfo, { id: 6, banned: false, shikimoriId: 'has-no-user-2', userId: null }),
+            ],
+            [
+                7,
+                { userId: 3 },
+                plainToInstance(UploaderInfo, { id: 7, banned: false, shikimoriId: 'has-no-user-3', userId: 3 }),
+            ],
+            [
+                8,
+                { userId: 5, shikimoriId: 'has-user' },
+                plainToInstance(UploaderInfo, { id: 8, banned: false, shikimoriId: 'has-user', userId: 5 }),
+            ],
+            [
+                9,
+                { userId: 6, shikimoriId: 'has-user-1', banned: true },
+                plainToInstance(UploaderInfo, { id: 9, banned: true, shikimoriId: 'has-user-1', userId: 6 }),
+            ],
+            [
+                10,
+                { userId: 7, shikimoriId: 'has-user-2', banned: true },
+                plainToInstance(UploaderInfo, { id: 10, banned: true, shikimoriId: 'has-user-2', userId: 7 }),
+            ],
+            [
+                11,
+                { shikimoriId: 'other-user' },
+                plainToInstance(UploaderInfo, { id: 11, banned: false, shikimoriId: 'other-user', userId: null }),
+            ],
+            [
+                12,
+                { shikimoriId: 'other-user-1', banned: true },
+                plainToInstance(UploaderInfo, { id: 12, banned: true, shikimoriId: 'other-user-1', userId: null }),
+            ],
+        ];
+
+        const negativePatchReqBodies: Partial<PatchUploaderRequest>[] = [
+            {},
+        ];
+
+        for (const [index, [uploaderId, positiveReqBody, expected]] of positivePatchReqBodies.entries()) {
+            it(
+                `should update uploader #${index} PATCH /api/admin/uploaders/:id`,
+                async () => {
+                    const res = await env.adminClient.updateUploader(uploaderId, positiveReqBody);
+
+                    expect(res).toStrictEqual(expected);
+                },
+            );
+        }
     });
 });
