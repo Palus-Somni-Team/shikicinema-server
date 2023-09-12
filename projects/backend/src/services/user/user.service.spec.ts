@@ -18,11 +18,11 @@ import { UserService } from '~backend/services/user/user.service';
 
 describe('UserService', () => {
     const id = 123;
-    const oneUserEntity = new UserEntity('user1', '12345678', 'user1@email.com');
+    const oneUserEntity = new UserEntity('user1', '12345678', 'user1@email.com', null);
     const userEntities = [
-        new UserEntity('user2', '12345678', 'user2email.com'),
-        new UserEntity('user3', '12345678', 'user3email.com'),
-        new UserEntity('user4', '12345678', 'user4email.com'),
+        new UserEntity('user2', '12345678', 'user2email.com', null),
+        new UserEntity('user3', '12345678', 'user3email.com', null),
+        new UserEntity('user4', '12345678', 'user4email.com', null),
     ];
     const createQuery = {
         login: oneUserEntity.login,

@@ -26,7 +26,7 @@ import { UserService } from '~backend/services/user/user.service';
 describe('AuthService', () => {
     const fakeUserPassword = 'fakeUserPass';
     const fakeUserHashedPassword = bcrypt.hashSync(fakeUserPassword, 10);
-    const fakeUserEntity = new UserEntity('fakeUser', fakeUserHashedPassword, 'fake@email.com');
+    const fakeUserEntity = new UserEntity('fakeUser', fakeUserHashedPassword, 'fake@email.com', null);
     const fakeRequest = {
         user: 123,
         logout(done) {

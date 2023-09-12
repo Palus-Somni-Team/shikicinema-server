@@ -74,18 +74,6 @@ export class AuthService {
         }
     }
 
-    async newUploader(req: IRequest, shikimoriToken: ShikimoriAccessToken): Promise<UploaderEntity> {
-        let shikimoriUser: ShikimoriUser;
-
-        try {
-            shikimoriUser = await this.shikimoriService.getUserInfoByToken(shikimoriToken.token);
-        } catch (e) {
-            throw new BadRequestException('Your shikimori access token is expired');
-        }
-
-        return this.uploaderService.newShikimoriUploader(shikimoriUser.id, req.user ? req.user : null);
-    }
-
     register(user: RegisterUser): Promise<UserEntity> {
         return this.userService.create({
             login: user.login,

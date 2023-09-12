@@ -1,4 +1,5 @@
 import * as request from 'supertest';
+import { plainToInstance } from 'class-transformer';
 
 import {
     CreateVideoRequest,
@@ -11,10 +12,14 @@ import {
 } from '~backend/routes/api/video/dto';
 import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
+import { GetUploadersRequest } from '~backend/routes/api/uploaders/dto';
+import { GetUploadersResponse } from '~backend/routes/api/uploaders/dto/get-uploaders-response.dto';
 import { GetVideoRequestsRequest, GetVideoRequestsResponse } from '~backend/routes/api/requests/video/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
+import { PatchUploaderRequest } from '~backend/routes/api/admin/uploaders/dto/patch-uploader-request.dto';
+import { ShikimoriAccessToken } from '~backend/routes/auth/dto/ShikimoriAccessToken.dto';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
-import { plainToInstance } from 'class-transformer';
+import { UploaderInfo } from '~backend/routes/auth/dto/UploaderInfo.dto';
 
 export class TestClient {
     private readonly server: any;
@@ -141,6 +146,14 @@ export class TestClient {
         return this.checkResponse(VideoResponse, this.updateVideoRaw(id, req));
     }
 
+    public updateUploaderRaw(id: number, req: PatchUploaderRequest): request.Test {
+        return this.patch(`/api/admin/uploaders/${id}`, req);
+    }
+
+    public updateUploader(id: number, req: PatchUploaderRequest): Promise<UploaderInfo> {
+        return this.checkResponse(UploaderInfo, this.updateUploaderRaw(id, req));
+    }
+
     //#endregion Admin
 
     //#region Video
@@ -229,12 +242,39 @@ export class TestClient {
 
     //#endregion Video Requests
 
+    //#region Video Requests
+
+    public getUploadersRaw(req: GetUploadersRequest): request.Test {
+        return this.get('/api/uploaders', req);
+    }
+
+    public getUploaders(req: GetUploadersRequest): Promise<GetUploadersResponse> {
+        return this.checkResponse(GetUploadersResponse, this.getUploadersRaw(req));
+    }
+
+    public createUploaderRaw(req: ShikimoriAccessToken): request.Test {
+        return this.post('/api/uploaders', req);
+    }
+
+    public createUploader(req: ShikimoriAccessToken): Promise<UploaderInfo> {
+        return this.checkResponse(UploaderInfo, this.createUploaderRaw(req));
+    }
+
+    //#endregion Video Requests
+
     //#region Util
 
     public async checkResponse<T>(type: { new(): T }, response: request.Test | request.Response): Promise<T> {
         const res = await response;
-        expect(res.status >= 200 && res.status < 300);
-        return plainToInstance(type, res.body);
+        const isOk = res.status >= 200 && res.status < 300;
+        const isClientError = res.status >= 400 && res.status < 500;
+
+        if (!isOk && !isClientError) {
+            throw new Error(`Should be 2XX or 4XX\n\tStatus: ${res.statusCode}\n\tResponse: ` +
+                JSON.stringify(res.body));
+        }
+
+        return isOk ? plainToInstance(type, res.body) : res.body;
     }
 
     public async checkEmptyResponse(response: request.Test | request.Response): Promise<void> {

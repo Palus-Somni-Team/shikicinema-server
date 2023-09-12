@@ -37,7 +37,7 @@
     "@nestjs/platform-express": "^9.3.12",
     "@nestjs/swagger": "^6.2.1",
     "@nestjs/typeorm": "^9.0.1",
-    "@shikicinema/types": "^0.0.1",
+    "@shikicinema/types": "^0.0.2",
     "@types/sqlite3": "^3.1.8",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",

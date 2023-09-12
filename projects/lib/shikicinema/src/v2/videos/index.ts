@@ -17,7 +17,6 @@ export * from './CreateVideoRequest';
 export * from './GetEpisodesRequest';
 export * from './GetVideosRequest';
 export * from './UpdateVideoRequest';
-export * from './Uploader';
 export * from './Video';
 export * from './VideoKindEnum';
 export * from './VideoQualityEnum';

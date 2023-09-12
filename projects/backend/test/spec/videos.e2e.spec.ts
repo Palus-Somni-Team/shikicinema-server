@@ -127,11 +127,12 @@ describe('Videos api (e2e)', () => {
                 author: 'some author',
                 kind: VideoKindEnum.ORIGINAL,
                 quality: VideoQualityEnum.WEB,
-                url: 'https://test.com/upload_video.mp4',
+                url: 'https://test.com/upload_video_1234567890.mp4',
             };
             const createVideoRes1 = await env.shikiAuthClient.createVideo(reqBody);
 
             reqBody.author = reqBody.author.toUpperCase() + ' ';
+            reqBody.url = 'https://test.com/upload_video_1234567890_other.mp4';
             const createVideoRes2 = await env.shikiAuthClient.createVideo(reqBody);
             expect(createVideoRes1.author).toStrictEqual(createVideoRes2.author);
         });

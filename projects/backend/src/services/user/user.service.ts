@@ -59,11 +59,16 @@ export class UserService {
             name,
             email,
             shikimoriId,
-            roles: roles ? { role: In(roles) } : roles,
+            roles: roles?.length > 0 ? { role: In(roles) } : undefined,
             createdAt,
         });
 
-        return this.repository.findAndCount({ where, skip: offset, take: limit });
+        return this.repository.findAndCount({
+            where,
+            relations: ['roles', 'uploader'],
+            skip: offset,
+            take: limit,
+        });
     }
 
     async create(user: CreateUser): Promise<UserEntity> {
@@ -74,7 +79,7 @@ export class UserService {
                 const usersRepo = entityManager.getRepository(UserEntity);
                 const rolesRepo = entityManager.getRepository(UserRolesEntity);
                 const { email, login, password, roles } = user;
-                const userEntity = await usersRepo.save(new UserEntity(login, password, email));
+                const userEntity = await usersRepo.save(new UserEntity(login, password, email, null));
 
                 userEntity.roles = await rolesRepo.save(
                     plainRoleMapToUserRolesEntity(userEntity, roles || [Role.user])

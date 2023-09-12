@@ -6,7 +6,7 @@ import { GetAdminUsersResponse as Response } from '@shikicinema/types';
 export class GetAdminUsersResponse implements Response {
     @Expose()
     @Type(() => AdminUserInfo)
-    @ApiProperty()
+    @ApiProperty({ type: [AdminUserInfo] })
     data: AdminUserInfo[];
 
     @Expose()

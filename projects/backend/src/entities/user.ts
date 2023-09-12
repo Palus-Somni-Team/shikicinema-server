@@ -53,7 +53,7 @@ export class UserEntity {
         login: string,
         password: string,
         email: string,
-        uploader: UploaderEntity = null,
+        uploader: UploaderEntity,
         name: string = login,
         createdAt: Date = new Date(),
         updateAt: Date = new Date(),

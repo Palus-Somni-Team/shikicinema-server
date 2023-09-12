@@ -24,7 +24,6 @@ import {
     RegisterUser,
     ShikimoriAccessToken,
     UploadTokenInfo,
-    UploaderInfo,
 } from '~backend/routes/auth/dto';
 import { LocalGuard } from '~backend/guards/local.guard';
 
@@ -75,14 +74,6 @@ export class AuthController extends BaseController {
     async register(@Req() req: IRequest, @Body() user: RegisterUser): Promise<OwnerUserInfo> {
         const newUser = await this.authService.register(user);
         return new OwnerUserInfo(newUser);
-    }
-
-    @Post('uploader')
-    @ApiResponse({ status: 201, description: 'New uploader created successfully', type: UploaderInfo })
-    @ApiResponse({ status: 400, description: 'Invalid or expired Shikimori token' })
-    async newUploader(@Req() req: IRequest, @Body() shikimoriToken: ShikimoriAccessToken): Promise<UploaderInfo> {
-        const newUploader = await this.authService.newUploader(req, shikimoriToken);
-        return new UploaderInfo(newUploader);
     }
 
     @HttpCode(HttpStatus.OK)
