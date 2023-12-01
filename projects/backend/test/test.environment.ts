@@ -9,6 +9,8 @@ import { TestClient } from '~backend-e2e/test.client';
 
 export class TestEnvironment {
     public static readonly AdminLoginData = { login: 'admin', password: '12345678' };
+    public static readonly User1ShikimoriData = { shikimoriId: '88005553535' };
+    public static readonly AdminShikimoriData = { shikimoriId: '13371337' };
 
     private _dataSource: DataSource;
     private _anonClient: TestClient;

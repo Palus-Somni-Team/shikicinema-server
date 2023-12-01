@@ -7,6 +7,7 @@ import { DataResponse } from '../../DataResponse';
  */
 export type GetVideoRequestsResponse = DataResponse<VideoRequest>;
 
+export * from './CreateVideoRequestRequest';
 export * from './GetVideoRequestsRequest'
 export * from './VideoRequestTypeEnum';
 export * from './VideoRequestStatusEnum';

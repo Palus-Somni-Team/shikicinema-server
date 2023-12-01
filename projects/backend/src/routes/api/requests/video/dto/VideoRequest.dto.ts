@@ -8,6 +8,7 @@ import {
     VideoRequestStatusEnum,
     VideoRequestTypeEnum,
 } from '@shikicinema/types';
+import { UploaderInfo } from '~backend/routes/auth/dto';
 import { UserInfo } from '~backend/routes/api/user/dto';
 import { VideoRequestEntity } from '~backend/entities';
 import { VideoResponse } from '~backend/routes/api/video/dto';
@@ -71,8 +72,8 @@ export class VideoRequest implements Interface {
 
     @Expose()
     @ApiProperty()
-    @Type(() => UserInfo)
-    createdBy: UserInfo;
+    @Type(() => UploaderInfo)
+    createdBy: UploaderInfo;
 
     @Expose()
     @ApiProperty()
@@ -95,7 +96,7 @@ export class VideoRequest implements Interface {
         this.updatedAt = entity.updatedAt;
         this.video = new VideoResponse(entity.video);
         this.author = entity.author ? new Author(entity.author) : null;
-        this.createdBy = new UserInfo(entity.createdBy);
+        this.createdBy = new UploaderInfo(entity.createdBy);
         this.reviewedBy = entity.reviewedBy ? new UserInfo(entity.reviewedBy) : null;
     }
 }

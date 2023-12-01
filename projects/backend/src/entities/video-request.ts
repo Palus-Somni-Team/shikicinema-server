@@ -1,4 +1,4 @@
-import { AuthorEntity, UserEntity, VideoEntity } from '~backend/entities';
+import { AuthorEntity, UploaderEntity, UserEntity, VideoEntity } from '~backend/entities';
 import {
     Column,
     CreateDateColumn,
@@ -9,7 +9,6 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { VideoKindEnum, VideoQualityEnum, VideoRequestStatusEnum, VideoRequestTypeEnum } from '@shikicinema/types';
-
 
 @Entity('video_requests')
 export class VideoRequestEntity {
@@ -56,9 +55,9 @@ export class VideoRequestEntity {
     @JoinColumn({ name: 'author_id' })
     author: AuthorEntity;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UploaderEntity)
     @JoinColumn({ name: 'created_by_id' })
-    createdBy: UserEntity;
+    createdBy: UploaderEntity;
 
     @ManyToOne(() => UserEntity, { nullable: true })
     @JoinColumn({ name: 'reviewed_by_id' })
@@ -77,7 +76,7 @@ export class VideoRequestEntity {
         reviewerComment: string,
         video: VideoEntity,
         author: AuthorEntity,
-        createdBy: UserEntity,
+        createdBy: UploaderEntity,
         reviewedBy: UserEntity,
     ) {
         this.type = type;

@@ -7,7 +7,8 @@
     "build:backend": "npm run build --prefix projects/backend",
     "build:types": "npm run build --prefix projects/lib/shikicinema",
     "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "test:backend": "npm run test --prefix projects/backend"
   },
   "workspaces": [
     "projects/lib/shikicinema",

@@ -1,6 +1,6 @@
 import { VideoRequestStatusEnum } from './VideoRequestStatusEnum';
 import { VideoRequestTypeEnum } from './VideoRequestTypeEnum'
-import { Author, User, Video, VideoKindEnum, VideoQualityEnum } from '../../..';
+import { Author, Uploader, User, Video, VideoKindEnum, VideoQualityEnum } from '../../..';
 
 /**
  * Interface for the classes representing video request.
@@ -11,13 +11,14 @@ import { Author, User, Video, VideoKindEnum, VideoQualityEnum } from '../../..';
  * @property {VideoKindEnum} kind Kind to set.
  * @property {VideoQualityEnum} quality Quality to set.
  * @property {string} language Language to set.
- * @property {string} comment Comment that describes reason or problem.
- * @property {string} rejectReason Describes why request was rejected.
+ * @property {string} comment Comment that describes a problem.
+ * @property {string} reviewerComment Reviewer comment.
  * @property {Date} createdAt When request was created.
  * @property {Date} updatedAt When request was updated last time.
  * @property {Video} video Video that request belongs to.
  * @property {Author} author Author to set.
- * @property {User} user Request creator.
+ * @property {Uploader} createdBy Request creator.
+ * @property {User} user Request reviewer.
  */
 export interface VideoRequest {
     id: number;
@@ -33,6 +34,6 @@ export interface VideoRequest {
     updatedAt: Date;
     video: Video;
     author: Author;
-    createdBy: User;
+    createdBy: Uploader;
     reviewedBy: User;
 }

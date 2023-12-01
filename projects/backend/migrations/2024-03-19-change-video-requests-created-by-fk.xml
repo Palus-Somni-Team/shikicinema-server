@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2024-03-19-change-video-requests-created-by-fk" author="BasicEC">
+
+        <dropForeignKeyConstraint baseTableName="video_requests"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_video_requests_created_by_id"/>
+
+        <addForeignKeyConstraint baseTableName="video_requests"
+                                 baseColumnNames="created_by_id"
+                                 constraintName="fk_video_requests_created_by_id"
+                                 referencedTableName="uploaders"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

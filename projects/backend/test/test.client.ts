@@ -9,9 +9,14 @@ import {
     SearchVideosRequest,
     VideoResponse,
 } from '~backend/routes/api/video/dto';
+import {
+    CreateVideoRequestRequest,
+    GetVideoRequestsRequest,
+    GetVideoRequestsResponse,
+    VideoRequest,
+} from '~backend/routes/api/requests/video/dto';
 import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
-import { GetVideoRequestsRequest, GetVideoRequestsResponse } from '~backend/routes/api/requests/video/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import { plainToInstance } from 'class-transformer';
@@ -225,6 +230,14 @@ export class TestClient {
 
     public getVideoRequests(req: GetVideoRequestsRequest): Promise<GetVideoRequestsResponse> {
         return this.checkResponse(GetVideoRequestsResponse, this.getVideoRequestsRaw(req));
+    }
+
+    public createVideoRequestsRaw(req: CreateVideoRequestRequest): request.Test {
+        return this.post('/api/requests/videos', req);
+    }
+
+    public createVideoRequests(req: CreateVideoRequestRequest): Promise<VideoRequest> {
+        return this.checkResponse(VideoRequest, this.createVideoRequestsRaw(req));
     }
 
     //#endregion Video Requests
