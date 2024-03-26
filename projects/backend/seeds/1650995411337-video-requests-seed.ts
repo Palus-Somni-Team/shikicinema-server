@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import {
+    UploaderEntity,
     UserEntity,
     VideoEntity,
     VideoRequestEntity,
@@ -13,11 +14,12 @@ export class VideoRequestsSeed1650995411337 implements MigrationInterface {
         const videoReqsRepo = await queryRunner.manager.getRepository(VideoRequestEntity);
         const videosRepo = await queryRunner.manager.getRepository(VideoEntity);
         const usersRepo = await queryRunner.manager.getRepository(UserEntity);
+        const uplodersRepo = await queryRunner.manager.getRepository(UploaderEntity);
 
         const videos = await videosRepo.find({ relations: ['author'] });
         const admin = await usersRepo.findOne({ where: { login: 'admin' } });
-        const creator1 = await usersRepo.findOne({ where: { login: 'user1' } });
-        const creator2 = await usersRepo.findOne({ where: { login: 'user2' } });
+        const user1Uploader = await uplodersRepo.findOne({ where: { shikimoriId: '88005553535' } });
+        const adminUploader = await uplodersRepo.findOne({ where: { shikimoriId: '13371337' } });
 
         seeds.push(
             new VideoRequestEntity(
@@ -31,7 +33,7 @@ export class VideoRequestsSeed1650995411337 implements MigrationInterface {
                 undefined,
                 videos[0],
                 undefined,
-                creator1,
+                user1Uploader,
                 null,
             ),
             new VideoRequestEntity(
@@ -45,7 +47,7 @@ export class VideoRequestsSeed1650995411337 implements MigrationInterface {
                 'No! It\'s my favorite anime!',
                 videos[0],
                 undefined,
-                creator2,
+                adminUploader,
                 admin,
             ),
             new VideoRequestEntity(
@@ -59,7 +61,7 @@ export class VideoRequestsSeed1650995411337 implements MigrationInterface {
                 '¯\\_(ツ)_/¯',
                 videos[1],
                 videos[1].author,
-                creator1,
+                user1Uploader,
                 admin,
             ),
         );
