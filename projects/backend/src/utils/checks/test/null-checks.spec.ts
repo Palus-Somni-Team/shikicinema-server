@@ -1,4 +1,5 @@
 import { TestValidator } from '~backend/utils/checks/test/test-validator';
+import { assertValidatorErrors } from '~backend/utils/checks/test/check-test.utils';
 
 describe('isNull', () => {
     const validator = new TestValidator();
@@ -27,11 +28,7 @@ describe('isNull', () => {
         validator.checkValue(paramName, {}).isNullish();
 
         // assert
-        expect(validator.argumentNotNullErrors.size).toBe(1);
-        expect(validator.argumentNotNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNotNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNotNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} to be nullish.`);
+        assertValidatorErrors(validator.argumentNotNullErrors, paramName, `Expected ${paramName} to be nullish.`);
     });
 
     it('notExists method changes message', () => {
@@ -42,11 +39,7 @@ describe('isNull', () => {
         validator.checkValue(paramName, {}).notExists();
 
         // assert
-        expect(validator.argumentNotNullErrors.size).toBe(1);
-        expect(validator.argumentNotNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNotNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNotNullErrors.get(paramName)[0])
-            .toBe(`${paramName} is already exists.`);
+        assertValidatorErrors(validator.argumentNotNullErrors, paramName, `${paramName} is already exists.`);
     });
 
     it('uses custom message if passed', () => {
@@ -58,10 +51,6 @@ describe('isNull', () => {
         validator.checkValue(paramName, {}).notExists(message);
 
         // assert
-        expect(validator.argumentNotNullErrors.size).toBe(1);
-        expect(validator.argumentNotNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNotNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNotNullErrors.get(paramName)[0])
-            .toBe(message);
+        assertValidatorErrors(validator.argumentNotNullErrors, paramName, message);
     });
 });

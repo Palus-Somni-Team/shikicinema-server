@@ -1,4 +1,5 @@
 import { TestValidator } from '~backend/utils/checks/test/test-validator';
+import { assertValidatorErrors } from '~backend/utils/checks/test/check-test.utils';
 
 describe('Number checks', () => {
     const cases = [
@@ -13,7 +14,7 @@ describe('Number checks', () => {
     });
 
     for (const { less, middle, greater } of cases) {
-        it(`greaterOrEqualTo: throws on (${{ less, greater }})`, () => {
+        it(`greaterOrEqualTo: throws on (${less} ${greater})`, () => {
             // arrange
             const paramName = 'less';
 
@@ -21,14 +22,14 @@ describe('Number checks', () => {
             validator.checkValue(paramName, less).greaterOrEqualTo(greater);
 
             // assert
-            expect(validator.rangeErrors.size).toBe(1);
-            expect(validator.rangeErrors.has(paramName)).toBe(true);
-            expect(validator.rangeErrors.get(paramName).length).toBe(1);
-            expect(validator.rangeErrors.get(paramName)[0])
-                .toBe(`Expected ${paramName} to be greater or equal to ${greater}.`);
+            assertValidatorErrors(
+                validator.rangeErrors,
+                paramName,
+                `Expected ${paramName} to be greater or equal to ${greater}.`,
+            );
         });
 
-        it(`greaterOrEqualTo: doesn't throw on ${{ greater, less }}`, () => {
+        it(`greaterOrEqualTo: doesn't throw on ${greater} ${less}`, () => {
             // arrange
             const paramName = 'greater';
 
@@ -50,7 +51,7 @@ describe('Number checks', () => {
             expect(validator.rangeErrors.size).toBe(0);
         });
 
-        it(`lessOrEqualTo: throws on (${{ less, greater }})`, () => {
+        it(`lessOrEqualTo: throws on (${less} ${greater})`, () => {
             // arrange
             const paramName = 'greater';
 
@@ -58,14 +59,14 @@ describe('Number checks', () => {
             validator.checkValue(paramName, greater).lessOrEqualTo(less);
 
             // assert
-            expect(validator.rangeErrors.size).toBe(1);
-            expect(validator.rangeErrors.has(paramName)).toBe(true);
-            expect(validator.rangeErrors.get(paramName).length).toBe(1);
-            expect(validator.rangeErrors.get(paramName)[0])
-                .toBe(`Expected ${paramName} to be less or equal to ${less}.`);
+            assertValidatorErrors(
+                validator.rangeErrors,
+                paramName,
+                `Expected ${paramName} to be less or equal to ${less}.`,
+            );
         });
 
-        it(`lessOrEqualTo: doesn't throw on ${{ greater, less }}`, () => {
+        it(`lessOrEqualTo: doesn't throw on ${greater} ${less}`, () => {
             // arrange
             const paramName = 'less';
 
@@ -82,6 +83,28 @@ describe('Number checks', () => {
 
             // act
             validator.checkValue(paramName, middle).lessOrEqualTo(middle);
+
+            // assert
+            expect(validator.rangeErrors.size).toBe(0);
+        });
+
+        it(`equals: throws on different values ${less} ${greater}`, () => {
+            const paramName = 'test';
+
+            // act
+            validator.checkValue(paramName, less).equals(greater);
+
+            // assert
+            assertValidatorErrors(
+                validator.rangeErrors,
+                paramName,
+                `Expected ${paramName} to be ${greater}, but found ${less}.`
+            );
+        });
+
+        it(`equals: doesn't throw if values are equal ${less}`, () => {
+            // act
+            validator.checkValue('any', less).equals(less);
 
             // assert
             expect(validator.rangeErrors.size).toBe(0);
