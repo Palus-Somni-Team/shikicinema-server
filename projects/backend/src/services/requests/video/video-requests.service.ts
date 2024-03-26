@@ -93,4 +93,25 @@ export class VideoRequestService {
             return reqEntity;
         });
     }
+
+    async cancel(
+        requesterId: number,
+        requestId: number,
+    ): Promise<void> {
+        return this.dataSource.transaction(async (entityManager) => {
+            const reqRepo = await entityManager.getRepository(VideoRequestEntity);
+            const request = await reqRepo.findOne({ where: { id: requestId }, relations: ['createdBy'] });
+
+            UserAssert.check('request', request).exists();
+            UserAssert
+                .check('requesterId', requesterId)
+                .equals(request.createdBy.id, 'Only request creator can cancel request.');
+            UserAssert
+                .check('Request status', request.status)
+                .equals(VideoRequestStatusEnum.ACTIVE, 'Only active request can be canceled.');
+
+            request.status = VideoRequestStatusEnum.CANCELED;
+            await reqRepo.save(request);
+        });
+    }
 }

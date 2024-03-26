@@ -240,6 +240,10 @@ export class TestClient {
         return this.checkResponse(VideoRequest, this.createVideoRequestsRaw(req));
     }
 
+    public cancelVideoRequestsRaw(id: number): request.Test {
+        return this.patch(`/api/requests/videos/${id}/cancel`);
+    }
+
     //#endregion Video Requests
 
     //#region Util

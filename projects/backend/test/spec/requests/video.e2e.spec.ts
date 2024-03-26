@@ -190,4 +190,83 @@ describe('Video Requests API (e2e)', () => {
             );
         }
     });
+
+    describe('PATCH /api/requests/videos/:id/cancel', () => {
+        it('User must be authorized',
+            async () => {
+                const res = await env.anonClient.cancelVideoRequestsRaw(1);
+
+                expect(res.status).toBe(401);
+            },
+        );
+
+        it('Returns 404 when there\'s no request',
+            async () => {
+                // act
+                const response = await env.shikiAuthClient.cancelVideoRequestsRaw(404);
+
+                // assert
+                expect(response.status).toBe(404);
+                expect(response.body.message).toBe('request is not found.');
+            },
+        );
+
+        it('Returns 400 when cancel request with final status',
+            async () => {
+                // arrange
+                const req = await env.dataSource.getRepository(VideoRequestEntity).findOneBy({
+                    status: VideoRequestStatusEnum.APPROVED,
+                });
+
+                // act
+                const response = await env.shikiAuthClient.cancelVideoRequestsRaw(req.id);
+
+                // assert
+                expect(response.status).toBe(400);
+                expect(response.body.message).toBe('Only active request can be canceled.');
+            },
+        );
+
+        it('Returns 400 when cancel request of another user',
+            async () => {
+                // arrange
+                const adminUploader = await env.dataSource.getRepository(UploaderEntity).findOneBy({
+                    shikimoriId: TestEnvironment.AdminShikimoriData.shikimoriId,
+                });
+                const req = await env.dataSource.getRepository(VideoRequestEntity).findOneBy({
+                    createdBy: { id: adminUploader.id },
+                });
+
+                // act
+                const response = await env.shikiAuthClient.cancelVideoRequestsRaw(req.id);
+
+                // assert
+                expect(response.status).toBe(400);
+                expect(response.body.message).toBe('Only request creator can cancel request.');
+            },
+        );
+
+        it('Should return 200 and change status',
+            async () => {
+                // arrange
+                const video = await env.dataSource.getRepository(VideoEntity).findOneBy({ animeId: 1 });
+                const req: CreateVideoRequestRequest = {
+                    videoId: video.id,
+                    type: VideoRequestTypeEnum.INFO,
+                    comment: 'test comment',
+                };
+                const res = await env.shikiAuthClient.createVideoRequests(req);
+
+                // act
+                const response = await env.shikiAuthClient.cancelVideoRequestsRaw(res.id);
+
+                // assert
+                expect(response.status).toBe(200);
+
+                const videoRequest = await env.dataSource.getRepository(VideoRequestEntity).findOneBy({ id: res.id });
+                expect(videoRequest).not.toBeNull();
+                expect(videoRequest.status).toBe(VideoRequestStatusEnum.CANCELED);
+            },
+        );
+    });
 });
