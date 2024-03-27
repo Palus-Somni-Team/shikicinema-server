@@ -1,7 +1,8 @@
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '~backend/routes/base.controller';
-import { Body, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import {
+    CancelVideoRequestRequest,
     CreateVideoRequestRequest,
     GetVideoRequestsRequest,
     GetVideoRequestsResponse,
@@ -55,5 +56,13 @@ export class VideoRequestsController extends BaseController {
             request.author,
             request.comment);
         return new VideoRequest(entity);
+    }
+
+    @Patch(':id/cancel')
+    @UseGuards(UploadTokenGuard)
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'Cancel specified request' })
+    async cancel(@Req() req: IRequest, @Param() params: CancelVideoRequestRequest): Promise<void> {
+        await this.videoRequestService.cancel(req.user, params.id);
     }
 }

@@ -1,4 +1,5 @@
 import { TestValidator } from '~backend/utils/checks/test/test-validator';
+import { assertValidatorErrors } from '~backend/utils/checks/test/check-test.utils';
 
 describe('notNull', () => {
     const validator = new TestValidator();
@@ -15,11 +16,7 @@ describe('notNull', () => {
         validator.checkValue(paramName, null).notNullish();
 
         // assert
-        expect(validator.argumentNullErrors.size).toBe(1);
-        expect(validator.argumentNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} not to be nullish.`);
+        assertValidatorErrors(validator.argumentNullErrors, paramName, `Expected ${paramName} not to be nullish.`);
     });
 
     it('throws if undefined', () => {
@@ -30,11 +27,7 @@ describe('notNull', () => {
         validator.checkValue(paramName, undefined).notNullish();
 
         // assert
-        expect(validator.argumentNullErrors.size).toBe(1);
-        expect(validator.argumentNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`Expected ${paramName} not to be nullish.`);
+        assertValidatorErrors(validator.argumentNullErrors, paramName, `Expected ${paramName} not to be nullish.`);
     });
 
     it('doesn\'t throw if argument not null or undefined', () => {
@@ -56,11 +49,7 @@ describe('notNull', () => {
         validator.checkValue(paramName, undefined).exists();
 
         // assert
-        expect(validator.argumentNullErrors.size).toBe(1);
-        expect(validator.argumentNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(`${paramName} is not found.`);
+        assertValidatorErrors(validator.argumentNullErrors, paramName, `${paramName} is not found.`);
     });
 
     it('uses custom message if passed', () => {
@@ -73,10 +62,6 @@ describe('notNull', () => {
         validator.checkValue(paramName, undefined).exists(message);
 
         // assert
-        expect(validator.argumentNullErrors.size).toBe(1);
-        expect(validator.argumentNullErrors.has(paramName)).toBe(true);
-        expect(validator.argumentNullErrors.get(paramName).length).toBe(1);
-        expect(validator.argumentNullErrors.get(paramName)[0])
-            .toBe(message);
+        assertValidatorErrors(validator.argumentNullErrors, paramName, message);
     });
 });

@@ -79,6 +79,15 @@ export class Check<T> {
         return this;
     }
 
+    equals<T extends number>(this: Check<T>, expected: number, message: string = null): Check<T> {
+        if (this.value !== expected) {
+            const msg = message ? message : `Expected ${this.name} to be ${expected}, but found ${this.value}.`;
+            this._validator.addRangeError(this._name, msg);
+        }
+
+        return this;
+    }
+
     //#endregion number
 
     //#region array-like
