@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { GetByIdParamRequest } from '@shikicinema/types';
+import { CancelVideoRequestRequest as Interface } from '@shikicinema/types';
 import { IsInt, Min } from 'class-validator';
 
-export class CancelVideoRequestRequest implements GetByIdParamRequest {
+export class CancelVideoRequestRequest implements Interface {
     @Expose()
     @IsInt()
     @Min(0)
