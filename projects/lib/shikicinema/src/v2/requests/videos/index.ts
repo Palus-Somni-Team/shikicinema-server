@@ -18,3 +18,4 @@ export * from './GetVideoRequestsRequest'
 export * from './VideoRequestTypeEnum';
 export * from './VideoRequestStatusEnum';
 export * from './VideoRequest'
+export * from './RejectVideoRequestRequest'

@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { DevAssert } from '~backend/utils/checks/dev/dev-assert';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { UploaderEntity, VideoEntity, VideoRequestEntity } from '~backend/entities';
+import { UploaderEntity, UserEntity, VideoEntity, VideoRequestEntity } from '~backend/entities';
 import { UserAssert } from '~backend/utils/checks/user/user-assert';
 import { VideoKindEnum, VideoQualityEnum, VideoRequestStatusEnum, VideoRequestTypeEnum } from '@shikicinema/types';
 import { toSqlWhere } from '~backend/utils/postgres.utils';
@@ -111,7 +111,37 @@ export class VideoRequestService {
                 .equals(VideoRequestStatusEnum.ACTIVE, 'Only active request can be canceled.');
 
             request.status = VideoRequestStatusEnum.CANCELED;
-            await reqRepo.save(request);
+            await reqRepo.save(request, { reload: false });
+        });
+    }
+
+    async reject(
+        requesterId: number,
+        requestId: number,
+        comment: string,
+    ): Promise<VideoRequestEntity> {
+        return this.dataSource.transaction(async (entityManager) => {
+            const reqRepo = await entityManager.getRepository(VideoRequestEntity);
+            const request = await reqRepo.findOne({
+                where: { id: requestId },
+                relations: ['video', 'author', 'createdBy'],
+            });
+
+            UserAssert.check('request', request).exists();
+            UserAssert
+                .check('Request status', request.status)
+                .equals(VideoRequestStatusEnum.ACTIVE, 'Only active request can be rejected.');
+
+            const userRepo = await entityManager.getRepository(UserEntity);
+            const reviewer = await userRepo.findOneBy({ id: requesterId });
+
+            request.status = VideoRequestStatusEnum.REJECTED;
+            request.reviewerComment = comment;
+            request.reviewedBy = reviewer;
+
+            await reqRepo.save(request, { reload: false });
+
+            return request;
         });
     }
 }
