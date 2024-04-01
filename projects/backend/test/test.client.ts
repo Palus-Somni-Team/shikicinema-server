@@ -18,6 +18,7 @@ import {
 import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
+import { RejectVideoRequestRequest } from '~backend/routes/api/admin/requests/video/dto';
 import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import { plainToInstance } from 'class-transformer';
 
@@ -242,6 +243,14 @@ export class TestClient {
 
     public cancelVideoRequestsRaw(id: number): request.Test {
         return this.patch(`/api/requests/videos/${id}/cancel`);
+    }
+
+    public rejectVideoRequestRaw(req: RejectVideoRequestRequest): request.Test {
+        return this.patch('/api/admin/requests/videos/reject', req);
+    }
+
+    public rejectVideoRequest(req: RejectVideoRequestRequest): Promise<VideoRequest> {
+        return this.checkResponse(VideoRequest, this.rejectVideoRequestRaw(req));
     }
 
     //#endregion Video Requests

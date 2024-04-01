@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { RouterModule, Routes } from 'nest-router';
 
 import { AdminModule } from '~backend/routes/api/admin/admin.module';
+import { AdminRequestsModule } from '~backend/routes/api/admin/requests/admin.requests.module';
 import { AdminUserModule } from '~backend/routes/api/admin/user/admin-user.module';
 import { AdminVideoModule } from '~backend/routes/api/admin/video/admin-video.module';
+import { AdminVideoRequestsModule } from '~backend/routes/api/admin/requests/video/admin-video-requests.module';
 import { ApiModule } from '~backend/routes/api/api.module';
 import { AuthModule } from '~backend/routes/auth/auth.module';
 import { AuthorModule } from '~backend/routes/api/author/authors.module';
@@ -45,6 +47,16 @@ const routes: Routes = [
                     {
                         path: '/videos',
                         module: AdminVideoModule,
+                    },
+                    {
+                        path: '/requests',
+                        module: AdminRequestsModule,
+                        children: [
+                            {
+                                path: '/videos',
+                                module: AdminVideoRequestsModule,
+                            },
+                        ],
                     },
                 ],
             },
