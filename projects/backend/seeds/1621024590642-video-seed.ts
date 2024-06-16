@@ -22,10 +22,14 @@ export class VideoSeed1621024590642 implements MigrationInterface {
             new VideoEntity(1, 2, 'https://admin2.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
             new VideoEntity(1, 3, 'https://admin3.up', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], admin),
             new VideoEntity(1337, 7, 'https://banned.com', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], banned),
+            new VideoEntity(404, 404, 'https://marked_as_deleted.com', VideoKindEnum.DUBBING, 'ru', VideoQualityEnum.TV, authors[i++ % authors.length], user),
         );
 
         const videoRepo = await queryRunner.manager.getRepository(VideoEntity);
-        await videoRepo.save(seeds);
+        const entities = await videoRepo.save(seeds);
+
+        const toMarkAsDeleted = entities.find((v) => v.animeId === 404 && v.episode === 404);
+        await videoRepo.softDelete(toMarkAsDeleted.id);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

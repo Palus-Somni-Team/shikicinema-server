@@ -2,6 +2,7 @@ import { AuthorEntity, UploaderEntity } from '~backend/entities';
 import {
     Column,
     CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -46,6 +47,9 @@ export class VideoEntity {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @DeleteDateColumn({ name: 'deleted_at' })
+    deletedAt: Date;
 
     @ManyToOne(() => UploaderEntity, (uploader) => uploader.videos, { cascade: ['insert', 'update'] })
     @JoinColumn({ name: 'uploader_id' })

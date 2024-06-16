@@ -65,8 +65,7 @@ export class VideoService {
             UserAssert.check('video', entity).exists();
 
             if (video.author && normalizeString(video.author) !== normalizeString(entity.author.name)) {
-                const authorEntity = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
-                entity.author = authorEntity;
+                entity.author = await this.authorService.getOrCreateAuthorEntity(entityManager, video.author);
             }
 
             entity.animeId = video?.animeId ?? entity.animeId;
@@ -87,12 +86,25 @@ export class VideoService {
         await this.repository.delete({ id });
     }
 
+    async softDelete(id: number): Promise<void> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+
+        await this.repository.softDelete(id);
+    }
+
+    async restore(id: number): Promise<void> {
+        DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
+
+        await this.repository.restore(id);
+    }
+
     async findById(id: number): Promise<VideoEntity> {
         DevAssert.check('id', id).notNullish().greaterOrEqualTo(0);
 
         const video = await this.repository.findOne({
             where: { id },
             relations: ['uploader', 'author'],
+            withDeleted: true,
         });
 
         if (!video) {
@@ -132,6 +144,7 @@ export class VideoService {
         language?: string,
         quality?: VideoQualityEnum,
         uploader?: string,
+        includeDeleted?: boolean,
     ): Promise<[VideoEntity[], number]> {
         DevAssert.check('limit', limit).notNullish().greaterOrEqualTo(1).lessOrEqualTo(100);
         DevAssert.check('offset', offset).notNullish().greaterOrEqualTo(0);
@@ -156,6 +169,7 @@ export class VideoService {
             skip: offset,
             take: limit,
             relations: ['uploader', 'author'],
+            withDeleted: includeDeleted,
         });
     }
 

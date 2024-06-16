@@ -65,7 +65,8 @@ export class VideoController extends BaseController {
             query.kind,
             query.language,
             query.quality,
-            query.uploader
+            query.uploader,
+            false
         );
 
         return new GetVideosResponse(videos.map((video) => new VideoResponse(video)), limit, offset, total);
