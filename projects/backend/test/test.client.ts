@@ -1,5 +1,6 @@
 import * as request from 'supertest';
 
+import { AdminVideoResponse, UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import {
     CreateVideoRequest,
     GetEpisodesRequest,
@@ -19,7 +20,6 @@ import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
 import { RejectVideoRequestRequest } from '~backend/routes/api/admin/requests/video/dto';
-import { UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import { plainToInstance } from 'class-transformer';
 
 export class TestClient {
@@ -127,8 +127,8 @@ export class TestClient {
         return this.get(`/api/admin/videos/${id}`);
     }
 
-    public getVideo(id: number): Promise<VideoResponse> {
-        return this.checkResponse(VideoResponse, this.getVideoRaw(id));
+    public getVideo(id: number): Promise<AdminVideoResponse> {
+        return this.checkResponse(AdminVideoResponse, this.getVideoRaw(id));
     }
 
     public deleteVideoRaw(id: number): request.Test {
@@ -139,12 +139,28 @@ export class TestClient {
         return this.checkEmptyResponse(this.deleteVideoRaw(id));
     }
 
+    public softDeleteVideoRaw(id: number): request.Test {
+        return this.post(`/api/admin/videos/deleted/${id}`);
+    }
+
+    public softDeleteVideo(id: number): Promise<void> {
+        return this.checkEmptyResponse(this.softDeleteVideoRaw(id));
+    }
+
+    public restoreVideoRaw(id: number): request.Test {
+        return this.delete(`/api/admin/videos/deleted/${id}`);
+    }
+
+    public restoreVideo(id: number): Promise<void> {
+        return this.checkEmptyResponse(this.restoreVideoRaw(id));
+    }
+
     public updateVideoRaw(id: number, req: UpdateVideoRequest): request.Test {
         return this.patch(`/api/admin/videos/${id}`, req);
     }
 
-    public updateVideo(id: number, req: UpdateVideoRequest): Promise<VideoResponse> {
-        return this.checkResponse(VideoResponse, this.updateVideoRaw(id, req));
+    public updateVideo(id: number, req: UpdateVideoRequest): Promise<AdminVideoResponse> {
+        return this.checkResponse(AdminVideoResponse, this.updateVideoRaw(id, req));
     }
 
     //#endregion Admin

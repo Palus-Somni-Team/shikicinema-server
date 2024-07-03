@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2024-04-05-01-add-deleted-at-column-to-videos" author="BasicEC">
+        <addColumn tableName="videos">
+            <column name="deleted_at" type="timestamptz"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

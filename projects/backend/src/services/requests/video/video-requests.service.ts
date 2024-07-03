@@ -45,6 +45,7 @@ export class VideoRequestService {
             take: limit,
             order: { id: 'desc' },
             relations: ['video', 'author', 'createdBy', 'reviewedBy'],
+            withDeleted: true,
         });
     }
 
