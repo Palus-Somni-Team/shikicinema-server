@@ -2,6 +2,10 @@ import * as request from 'supertest';
 
 import { AdminVideoResponse, UpdateVideoRequest } from '~backend/routes/api/admin/video/dto';
 import {
+    ApproveVideoRequestRequest,
+    RejectVideoRequestRequest,
+} from '~backend/routes/api/admin/requests/video/dto';
+import {
     CreateVideoRequest,
     GetEpisodesRequest,
     GetEpisodesResponse,
@@ -19,7 +23,6 @@ import {
 import { GetAdminUsersResponse } from '~backend/routes/api/admin/user/dto';
 import { GetAuthorResponse, GetAuthorsRequest } from '~backend/routes/api/author/dto';
 import { LoginRequest, OwnerUserInfo, RegisterUser } from '~backend/routes/auth/dto';
-import { RejectVideoRequestRequest } from '~backend/routes/api/admin/requests/video/dto';
 import { plainToInstance } from 'class-transformer';
 
 export class TestClient {
@@ -267,6 +270,14 @@ export class TestClient {
 
     public rejectVideoRequest(req: RejectVideoRequestRequest): Promise<VideoRequest> {
         return this.checkResponse(VideoRequest, this.rejectVideoRequestRaw(req));
+    }
+
+    public approveVideoRequestRaw(req: ApproveVideoRequestRequest): request.Test {
+        return this.patch('/api/admin/requests/videos/approve', req);
+    }
+
+    public approveVideoRequest(req: ApproveVideoRequestRequest): Promise<VideoRequest> {
+        return this.checkResponse(VideoRequest, this.approveVideoRequestRaw(req));
     }
 
     //#endregion Video Requests
