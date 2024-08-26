@@ -125,7 +125,6 @@ export class VideoRequestService {
             const reqRepo = await entityManager.getRepository(VideoRequestEntity);
             const request = await reqRepo.findOne({
                 where: { id: requestId },
-                relations: ['video', 'author', 'createdBy'],
             });
 
             UserAssert.check('request', request).exists();
@@ -141,6 +140,59 @@ export class VideoRequestService {
             request.reviewedBy = reviewer;
 
             await reqRepo.save(request, { reload: false });
+
+            return request;
+        });
+    }
+
+    async approve(
+        reviewerId: number,
+        requestId: number,
+        comment: string,
+    ): Promise<VideoRequestEntity> {
+        return this.dataSource.transaction(async (entityManager) => {
+            const reqRepo = await entityManager.getRepository(VideoRequestEntity);
+            const request = await reqRepo.findOne({
+                where: { id: requestId },
+                relations: ['author', 'video'],
+            });
+
+            UserAssert.check('request', request).exists();
+            UserAssert
+                .check('Request status', request.status)
+                .equals(VideoRequestStatusEnum.ACTIVE, 'Only active request can be approved.');
+            // video can be marked as deleted at this moment, so we can only cancel or reject request
+            UserAssert.check('video', request.video).exists();
+
+            const userRepo = await entityManager.getRepository(UserEntity);
+            const reviewer = await userRepo.findOneBy({ id: reviewerId });
+
+            request.status = VideoRequestStatusEnum.APPROVED;
+            request.reviewerComment = comment;
+            request.reviewedBy = reviewer;
+
+            switch (request.type) {
+                case VideoRequestTypeEnum.DELETE:
+                    await reqRepo.save(request, { reload: false });
+                    const videoRepo = await entityManager.getRepository(VideoEntity);
+                    await videoRepo.softDelete(request.video.id);
+                    break;
+                case VideoRequestTypeEnum.UPDATE:
+                    request.video.episode = request.episode ?? request.video.episode;
+                    request.video.kind = request.kind ?? request.video.kind;
+                    request.video.quality = request.quality ?? request.video.quality;
+                    request.video.language = request.language ?? request.video.language;
+                    if (request.author) {
+                        request.video.author = request.author;
+                    }
+                    await reqRepo.save(request, { reload: false });
+                    break;
+                case VideoRequestTypeEnum.INFO:
+                    await reqRepo.save(request, { reload: false });
+                    break;
+                default:
+                    throw new Error('Unsupported request type');
+            }
 
             return request;
         });
